@@ -2,6 +2,10 @@
 
 echo "it is $(date)"
 
+# TODO: remove this once the branch is merged
+source ~/lab_management_scripts/.venv/bin/activate
+elab frequency 3800
+
 git clone  https://github.com/travisdowns/avx-turbo.git || true
 
 cd avx-turbo
