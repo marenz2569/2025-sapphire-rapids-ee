@@ -17,7 +17,7 @@ make -j
 
 lsmod | grep -q msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
 
-OUTFILE="../results/$(date +"%Y-%m-%d").csv"
+OUTFILE="../results/$(date +"%Y-%m-%d").datafile"
 
 sudo ./avx-turbo | tee $OUTFILE
 
