@@ -19,6 +19,6 @@ lsmod | grep -q msr && echo "MSR already loaded" || { echo "Loading MSR module";
 
 OUTFILE="../results/$(date +"%Y-%m-%d").datafile"
 
-sudo ./avx-turbo | tee $OUTFILE
+sudo ./avx-turbo --iters=100000 --warmup-ms=1000 | tee $OUTFILE
 
 echo "written results to $OUTFILE"
