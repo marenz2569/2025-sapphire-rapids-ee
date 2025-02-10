@@ -15,7 +15,7 @@ git reset --hard 9cfe8bf3089636b98d9a7eaa97b9fef268004a1b
 
 make -j
 
-lsmod | grep -q msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
+lsmod | grep -w msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
 
 OUTFILE="../results/$(date +"%Y-%m-%d").datafile"
 
