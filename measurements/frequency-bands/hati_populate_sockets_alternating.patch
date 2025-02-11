@@ -1,0 +1,13 @@
+diff --git a/avx-turbo.cpp b/avx-turbo.cpp
+index c7d4dc0..42f157e 100644
+--- a/avx-turbo.cpp
++++ b/avx-turbo.cpp
+@@ -641,7 +641,7 @@ struct test_thread {
+     void operator()() {
+         // if (verbose) printf("Running test in thread %lu, this = %p\n", id, this);
+         if (!arg_no_pin) {
+-            pin_to_cpu(id);
++            pin_to_cpu((id/2+(id%2)*56)%112);
+         }
+         aperf_ghz aperf_timer;
+         outer_timer& outer = use_aperf ? static_cast<outer_timer&>(aperf_timer) : dummy_outer::dummy;

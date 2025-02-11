@@ -13,6 +13,8 @@ cd avx-turbo
 # latest master version on the time of this commit
 git reset --hard 9cfe8bf3089636b98d9a7eaa97b9fef268004a1b
 
+git apply ../hati_populate_sockets_alternating.patch
+
 make -j
 
 lsmod | grep -w msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
