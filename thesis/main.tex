@@ -1,0 +1,33 @@
+\input{0_frontmatter/0_header}
+
+\begin{document}
+	\frontmatter
+	\pagenumbering{Roman} 				% needed to capitalize the roman page numbering
+	\input{0_frontmatter/1_title}		% title page
+	\input{0_frontmatter/2_task}		% task description
+	\input{0_frontmatter/3_declaration}	% declaration of authorship
+	\input{0_frontmatter/4_abstract}
+	\tableofcontents
+	\input{0_frontmatter/5_acronyms}	% opt. Abkürzungsverzeichnis (bzw. Symbol-/Formel-Verzeichnis)
+	
+	\mainmatter	% Inhaltliche Kapitel
+	\input{1_mainmatter/1_introduction}
+	\input{1_mainmatter/2_background}
+	\input{1_mainmatter/3_architectural_details}
+	\input{1_mainmatter/4_test_system_rapl}
+	\input{1_mainmatter/5_power_management}
+	\input{1_mainmatter/6_memory_hierarchy}
+	\input{1_mainmatter/7_conclusion_and_future_work}
+	
+	\input{2_bib/0_bibliography} 		% Literatur
+	
+	\listoffigures
+	\listoftables
+
+	\appendix							% (alphabetic numbering)
+	\input{3_appendix/0_appendix}
+
+%	\backmatter
+%   \chapter{Acknowledgement}
+\end{document}
+

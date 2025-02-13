@@ -1,0 +1,73 @@
+	\faculty{Faculty of Computer Science}
+	\institute{Institute of Computer Engineering \phantom{Push the institute name below the line.}}
+	\chair{Chair of Computer Architecture \phantom{Push the chair name on then next line.}}
+
+
+	\newcommand*{\Title}{An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features}
+	\newcommand*{\Author}{Markus Schmidl}
+
+\date{\today}	
+
+\title{\Title}
+
+
+\author{\Author}
+\dateofbirth{22.12.1999}
+\placeofbirth{Hartmannsdorf}
+\matriculationnumber{4759854}
+
+
+% TODO adapt to type of work
+% All possible values can be looked up in the documentation on page 38:
+% https://ftp.tu-chemnitz.de/pub/tex/macros/latex/contrib/tudscr/doc/tudscr.pdf
+
+%\subject{bachelor}
+%\graduation[B.Sc.]{Bachelor of Science}
+\subject{diploma}
+\graduation[Dipl. Ing.]{Master of Science}
+
+\supervisor{Dr. Robert Sch\"one}
+
+\referee{Prof. Dr. Wolfgang E. Nagel \and Prof. Dr.-Ing. Diana G\"ohringer}
+
+% TODO: Add subject and if needed keywords
+% Add title and author to pdf-meta-data
+\hypersetup{
+	pdftitle    = {\Title},
+	pdfsubject  = {},
+	pdfauthor   = {\Author},
+	pdfkeywords = {Stichwort1, Stichwort2 ...}
+}
+
+%\makecover
+
+\maketitle
+
+% Change properties for all other pages that use a these information. No institute to avoid three lines and a black instead of a blue logo.
+	\faculty{Faculty of Computer Science }
+	\institute{}
+	\chair{Chair of Computer Architecture}
+	
+\ifx\DraftModeOn\undefined
+
+% Please leave notes FOR a specific co-author by using these macros
+\newcommand{\todoms}[1]{}
+
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\newcommand{\lstref}[1]{Listing~\ref{lst:#1}}
+	
+\renewcommand{\todo}[1]{}
+
+\else
+
+% Please leave notes FOR a specific co-author by using these macros
+\newcommand{\todoms}[1]{\todo[color=orange!60,inline,size=\small]{Markus: #1}}
+
+\newcommand{\figref}[1]{\textcolor{red}{Figure~\ref{fig:#1}}}
+\newcommand{\tabref}[1]{\textcolor{red}{Table~\ref{tab:#1}}}
+\newcommand{\secref}[1]{\textcolor{red}{Section~\ref{sec:#1}}}
+\newcommand{\lstref}[1]{\textcolor{red}{Listing~\ref{lst:#1}}}
+	
+\fi
