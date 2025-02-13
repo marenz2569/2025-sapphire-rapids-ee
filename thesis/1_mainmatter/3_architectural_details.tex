@@ -2,11 +2,12 @@
 The Sapphire Rapids family of Server Processors is the successor to the ``Ice Lake'' architecture.
 It is the first in Intels lineup of server processor to introduce a modular design containing four tiles in a 2x2 grid interconnected with EMIB structures.
 The two variants of this processor are 4th Generation Intel Xeon Scalable Processor and Xeon CPU Max Series with four additional HBM blocks.~\cite{Intel_2021_Hotchips}
-Each tile contains up to 15 Golden Cove cores with shared L3 cache interconnected by a mesh, accelerators, two DDR5 memory busses, N PCIe Gen 5 and one UPI 2.0 link.
+Each tile contains up to 15 Golden Cove cores with a shared L3 cache connected by a mesh, accelerators, two DDR5 memory busses, N PCIe Gen 5 and one UPI 2.0 link.
+This structure enables the package to be used in a single memory domain or split into two or four sub-NUMA clusters.~\cite{Intel_4th_gen_scalable}
 
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/spr-uma.png}
     \caption{Block diagram of the 4th Generation Intel Xeon Scalable Processor from~\cite{Intel_4th_gen_scalable}.
-It contains two mirrored tiles arranged in a 2x2 grid. The mesh is continued via EMIB structures across the die boundaries.~\cite{Intel_2022_ISSCC}}
+Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMIB structures to continue the mesh across the die boundaries.~\cite{Intel_2022_ISSCC}}
 \end{figure}
