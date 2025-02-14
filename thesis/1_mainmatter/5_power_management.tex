@@ -6,7 +6,25 @@
 
 \section{Shared Frequency Domains}
 
-\section{Cdyn Classes}
+\section{AVX Frequencies}
+
+Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.~\cite{Hackenberg_2015_Haswell}
+The concept has been extended with the Skylake Server Microarchitecture.
+\todoms{cite Optimization Reference Manual: Volume 1 Section 2.6.3 SKYLAKE SERVER POWER MANAGEMENT}
+
+Historically, instructions have been split into classes based on the used instruction set, i.e. AVX2 and AVX512.
+With Ice Lake these classes have updated to better accomodate the actual power consumption of these operations.
+\todoms{cite New 3rd Gen Intel® Xeon® Scalable Processor Codename: Ice Lake-SP}
+
+With the addition of the AMX instruction set Intel split up these classes further into four classes. \todoms{\url{https://www.servethehome.com/5th-gen-intel-xeon-scalable-emerald-rapids-resets-servers-by-intel/}}
+\todoms{Add the table here}
+In \todoms{cite Microarchitectural comparison and in-core modeling of state-of-the-art CPUs: Grace, Sapphire Rapids, and Genoa}, Laukemann et al. checked the CPU throttling for these classes however they we only able to show the throttling for classes \todoms{Class 0 and 1, verify this!}
+
+\todoms{Cdynn classes.}
+
+``smarter mapping between instructions and specific power levels'' See IceLakeSP Hotchips
+
+\todoms{Reading the cdynn classes from the PMU (per core)}
 
 \section{Uncore Frequency Scaling}
 
