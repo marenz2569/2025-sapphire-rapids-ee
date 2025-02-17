@@ -57,6 +57,6 @@ OUTFILE="results/$(date +"%Y-%m-%d").datafile"
 
 ISST=$HOME/linux/tools/power/x86/intel-speed-select/intel-speed-select
 
-sudo $ISST perf-profile info | tee $OUTFILE
+sudo $ISST perf-profile info 2>&1 | tee $OUTFILE
 
 echo "written results to $OUTFILE"
