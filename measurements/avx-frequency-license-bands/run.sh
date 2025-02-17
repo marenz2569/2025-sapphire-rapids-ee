@@ -2,7 +2,9 @@
 
 echo "it is $(date)"
 
-DIR_NAME=$(dirname "$0")
+DIR_NAME=$(dirname $(readlink -f -- "$0"))
+
+echo "Script is located in $DIR_NAME"
 
 # Download libnl-3 dependencies
 if [ ! -d "$DIR_NAME/dependencies" ]; then
@@ -55,8 +57,6 @@ OUTFILE="results/$(date +"%Y-%m-%d").datafile"
 
 ISST=$HOME/linux/tools/power/x86/intel-speed-select/intel-speed-select
 
-sudo $ISST perf-profile list | tee $OUTFILE
+sudo $ISST perf-profile info | tee $OUTFILE
 
 echo "written results to $OUTFILE"
-
-CFLAGS=-I/home/s2599166/2025-diploma-thesis/measurements/isst/usr/include/libnl3 LDFLAGS=-L/home/s2599166/2025-diploma-thesis/measurements/isst/lib/x86_64-linux-gnu
