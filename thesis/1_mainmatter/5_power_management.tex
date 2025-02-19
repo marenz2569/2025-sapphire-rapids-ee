@@ -18,19 +18,38 @@ The mapping from instruction set and power usage are displayed in~\tabref{avx-cl
 In \figref{p0n-frequencies} we are able to extracte the per core opportunistic turbo frequencies per license on our testsystem using a modified version of ``intel-speed-select''.
 \todoms{Reference to the test system}
 
+% \begin{table}[t]
+% 	\centering
+% 	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.~\cite{ServeTheHome_Emerald_Rapids_2023}}
+% 	\begin{tabular}{|l|c|c|c|c|}
+%         \hline
+%         \diagbox[height=5em]{Instruction\\Class}{\\$C_{dyn}$ Class} & 0 & 1 & 2 & 3 \\
+%         \hline
+%         SSE & 128 Light & 128 Heavy & & \\
+%         AVX2 & 256 Light & 256 Moderate & 256 Heavy & \\
+%         AVX512 & 512 Ultra-Light & 512 Light & 512 Moderate & 512 Heavy \\
+%         AMX & & AMX Light & AMX Moderate & AMX Heavy \\
+%         \hline \hline
+%         Turbo Frequency & SSE & AVX2 & AVX512 & AMX \\ 
+%         \hline
+% 	\end{tabular}
+% \end{table}
+
 \begin{table}[t]
 	\centering
-	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.~\cite{ServeTheHome_Emerald_Rapids_2023}}
-	\begin{tabular}{|l|c|c|c|c|}
+	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.
+    The $C_{dyn}$ classes 0 through 3 map to the license levels SSE, AVX2, AVX512 and AMX.~\cite{ServeTheHome_Emerald_Rapids_2023}}
+    \begin{tabular}{|l|p{0.14\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|}
         \hline
-        \diagbox[height=5em]{Instruction\\Class}{\\$C_{dyn}$ Class} & 0 & 1 & 2 & 3 \\
+        \diagbox[width=0.24\textwidth]{$C_{dyn}$\\Class}{Instruction\\Class} & SSE & AVX2 & AVX512 & AMX \\
         \hline
-        SSE & 128 Light & 128 Heavy & & \\
-        AVX2 & 256 Light & 256 Moderate & 256 Heavy & \\
-        AVX512 & 512 Ultra-Light & 512 Light & 512 Moderate & 512 Heavy \\
-        AMX & & AMX Light & AMX Moderate & AMX Heavy \\
-        \hline \hline
-        Turbo Frequency & SSE & AVX2 & AVX512 & AMX \\ 
+        0 (SSE License) & 128 Light & 256 Light & 512 Ultra-Light & \\
+        \hline
+        1 (AVX2 License) & 128 Heavy & 256 Moderate & 512 Light & AMX Light \\
+        \hline
+        2 (AVX512 License) & & 256 Heavy & 512 Moderate & AMX Moderate \\
+        \hline
+        3 (AMX License) & & & 512 Heavy & AMX Heavy \\
         \hline
 	\end{tabular}
 \end{table}
@@ -40,8 +59,6 @@ However they were only able to trigger two out of the three license level, leavi
 Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench'' with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
 They we also only able to show two out of the four license levels.
 
-\todoms{Show the license levels on SPR barnard (same processor as laukemann)}
-
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands.pdf}
@@ -50,7 +67,13 @@ They we also only able to show two out of the four license levels.
     In the first bucket the SSE and AVX2 license bands share the same frequency.}
 \end{figure}
 
-\todoms{Reading the cdynn classes from the PMU (per core)}
+Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
+Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
+
+
+\todoms{Show the license levels on SPR barnard (same processor as laukemann)}
+\todoms{How can we read the cdynn classes from the PMU (per core)?}
+\todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
 \section{Uncore Frequency Scaling}
 
