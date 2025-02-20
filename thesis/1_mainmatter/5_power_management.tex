@@ -1,10 +1,19 @@
 \chapter{Power Management}
 ``It will also be interesting to look at Sapphire Rapids, which also implements Golden Cove cores, including an analysis of user space idle states, and AVX frequencies.''
+\todoms{cite alder lake paper}
+\todoms{what is in the outlook of the sklylake, cascade lake and icelake papers?}
 
 \section{Infuence of Tiles}
-\todoms{Where is the PMU?}
+\begin{itemize}
+    \item one pmu per tile. one master pmu.\todoms{citations of the patent}
+    \item find the location of the pmu. one measurement.\todoms{Where is the PMU?}
+\end{itemize}
 
 \section{Shared Frequency Domains}
+
+\section{Intel speed select}
+
+\todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
 
 \section{AVX Frequencies}
 
@@ -70,8 +79,26 @@ They we also only able to show two out of the four license levels.
 Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
 Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
-
 \todoms{Show the license levels on SPR barnard (same processor as laukemann)}
+
+\todoms{explain cdyn bench measurement}
+
+\begin{itemize}
+    \item intel speed select technology and avx frequencies are independent of one another.\\
+    one plot to support this claim. potential for optimization on intels side.
+    \item to answer the above optimization question we need to highlight why these throttling mechanisms exist.\\
+    Iccmax. first droop. maybe cite patent and/or look in the source code of edk2.
+    \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
+    \item problem: other throttling mechanisms (rapl).
+    intel speed select CLOS groups, one priority core, all other no priority.
+    we can read the frequency on the priority core.
+    \item question: what uses power on the processor? (execution and memory movement)
+    why did the other two author fail at showing all levels?
+    \item make the case for memory size in loop and number of different instructions
+    \item explain the kernels and their parameter.
+    \item derive the rules for the classes
+\end{itemize}
+
 \todoms{How can we read the cdynn classes from the PMU (per core)?}
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
