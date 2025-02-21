@@ -11,10 +11,6 @@
 
 \section{Shared Frequency Domains}
 
-\section{Intel speed select}
-
-\todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
-
 \section{AVX Frequencies}
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
@@ -83,15 +79,27 @@ Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
 \todoms{explain cdyn bench measurement}
 
+% We propose a method to measure if small kernels trigger the power management of a core to stay in one license level.
+To associate which events trigger the processor cores to be part of a license level, we design a microbenchmark that executes small kernels on a fixed number of threads and measure the resulting core frequencies.
+This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
+However, we can only read the license level based on the maximal turbo frequency.
+To ensure that we do not trigger other power limiting mechanisms, e.g. RAPL, we utilize ``Intel Speed Select Core-Power'' to set one thread to priority group zero and all other to priority group 1 with a fixed low maximum frequency.
+The measurement of frequency is done on the thread in group zero, which should run at the maximum turbo frequency.
+We will dissect ``Intel Speed Select'' in~\secref{isst}.
+
+To validate the claim that the frequency limiting is independent of the ``Intel Speed Select Core-Power'' mechanisms, we prototype this measurement with four different FIRESTARTER kernels.
+The result is displayed in figure ..., we can clearly validate the findings of~\figref{p0n-frequencies}.
+
+\todoms{One plot with four Firestarter kernels, RAPL package vs max RAPL package on pkg0 with ISST, and frequency of thread zero to show that these two mechanisms are independent of each other. On all number of cores.}
+
+
 \begin{itemize}
-    \item intel speed select technology and avx frequencies are independent of one another.\\
-    one plot to support this claim. potential for optimization on intels side.
     \item to answer the above optimization question we need to highlight why these throttling mechanisms exist.\\
     Iccmax. first droop. maybe cite patent and/or look in the source code of edk2.
-    \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
-    \item problem: other throttling mechanisms (rapl).
-    intel speed select CLOS groups, one priority core, all other no priority.
-    we can read the frequency on the priority core.
+    % \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
+    % \item problem: other throttling mechanisms (rapl).
+    % intel speed select CLOS groups, one priority core, all other no priority.
+    % we can read the frequency on the priority core.
     \item question: what uses power on the processor? (execution and memory movement)
     why did the other two author fail at showing all levels?
     \item make the case for memory size in loop and number of different instructions
@@ -101,6 +109,23 @@ Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
 \todoms{How can we read the cdynn classes from the PMU (per core)?}
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
+
+
+\section{Intel speed select}
+\label{sec:isst}
+
+\begin{itemize}
+    \item intel speed select technology and avx frequencies are independent of one another.\\
+    one plot to support this claim. potential for optimization on intels side.
+    sort of: turbo-mode (turbo ratio limit) is one of many algorithm.
+    turbo-freq buckets are another. (garanteed turbo freqs in high prio buckets, vs low prio)
+    perf-profile is yet another. (different TRLs (?) and base frequencies with different number of cores)
+    core-power with CLOS groups are another. (different frequency limits based on different priorities)
+    base-freq
+    \item open question: how do they work together?
+\end{itemize}
+
+\todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
 
 \section{Uncore Frequency Scaling}
 
