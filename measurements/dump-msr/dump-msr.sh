@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Read the Msr space from 0..0x2000
-for ((i = 0 ; i < 8192 ; i++)); do
+# Read the Msr space from 0..0xffffffff
+for ((i = 0 ; i < 4294967296 ; i++)); do
     echo -n "$i: "
     rdmsr -p 0 $i || echo ""
 done
