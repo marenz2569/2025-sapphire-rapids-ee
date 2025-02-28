@@ -49,6 +49,7 @@ cd tools/power/x86/intel-speed-select
 
 export CFLAGS=-I$DIR_NAME/dependencies/usr/include/libnl3
 export LDFLAGS=-L$DIR_NAME/dependencies/lib/x86_64-linux-gnu
+make clean
 make -j
 
 cd $DIR_NAME
