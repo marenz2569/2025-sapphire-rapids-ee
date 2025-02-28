@@ -53,16 +53,16 @@ export CFLAGS=-I$DIR_NAME/dependencies/usr/include/libnl3
 export LDFLAGS=-L$DIR_NAME/dependencies/lib/x86_64-linux-gnu
 make -j
 
-cd $DIR_NAME/dependecies/FIRESTARTER
+cd $DIR_NAME/dependencies/FIRESTARTER
 
 git pull
 
 # TODO: change this to master. This is currently the version of PR 115
 git reset --hard f4675a46e6acd59101ef9baae7f3a11712cafa8e
 
-mkdir -p $DIR_NAME/dependecies/FIRESTARTER-build || true
+mkdir -p $DIR_NAME/dependencies/FIRESTARTER-build || true
 
-cd $DIR_NAME/dependecies/FIRESTARTER-build
+cd $DIR_NAME/dependencies/FIRESTARTER-build
 
 cmake ../FIRESTARTER -G Ninja
 ninja
