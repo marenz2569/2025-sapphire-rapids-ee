@@ -2,7 +2,7 @@
 
 This folder contains the measurement and plotting scripts to infer the `P0n` turbo frequencies for different license levels.
 
-## Initial Idea
+## Initial Idea (Not validated)
 
 We do this by running workloads that each trigger a different license level while being power unconstrained with a different number of cores.
 
