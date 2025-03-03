@@ -88,7 +88,7 @@ sudo $ISST turbo-freq disable
 sudo $ISST core-power disable
 sudo $ISST -c 0-55 core-power assoc --clos 1
 sudo $ISST -c 0 core-power assoc --clos 0
-sudo $ISST core-power config -c 1 -m 1000
+sudo $ISST core-power config -c 1 -m 1600
 sudo $ISST core-power enable
 
 # Set the FIRESTARTER measurement core to 0
@@ -104,10 +104,10 @@ for ((i = 0 ; i < 56 ; i++)); do
     else
         BINDLIST=0-$i
     fi
-    $FIRESTARTER -b $BINDLIST --measurement --start-delta=30000 --start-delta=5000 -t 60 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/lic0/$i.csv
-    $FIRESTARTER -b $BINDLIST --measurement --start-delta=30000 --start-delta=5000 -t 60 -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $OUTFOLDER/lic1/$i.csv
-    $FIRESTARTER -b $BINDLIST --measurement --start-delta=30000 --start-delta=5000 -t 60 --run-instruction-groups=REG:100 | tail -n 9 > $OUTFOLDER/lic2/$i.csv
-    $FIRESTARTER -b $BINDLIST --measurement --start-delta=30000 --start-delta=5000 -t 60 --run-instruction-groups=L3_L:100 | tail -n 9 > $OUTFOLDER/lic3/$i.csv
+    $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/lic0/$i.csv
+    $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $OUTFOLDER/lic1/$i.csv
+    $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 --run-instruction-groups=REG:100 | tail -n 9 > $OUTFOLDER/lic2/$i.csv
+    $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 --run-instruction-groups=L3_L:100 | tail -n 9 > $OUTFOLDER/lic3/$i.csv
 done
 
 # Reset ISST
