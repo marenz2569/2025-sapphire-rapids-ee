@@ -3,6 +3,14 @@
 \todoms{cite alder lake paper}
 \todoms{what is in the outlook of the sklylake, cascade lake and icelake papers?}
 
+
+\begin{itemize}
+    \item highlight why throttling mechanisms exist.\\
+    Iccmax. first droop. maybe cite patent and/or look in the source code of edk2.
+    \item question: what uses power on the processor? (execution and memory movement)
+\end{itemize}
+
+
 \section{Infuence of Tiles}
 \begin{itemize}
     \item one pmu per tile. one master pmu.\todoms{citations of the patent}
@@ -88,21 +96,35 @@ The measurement of frequency is done on the thread in group zero, which should r
 We will dissect ``Intel Speed Select'' in~\secref{isst}.
 
 To validate the claim that the frequency limiting is independent of the ``Intel Speed Select Core-Power'' mechanisms, we prototype this measurement with four different FIRESTARTER kernels.
-The result is displayed in figure ..., we can clearly validate the findings of~\figref{p0n-frequencies}.
+The result is displayed in~\figref{validated-p0n-frequencies}. We can clearly validate the findings of~\figref{p0n-frequencies}.
+However, the power consumption of the AMX kernel has inconsistent jumps that change with multiple measurements.
 
-\todoms{One plot with four Firestarter kernels, RAPL package vs max RAPL package on pkg0 with ISST, and frequency of thread zero to show that these two mechanisms are independent of each other. On all number of cores.}
+\todoms{Display the different FIRESTARTER kernels and show that not only the user instruction set, but also the number of memory accesses are influencing the resulting license level.}
+
+\todoms{Validate this claim: We have validated that a logic is triggering, different C state levels of unused threads or a change in uncore frequency?}
+
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/validate-avx-frequency-license-bands.pdf}
+    \caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
+    The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
+    In the first bucket the SSE and AVX2 license bands share the same frequency. We make shure that the package power does not exceed the maximum of \SI{350}{\watt} of our test platfrom.}
+\end{figure}
+
+% \todoms{One plot with four Firestarter kernels, RAPL package vs max RAPL package on pkg0 with ISST, and frequency of thread zero to show that these two mechanisms are independent of each other. On all number of cores.}
+
+\todoms{More details for cdyn measurement}
 
 
 \begin{itemize}
-    \item to answer the above optimization question we need to highlight why these throttling mechanisms exist.\\
-    Iccmax. first droop. maybe cite patent and/or look in the source code of edk2.
     % \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
     % \item problem: other throttling mechanisms (rapl).
     % intel speed select CLOS groups, one priority core, all other no priority.
     % we can read the frequency on the priority core.
-    \item question: what uses power on the processor? (execution and memory movement)
+    \item (again) question: what uses power on the processor? (execution and memory movement)
     why did the other two author fail at showing all levels?
-    \item Plot shows that memory accesses are important for changing the license level.
+    % \item Plot shows that memory accesses are important for changing the license level.
     \item make the case for memory size in loop and number of different instructions
     \item explain the kernels and their parameter.
     \item derive the rules for the classes
