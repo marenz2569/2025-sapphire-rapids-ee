@@ -19,6 +19,12 @@
 
 \section{Shared Frequency Domains}
 
+\todoms{shell script in alder lake paper for shared frequency domains}
+\todoms{shell script for mapping cpus to physical locations}
+
+\section{Shared Voltage Domains}
+\todoms{how many and what cores are on the same voltage regulator?}
+
 \section{AVX Frequencies}
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
@@ -112,6 +118,8 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
     In the first bucket the SSE and AVX2 license bands share the same frequency. We make shure that the package power does not exceed the maximum of \SI{350}{\watt} of our test platfrom.}
 \end{figure}
 
+\todoms{Rerun the measurements on banard.}
+
 % \todoms{One plot with four Firestarter kernels, RAPL package vs max RAPL package on pkg0 with ISST, and frequency of thread zero to show that these two mechanisms are independent of each other. On all number of cores.}
 
 \todoms{More details for cdyn measurement}
@@ -151,6 +159,12 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
 \todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
 
 \section{Uncore Frequency Scaling}
+\todoms{timing of uncore frequency change. l1 ptr, swithing to l3 ptr chasing. scripts in skylake paper.}
 
 \section{Idle State Latencies}
-\todoms{Both user and normal C states}
+\todoms{Both user and normal C states latencies}
+\todoms{influence of tiles on the c state latencies}
+
+\section{P-State Latencies}
+\todoms{p-state latency measurement}
+\todoms{influence of tiles on the p state latencies}
