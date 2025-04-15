@@ -57,18 +57,19 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 \begin{table}[t]
 	\centering
 	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.
-    The $C_{dyn}$ classes 0 through 3 map to the license levels SSE, AVX2, AVX512 and AMX.~\cite{ServeTheHome_Emerald_Rapids_2023}}
+    The $C_{dyn}$ classes 0 through 3 map to the license levels SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
+    The license levels that we could measure are marked in red.}
     \begin{tabular}{|l|p{0.14\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|}
         \hline
         \diagbox[width=0.24\textwidth]{$C_{dyn}$\\Class}{Instruction\\Class} & SSE & AVX2 & AVX512 & AMX \\
         \hline
-        0 (SSE License) & 128 Light & 256 Light & 512 Ultra-Light & \\
+        0 (SSE License) & 128 Light & \cellcolor{red!15}{\textbf{256 Light}} & 512 Ultra-Light & \\
         \hline
-        1 (AVX2 License) & 128 Heavy & 256 Moderate & 512 Light & AMX Light \\
+        1 (AVX2 License) & 128 Heavy & \cellcolor{red!15}{\textbf{256 Moderate}} & 512 Light & AMX Light \\
         \hline
-        2 (AVX512 License) & & 256 Heavy & 512 Moderate & AMX Moderate \\
+        2 (AVX512 License) & & 256 Heavy & \cellcolor{red!15}{\textbf{512 Moderate}} & AMX Moderate \\
         \hline
-        3 (AMX License) & & & 512 Heavy & AMX Heavy \\
+        3 (AMX License) & & & \cellcolor{red!15}{\textbf{512 Heavy}} & AMX Heavy \\
         \hline
 	\end{tabular}
 \end{table}
