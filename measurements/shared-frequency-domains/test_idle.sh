@@ -13,13 +13,15 @@
 
 gcc while_true.c -o while_true
 
+elab ht disable
+
 echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
 
 #set low frequency on all CPUs
 echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
 
-# for all 24 CPUs
-CPUS=`seq 0 23`
+# for all 56 CPUs
+CPUS=`seq 0 55`
 
 for CPU1 in $CPUS; do
   for CPU2 in $CPUS; do
