@@ -13,13 +13,11 @@
 
 gcc while_true.c -o while_true
 
-elab ht disable
-
-# enable all cstates.
 echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
 
-# set low frequency on all CPUs
-echo userspace | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
+# TODO: remove this once the branch is merged
+source ~/lab_management_scripts/.venv/bin/activate
+elab ht disable
 
 # for all 56 CPUs
 CPUS=`seq 0 55`
@@ -34,14 +32,11 @@ for CPU1 in $CPUS; do
     echo 800000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed > /dev/null
     # set high frequency on the influential CPU
     echo 2400000 | sudo tee /sys/devices/system/cpu/cpu${CPU2}/cpufreq/scaling_setspeed > /dev/null
-    # explicitly set tested CPU to low frequency
-    echo 800000 | sudo tee /sys/devices/system/cpu/cpu${CPU1}/cpufreq/scaling_setspeed > /dev/null
-    # test frequency on tested CPU via perf
+    # test frequency via perf
     FREQ=`taskset -c ${CPU1} perf stat --log-fd 1 -e cycles -x ' ' timeout 1s ./while_true | grep -v "not counted" - | awk '{print $1}' `
     # it should be 800 MHz, test with 20% addition.
     if [ $FREQ -gt (800000000 * 1.2) ]; then
       echo "cpu $CPU2 influences cpu $CPU1: frequency of cpu $CPU1 is $FREQ Hz instead of 800MHz"
     fi
-    sleep 1
   done
 done

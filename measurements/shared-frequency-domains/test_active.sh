@@ -24,20 +24,21 @@ CPUS=`seq 0 55`
 
 for CPU1 in $CPUS; do
   for CPU2 in $CPUS; do
-  #set low frequency on all CPUs
+    if [[ $CPU1 -eq $CPU2 ]];
+    then
+      continue
+    fi
+    # set low frequency on all CPUs
     elab frequency 800
-  #set high frequency on the influential CPU
+    # set high frequency on the influential CPU
     elab frequency --cpus ${CPU2} 3800
-  #explicitly set tested CPU to low frequency
-    # elab frequency --cpus ${CPU1} 800
-    #run some workload on influential CPU -> sth is not idle -> active
+    # run some workload on influential CPU
     taskset -c ${CPU2} timeout 2s ./while_true &
-    #test frequency on tested CPU via perf
+    # test frequency via perf
     FREQ=`taskset -c ${CPU1} perf stat --log-fd 1 -e cycles -x ' ' timeout 1s ./while_true | grep -v "not counted" - | awk '{print $1}' `
-    echo "$FREQ"
-    #it should be 800 MHz
-    if [ $FREQ -gt 1400000000 ]; then
-      echo "$CPU2 influences $CPU1: $FREQ"
+    # it should be 800 MHz, test with 20% addition.
+    if [ $FREQ -gt (800000000 * 1.2) ]; then
+      echo "cpu $CPU2 influences cpu $CPU1: frequency of cpu $CPU1 is $FREQ Hz instead of 800MHz"
     fi
     sleep 1
   done
