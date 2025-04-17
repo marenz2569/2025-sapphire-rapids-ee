@@ -30,13 +30,13 @@ for CPU1 in $CPUS; do
       continue
     fi
     # set low frequency on all CPUs
-    echo 800000 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_setspeed > /dev/null
+    elab frequency 800
     # set high frequency on the influential CPU
-    echo 2400000 | sudo tee /sys/devices/system/cpu/cpu${CPU2}/cpufreq/scaling_setspeed > /dev/null
+    elab frequency --cpus ${CPU2} 3800
     # test frequency via perf
     FREQ=`taskset -c ${CPU1} perf stat --log-fd 1 -e cycles -x ' ' timeout 1s ./while_true | grep -v "not counted" - | awk '{print $1}' `
     # it should be 800 MHz, test with 20% addition.
-    if [ $FREQ -gt $((800000000 * 1.2)) ]; then
+    if [ $FREQ -gt $(echo "scale=0; 800000000 * 1.2 / 1" | bc -l) ]; then
       echo "cpu $CPU2 influences cpu $CPU1: frequency of cpu $CPU1 is $FREQ Hz instead of 800MHz"
     fi
   done
