@@ -28,12 +28,12 @@
 \section{AVX Frequencies}
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
-This allows AVX2 instructions to use a lower base and different per core turbo frequencies.~\cite{Hackenberg_2015_Haswell}
-The concept has been extended with a new class for AVX512 instructions with the Skylake Server Microarchitecture.~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}
-With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' classes by their power consumption.~\cite{papazian_new_2020}
+This allows AVX2 instructions to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
+The concept has been extended with a new class for AVX512 instructions with the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
+With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' classes by their power consumption~\cite{papazian_new_2020}.
 With the addition of the AMX instruction set Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
 The used instruction set together with the power consumption are mapped to four license levels which determine the opportunistic AVX turbo frequencies based on the number of active cores.
-The mapping from instruction set and power usage are displayed in~\tabref{avx-classes}.~\cite{ServeTheHome_Emerald_Rapids_2023}
+The mapping from instruction set and power usage are displayed in~\tabref{avx-classes}~\cite{ServeTheHome_Emerald_Rapids_2023}.
 In \figref{p0n-frequencies} we are able to extracte the per core opportunistic turbo frequencies per license on our testsystem using a modified version of ``intel-speed-select''.
 \todoms{Reference to the test system}
 
