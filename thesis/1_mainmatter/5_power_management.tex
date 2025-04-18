@@ -28,7 +28,7 @@
 \section{AVX Frequencies}
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
-This allow the AVX2 instruction to use a lower base and different per core turbo frequencies.~\cite{Hackenberg_2015_Haswell}
+This allows AVX2 instructions to use a lower base and different per core turbo frequencies.~\cite{Hackenberg_2015_Haswell}
 The concept has been extended with a new class for AVX512 instructions with the Skylake Server Microarchitecture.~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}
 With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' classes by their power consumption.~\cite{papazian_new_2020}
 With the addition of the AMX instruction set Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
