@@ -14,7 +14,7 @@
 gcc while_true.c -o while_true
 
 # enable all cstates
-echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
+echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/state*/disable > /dev/null
 
 # TODO: remove this once the branch is merged
 source ~/lab_management_scripts/.venv/bin/activate
