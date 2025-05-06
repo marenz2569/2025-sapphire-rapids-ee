@@ -23,7 +23,7 @@ Starting with Sapphire Rapids, Intel changed their design on server processors t
 This change requires us to validate that core frequencies are independent of each other.
 We adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
-For the measurment we disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
+For the measurement we disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
 The frequency of this core has been measured while another core running at the highest frequency (\SI{3800}{\MHz}), either idling or also running a while true loop.
 The measurement has been repeated for all combinations of cores on a socket.
 We could not detect a change in frequency, therefore Sapphire Rapids must implements some scheme of frequency duty cycling for cores running with mixed frequencies on the same voltage regulator or let a core with a lower frequency core run with a suboptimal energy efficiency by using a higher than required voltage.
