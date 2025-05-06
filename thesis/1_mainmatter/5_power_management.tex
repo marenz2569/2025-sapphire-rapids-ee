@@ -30,7 +30,8 @@ We could not detect a change in frequency, therefore Sapphire Rapids must implem
 \todoms{Both options are not optimal, but the second should be worse in terms of EE.}
 
 \section{Shared Voltage Domains}
-\todoms{how many and what cores are on the same voltage regulator?}
+\todoms{how many (max four) and what cores (in rows) are on the same voltage regulator? We can detect 16 distinct jumps in power consumption when scaling a workload from one to all cores.}
+\todoms{Plot power consumption for a stream workload running in L1 or L2, scaling the workload either over the rows or over the columns. We should get a plot with 16 distinct jumps spaced out and a plot with 16 jumps at the start and then a gradual increse.}
 \todoms{shell script for mapping cpus to physical locations}
 
 \section{AVX Frequencies}
