@@ -18,12 +18,20 @@
 \end{itemize}
 
 \section{Shared Frequency Domains}
+% measurements/shared-frequency-domains 
+Starting with Sapphire Rapids, Intel changed their design on server processors to have shared FIVR for a set of up to four cores.
+This change requires us to validate that core frequencies are independent of each other.
+We adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
-\todoms{shell script in alder lake paper for shared frequency domains}
-\todoms{shell script for mapping cpus to physical locations}
+For the measurment we disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
+The frequency of this core has been measured while another core running at the highest frequency (\SI{3800}{\MHz}), either idling or also running a while true loop.
+The measurement has been repeated for all combinations of cores on a socket.
+We could not detect a change in frequency, therefore Sapphire Rapids must implements some scheme of frequency duty cycling for cores running with mixed frequencies on the same voltage regulator or let a core with a lower frequency core run with a suboptimal energy efficiency by using a higher than required voltage.
+\todoms{Both options are not optimal, but the second should be worse in terms of EE.}
 
 \section{Shared Voltage Domains}
 \todoms{how many and what cores are on the same voltage regulator?}
+\todoms{shell script for mapping cpus to physical locations}
 
 \section{AVX Frequencies}
 
