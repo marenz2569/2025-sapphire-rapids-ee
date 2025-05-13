@@ -59,15 +59,25 @@ for ((i = 0 ; i < 56 ; i++)); do
     # Measure 30 seconds, discarding the first 15 and last 2 seconds
     if [[ $i -eq 0 ]];
     then
-        ROWS_BINDLIST=0
 	COLUMNS_BINDLIST="${alt_order[i]}"
     else
-        ROWS_BINDLIST=0-$i
 	COLUMNS_BINDLIST="$COLUMNS_BINDLIST,${alt_order[i]}"
     fi
     # we need to access /sys/class/powercap
-    sudo $FIRESTARTER -b $ROWS_BINDLIST --measurement --start-delta=15000 --start-delta=2000 -t 30 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/rows/$i.csv
     sudo $FIRESTARTER -b $COLUMNS_BINDLIST --measurement --start-delta=15000 --start-delta=2000 -t 30 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/columns/$i.csv
+done
+
+for ((i = 0 ; i < 56 ; i++)); do
+    echo "Running with $i cores."
+    # Measure 30 seconds, discarding the first 15 and last 2 seconds
+    if [[ $i -eq 0 ]];
+    then
+        ROWS_BINDLIST=0
+    else
+        ROWS_BINDLIST=0-$i
+    fi
+    # we need to access /sys/class/powercap
+    sudo $FIRESTARTER -b $ROWS_BINDLIST --measurement --start-delta=15000 --start-delta=2000 -t 30 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/rows/$i.csv
 done
 
 echo "written results to $OUTFOLDER"
