@@ -38,7 +38,7 @@ sudo wrmsr -a 0x620 0x0a0a
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for ((i = 0 ; i < 56 ; i++)); do
     echo "Running with $i cores."
-    # Measure 30 seconds, discarding the first 15 and last 2
+    # Measure 10 seconds, discarding the first 5 and last 2
     if [[ $i -eq 0 ]];
     then
         BINDLIST=0
