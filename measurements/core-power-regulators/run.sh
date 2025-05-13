@@ -35,6 +35,8 @@ cd $DIR_NAME
 
 OUTFOLDER="results/$(date +"%Y-%m-%d")"
 
+mkdir -p $OUTFOLDER/ || true
+
 FIRESTARTER=$DIR_NAME/dependencies/FIRESTARTER-build/src/FIRESTARTER
 
 # TODO: remove this once the branch is merged
