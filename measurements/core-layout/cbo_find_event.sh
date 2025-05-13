@@ -1,8 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 HOSTNAME=`hostname`
 
 echo $HOSTNAME
+
+source ~/lab_management_scripts/.venv/bin/activate
+elab ht enable
+elab frequency 2200
+elab ht disable
 
 rm ./find_event_${HOSTNAME} || true
 
