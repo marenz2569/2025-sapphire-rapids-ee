@@ -48,6 +48,8 @@ elab ht disable
 # Set uncore frequency fixed to 1GHz
 sudo wrmsr -a 0x620 0x0a0a
 
+sudo modprobe intel_rapl_msr
+
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for ((i = 0 ; i < 56 ; i++)); do
     echo "Running with $i cores."
@@ -58,7 +60,8 @@ for ((i = 0 ; i < 56 ; i++)); do
     else
         BINDLIST=0-$i
     fi
-    $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/$i.csv
+    # we need to access /sys/class/powercap
+    sudo $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/$i.csv
 done
 
 echo "written results to $OUTFOLDER"
