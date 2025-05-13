@@ -19,7 +19,7 @@ fi
 
 cd $DIR_NAME/dependencies/FIRESTARTER
 
-git pull
+git fetch
 
 # TODO: change this to master. This is currently the version of PR 115
 git reset --hard f4675a46e6acd59101ef9baae7f3a11712cafa8e
