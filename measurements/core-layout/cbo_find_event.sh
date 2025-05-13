@@ -4,15 +4,15 @@ HOSTNAME=`hostname`
 
 echo $HOSTNAME
 
-rm ./find_event_${HOSTNAME}
+rm ./find_event_${HOSTNAME} || true
 
-for CPU in `seq 0 103`
+for CPU in `seq 0 55`
 do
 
 
 
 EVENTS=cycles
-for CBO in `seq 1 59`
+for CBO in `seq 0 55`
 do
 	# measure up/down
 	EVENTS="${EVENTS},uncore_cha_${CBO}/event=144,umask=0x03/"
