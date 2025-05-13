@@ -22,7 +22,7 @@ do
 
 done
 
-echo "CPU $CPU Event ${TEST_EVENT}" >> ./find_event_${HOSTNAME}
+echo "CPU $CPU Event" >> ./find_event_${HOSTNAME}
 sudo perf stat -x , -e ${EVENTS} -a --per-socket taskset -c $CPU ./stream > /dev/null 2>> ./find_event_${HOSTNAME}
 
 done
