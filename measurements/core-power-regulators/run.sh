@@ -35,7 +35,7 @@ cd $DIR_NAME
 
 OUTFOLDER="results/$(date +"%Y-%m-%d")"
 
-mkdir -p $OUTFOLDER/ || true
+mkdir -p $OUTFOLDER/{incremental} || true
 
 FIRESTARTER=$DIR_NAME/dependencies/FIRESTARTER-build/src/FIRESTARTER
 
@@ -61,7 +61,7 @@ for ((i = 0 ; i < 56 ; i++)); do
         BINDLIST=0-$i
     fi
     # we need to access /sys/class/powercap
-    sudo $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/incremental/$i.csv
 done
 
 echo "written results to $OUTFOLDER"
