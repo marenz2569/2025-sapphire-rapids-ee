@@ -53,7 +53,7 @@ sudo modprobe intel_rapl_msr
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for ((i = 0 ; i < 56 ; i++)); do
     echo "Running with $i cores."
-    # Measure 10 seconds, discarding the first 5 and last 2
+    # Measure 30 seconds, discarding the first 15 and last 2 seconds
     if [[ $i -eq 0 ]];
     then
         BINDLIST=0
@@ -61,7 +61,7 @@ for ((i = 0 ; i < 56 ; i++)); do
         BINDLIST=0-$i
     fi
     # we need to access /sys/class/powercap
-    sudo $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/incremental/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST --measurement --start-delta=15000 --start-delta=2000 -t 30 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/incremental/$i.csv
 done
 
 echo "written results to $OUTFOLDER"
