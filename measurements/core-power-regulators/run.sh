@@ -43,8 +43,7 @@ FIRESTARTER=$DIR_NAME/dependencies/FIRESTARTER-build/src/FIRESTARTER
 source ~/lab_management_scripts/.venv/bin/activate
 elab ht enable
 # Set core frequency fixed to 1GHz
-elab frequency 1000
-elab ht disable
+elab frequency 2000
 # Set uncore frequency fixed to 1GHz
 sudo wrmsr -a 0x620 0x0a0a
 
