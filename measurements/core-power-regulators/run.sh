@@ -28,8 +28,12 @@ FIRESTARTER=$DIR_NAME/dependencies/FIRESTARTER-build/src/FIRESTARTER
 
 # TODO: remove this once the branch is merged
 source ~/lab_management_scripts/.venv/bin/activate
-elab frequency 1000
 elab ht enable
+# Set core frequency fixed to 1GHz
+elab frequency 1000
+elab ht disable
+# Set uncore frequency fixed to 1GHz
+sudo wrmsr -a 0x620 0x0a0a
 
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for ((i = 0 ; i < 56 ; i++)); do
