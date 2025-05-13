@@ -6,6 +6,17 @@ DIR_NAME=$(dirname $(readlink -f -- "$0"))
 
 echo "Script is located in $DIR_NAME"
 
+if [ ! -d "$DIR_NAME/dependencies" ]; then
+    mkdir dependencies
+
+    cd dependencies
+    git clone https://github.com/tud-zih-energy/FIRESTARTER.git || true
+
+    cd ..
+else
+    echo "Skipping dependency download."
+fi
+
 cd $DIR_NAME/dependencies/FIRESTARTER
 
 git pull
