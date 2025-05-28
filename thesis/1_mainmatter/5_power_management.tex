@@ -194,13 +194,22 @@ We repeat the measurement for different settings of the core, uncore frequency a
 
 \todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
 
+
+\section{P-State Latencies}
+\todoms{p-state latency measurement}
+\todoms{influence of tiles on the p state latencies}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/ftalat_median_hati.pdf}
+    \caption{\label{fig:pstate_latencies_median}Median P-State switching latencies of the Sapphire Rappids processor.
+    We see two different behaviour, a low latency for switching to a lower frequency and switching up to \SI{1.8}{\GHz}, and a higher latency for switching above \SI{1.9}{\GHz}.
+    On the boundary to the lower frequency region some source/target frequency pairs emit a higher transition latency.}
+\end{figure}
+
+
 \section{Uncore Frequency Scaling}
 \todoms{timing of uncore frequency change. l1 ptr, swithing to l3 ptr chasing. scripts in skylake paper.}
 
 \section{Idle State Latencies}
 \todoms{Both user and normal C states latencies}
 \todoms{influence of tiles on the c state latencies}
-
-\section{P-State Latencies}
-\todoms{p-state latency measurement}
-\todoms{influence of tiles on the p state latencies}
