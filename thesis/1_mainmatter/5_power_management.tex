@@ -196,14 +196,51 @@ We repeat the measurement for different settings of the core, uncore frequency a
 
 
 \section{P-State Latencies}
-\todoms{p-state latency measurement}
-\todoms{influence of tiles on the p state latencies}
+
+\todoms{Describe DVFS, latencies occur between switches, cite ftalat paper, schoene skylake and alderlake for comparison.}
+
+To measure the latencies that occur during DVFS switches, I adapt ftalat, a benchmark developed by CITE PAPER, with modification by CITE PAPER.
+ftalat measures the execution time of a compute loop with a fixed processor frequency.
+The measurement methodology is as follows:
+First, a frequency change is requested.
+Second, the time until the execution time of the compute loop matches the expected for the requested frequency is measured.
+Then the measurements waits a random time between \SI{0}{\us} and \SI{5000}{\us} before being repeated for \SI{1000}{} times.
+
+In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
+In~\figref{pstate_latencies_time_dependance} we can observe this behaviour for frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}, whilst the transition latency from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} is unaffected by wait times.
+We split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
+Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher latency of \SI{600}{\us} instead of \SI{500}{\us}.
+Above this interval we see a different behaviour when switching to a higher frequency of \SI{1.9}{\GHz} and above.
+Some source/target frequency pairs emit a higher transition latency, especially when switching to \SI{1.9}{\GHz} and \SI{2.0}{\GHz} from a lower frequency.
+The expected worst case transition latency falls between \SI{1100}{\us} and \SI{2000}{\us}.
+This can be read from the 99th percentile plot in~\figref{pstate_latencies_99percentQuantile}.
+Outliers make this plot noiser than the other ones in this section.
+
+\begin{figure}[]
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/ftalat_median_<1ms_hati.pdf}
+        \caption{\label{fig:pstate_latencies_median_lt_1ms}Median p-state latencies. ($< \SI{1}{\ms}$)}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/ftalat_median_>1ms_hati.pdf}
+        \caption{\label{fig:pstate_latencies_median_gt_1ms}Median p-state latencies. ($> \SI{1}{\ms}$)}
+    \end{subfigure}
+    \caption{\label{fig:pstate_latencies_median}Median P-State switching latencies of the Sapphire Rappids processor, differentiated by wait times between frequency transitions below and above \SI{1}{\ms}.}
+\end{figure}
+
 \begin{figure}[]
     \centering
-    \includegraphics[width=0.8\columnwidth]{fig/ftalat_median_hati.pdf}
-    \caption{\label{fig:pstate_latencies_median}Median P-State switching latencies of the Sapphire Rappids processor.
-    We see two different behaviour, a low latency for switching to a lower frequency and switching up to \SI{1.8}{\GHz}, and a higher latency for switching above \SI{1.9}{\GHz}.
-    On the boundary to the lower frequency region some source/target frequency pairs emit a higher transition latency.}
+    \includegraphics[width=\columnwidth]{fig/ftalat_scatter_wait_transition_latency_hati.pdf}
+    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between frequency transitions on the transition latency. Displayed for frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.45\columnwidth]{fig/ftalat_99percentQuantile_hati.pdf}
+    \caption{\label{fig:pstate_latencies_99percentQuantile}99th percentile of P-state switching latencies.}
 \end{figure}
 
 
