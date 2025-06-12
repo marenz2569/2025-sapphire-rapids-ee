@@ -17,6 +17,9 @@ gcc while_true.c -o while_true
 rm -rf data || true
 mkdir -p data
 
+rm -rf data_txt || true
+mkdir -p data_txt
+
 CALLER=0 # The CPU that wakes up other CPUs
 CALLEE_LOCAL=1 # the CPU that is called locally
 BUSY_LOCAL=2 # a CPU that bears some load during the measurement of CALLEE_LOCAL
@@ -53,3 +56,11 @@ do
 
     killall while_true
 done
+
+cd data
+for file in ./*; do 
+    if [ -f "$file" ]; then 
+        perf script -i $file > ../data_txt/$file
+    fi 
+done
+cd ..
