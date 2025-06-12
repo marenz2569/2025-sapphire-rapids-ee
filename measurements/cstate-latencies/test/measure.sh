@@ -14,6 +14,9 @@
 gcc -pthread cond_wait.c -o cond_wait
 gcc while_true.c -o while_true
 
+rm -rf data || true
+mkdir -p data
+
 CALLER=0 # The CPU that wakes up other CPUs
 CALLEE_LOCAL=1 # the CPU that is called locally
 BUSY_LOCAL=2 # a CPU that bears some load during the measurement of CALLEE_LOCAL
@@ -33,16 +36,17 @@ done
 for CSTATE in $CSTATES
 do
 	# enable lowest C-state
+	echo "Enabling $(cat /sys/devices/system/cpu/cpu0/cpuidle/$CSTATE/name)"
 	echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 
 	# local
 	taskset -c $BUSY_LOCAL ./while_true &
-	for FREQ in $FREQS
+	for FREQ in ${FREQS[@]}
 	do
 		echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 		sleep 0.1
-		taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o perf.data.local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
-        taskset -c $CALLEE_LOCAL perf record -e power:cpu_idle -C $CALLEE_LOCAL -o perf.data.local_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
+		taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
+        taskset -c $CALLEE_LOCAL perf record -e power:cpu_idle -C $CALLEE_LOCAL -o data/perf.data.local_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
 		./cond_wait $CALLER $CALLEE_LOCAL $NTIMES $WAIT_US
 		killall perf
 	done
