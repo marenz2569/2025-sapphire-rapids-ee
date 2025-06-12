@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # "Energy Efficiency Features of the Intel Alder Lake Architecture" Artifact Collection
 # Copyright (C) 2024 TU Dresden, Center for Information Services and High Performance Computing
@@ -18,7 +18,7 @@ CALLER=0 # The CPU that wakes up other CPUs
 CALLEE_LOCAL=1 # the CPU that is called locally
 BUSY_LOCAL=2 # a CPU that bears some load during the measurement of CALLEE_LOCAL
 NTIMES=100 # the number of measurements
-FREQS=(800000 900000 1000000 1100000 1200000 1300000 1400000 1500000 1600000 1700000 1800000 1900000 2000000) # the supported frequencies
+FREQS=( 800000 900000 1000000 1100000 1200000 1300000 1400000 1500000 1600000 1700000 1800000 1900000 2000000 ) # the supported frequencies
 WAIT_US=100000 # how long to wait between measurements (so that the callee can fall back to idle)
 
 CSTATES=`ls /sys/devices/system/cpu/cpu0/cpuidle/` # here, the C-states are stored
