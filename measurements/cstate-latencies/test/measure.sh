@@ -40,7 +40,7 @@ do
 	echo 1 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 done
 
-for GOVERNOR in ${GOVERNOR[@]}
+for GOVERNOR in ${GOVERNORS[@]}
 do
 	echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
