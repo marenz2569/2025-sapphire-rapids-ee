@@ -248,5 +248,14 @@ Outliers make this plot noiser than the other ones in this section.
 \todoms{timing of uncore frequency change. l1 ptr, swithing to l3 ptr chasing. scripts in skylake paper.}
 
 \section{Idle State Latencies}
-\todoms{Both user and normal C states latencies}
-\todoms{influence of tiles on the c state latencies}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.45\columnwidth]{fig/C6_onecolumn.pdf}
+    \caption{\label{fig:c6_latencies}C-state latencies of C6 transition.}
+\end{figure}
+
+\begin{itemize}
+    \item Repeat measurement for remote socket and powersave governor.
+    \item Anomaly with perfomance governor at \SI{2.0}{\GHz}, C6 not used?
+\end{itemize}
