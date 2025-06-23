@@ -147,35 +147,38 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
 \todoms{How can we read the cdynn classes from the PMU (per core)?}
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
-\section{Shared Voltage Domains}
-
-Starting with Sapphire Rappids, Intel changed their design to have one one-die voltage regulator for multiple cores.
-They are ''arranged in horizontal strips``~\cite{Intel_2022_ISSCC}.
-This is a major change to their predecessors, where each core had its own FIVR.
-\todoms{citation needed}
-To measure this change, we run the same four FIRESTARTER workloads as described in~\secref{avx-frequencies}.
-We repeat the measurement for different settings of the core, uncore frequency and different population order.
+\section{AVX Frequency Anomalies}
+During testing, I populatated workload on different sets of CPU cores.
+I discovered that firstly, the reported AVX limits as described in~\figref{validated-p0n-frequencies} are worst-case limits and achieving higher turbo frequencies is possible and secondly throttling of the core frequency at \SI{800}{\MHz}.
+To measure these anomalies, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
+I repeat the measurement for different settings of the core, uncore frequency and different population order.
 \todoms{describe the population order}
+The average core frequency is displayed in~\figref{avx-anomaly-core-frequency}.
+% and the package power in~\figref{avx-anomaly-package-power}.
+For core frequencies which are below the nominal frequency of \SI{2}{\GHz}, I expect that the frequency is met and not throttled.
+This is also the case, expect for the AVX512 and AMX frequency levels at \SI{800}{\MHz} core frequency, which are throttled up to around \SI{600}{\MHz}.
+For higher than nominal frequencies the effect of RAPL is visible.
+With increasing core count some workloads are thottled below the level shown in~\figref{p0n-frequencies}.
+Strangly using a different pattern of populating the workloads on CPUs, we can archieve higher turbo frequencies outside of the limits shown in~\figref{p0n-frequencies}.
+This shows that the opportunistic AVX frequencies and RAPL are two worst case models which are used for setting the core frequency, however other (unknown) models in the CPUs power management are present that create this behaviour.
+More work is required to understand these in detail.
 
-\todoms{how many (max four) and what cores (in rows) are on the same voltage regulator? We can detect 16 distinct jumps in power consumption when scaling a workload from one to all cores.}
-\todoms{Plot power consumption for a stream workload running in L1 or L2, scaling the workload either over the rows or over the columns. We should get a plot with 16 distinct jumps spaced out and a plot with 16 jumps at the start and then a gradual increse.}
-\todoms{shell script for mapping cpus to physical locations}
+%\todoms{Remove package power plot.}
+\todoms{Remove automatic uncore freqency.}
 
+
+\todoms{Add uncore frequency as a new plot.}
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/core-power-regulators-core-frequency.pdf}
-    %\caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
-    %The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
-    %In the first bucket the SSE and AVX2 license bands share the same frequency. We make shure that the package power does not exceed the maximum of \SI{350}{\watt} of our test platfrom.}
+    \caption{\label{fig:avx-anomaly-core-frequency}Average core frequency across the cores running the workload.}
 \end{figure}
 
-\begin{figure}[]
-    \centering
-    \includegraphics[width=\columnwidth]{fig/core-power-regulators-package-power.pdf}
-    %\caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
-    %The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
-    %In the first bucket the SSE and AVX2 license bands share the same frequency. We make shure that the package power does not exceed the maximum of \SI{350}{\watt} of our test platfrom.}
-\end{figure}
+% \begin{figure}[]
+%     \centering
+%     \includegraphics[width=\columnwidth]{fig/core-power-regulators-package-power.pdf}
+%     \caption{\label{fig:avx-anomaly-package-power}}
+% \end{figure}
 
 
 \section{Intel speed select}
