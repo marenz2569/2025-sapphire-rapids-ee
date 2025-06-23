@@ -149,6 +149,10 @@ I discovered that firstly, the reported AVX limits as described in~\figref{valid
 To measure these anomalies, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
 I repeat the measurement for different settings of the core, uncore frequency and different population order.
 \todoms{describe the population order}
+%\todoms{Remove package power plot.}
+\todoms{Remove automatic uncore freqency.}
+\todoms{fix colors selection for the license levels}
+\todoms{Add uncore frequency as a new plot.}
 The average core frequency is displayed in~\figref{avx-anomaly-core-frequency}.
 % and the package power in~\figref{avx-anomaly-package-power}.
 For core frequencies which are below the nominal frequency of \SI{2}{\GHz}, I expect that the frequency is met and not throttled.
@@ -159,11 +163,6 @@ Strangly using a different pattern of populating the workloads on CPUs, we can a
 This shows that the opportunistic AVX frequencies and RAPL are two worst case models which are used for setting the core frequency, however other (unknown) models in the CPUs power management are present that create this behaviour.
 More work is required to understand these in detail.
 
-%\todoms{Remove package power plot.}
-\todoms{Remove automatic uncore freqency.}
-
-
-\todoms{Add uncore frequency as a new plot.}
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/core-power-regulators-core-frequency.pdf}
