@@ -99,7 +99,7 @@ done
 cd data
 for file in ./*; do 
     if [ -f "$file" ]; then 
-        perf script -i $file > ../data_txt/$file
+        perf script --ns -i $file > ../data_txt/$file
     fi 
 done
 cd ..
