@@ -40,62 +40,49 @@ do
 	echo 1 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 done
 
-for GOVERNOR in ${GOVERNORS[@]}
+
+for CSTATE in $CSTATES
 do
-	echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+	# enable lowest C-state
+	echo "Enabling $(cat /sys/devices/system/cpu/cpu0/cpuidle/$CSTATE/name)"
+	echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 
-	for CSTATE in $CSTATES
+	for GOVERNOR in ${GOVERNORS[@]}
 	do
-		# enable lowest C-state
-		echo "Enabling $(cat /sys/devices/system/cpu/cpu0/cpuidle/$CSTATE/name)"
-		echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
+		echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
-		# local
-		# Prevent the current socket to go into a package c-state
-		taskset -c $BUSY_LOCAL ./while_true &
 		for FREQ in ${FREQS[@]}
 		do
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 			sleep 0.1
+
+			# local
+			# Prevent the current socket to go into a package c-state
+			taskset -c $BUSY_LOCAL ./while_true &
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
 			taskset -c $CALLEE_LOCAL perf record -e power:cpu_idle -C $CALLEE_LOCAL -o data/perf.data.${GOVERNOR}_local_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
 			./cond_wait $CALLER $CALLEE_LOCAL $NTIMES $WAIT_US
 			killall perf
-		done
+			killall while_true
 
-		killall while_true
-
-		# remote idle
-		taskset -c $BUSY_LOCAL ./while_true &
-		for FREQ in ${FREQS[@]}
-		do
-			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-			echo $FREQ | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
-			sleep 0.1
+			# remote idle
+			taskset -c $BUSY_LOCAL ./while_true &
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_idle_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
-		done
+			killall while_true
 
-		killall while_true
-
-		# remote active
-		taskset -c $BUSY_LOCAL ./while_true &
-		taskset -c $BUSY_REMOTE ./while_true &
-		for FREQ in ${FREQS[@]}
-		do
-			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-			echo $FREQ | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
-			sleep 0.1
+			# remote active
+			taskset -c $BUSY_LOCAL ./while_true &
+			taskset -c $BUSY_REMOTE ./while_true &
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_active_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_active_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
+			killall while_true
 		done
-		
-		killall while_true
 	done
 done
 
