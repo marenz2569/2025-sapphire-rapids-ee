@@ -65,6 +65,7 @@ do
 			./cond_wait $CALLER $CALLEE_LOCAL $NTIMES $WAIT_US
 			killall perf
 			killall while_true
+			wait
 
 			# remote idle
 			taskset -c $BUSY_LOCAL ./while_true &
@@ -73,6 +74,7 @@ do
 			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
 			killall while_true
+			wait
 
 			# remote active
 			taskset -c $BUSY_LOCAL ./while_true &
@@ -82,6 +84,7 @@ do
 			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
 			killall while_true
+			wait
 		done
 	done
 done
