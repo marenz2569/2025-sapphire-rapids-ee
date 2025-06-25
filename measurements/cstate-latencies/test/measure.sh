@@ -20,9 +20,9 @@ mkdir -p data
 rm -rf data_txt || true
 mkdir -p data_txt
 
-CALLER=15 # The CPU that wakes up other CPUs
-CALLEE_LOCAL=16 # the CPU that is called locally
-BUSY_LOCAL=17 # a CPU that bears some load during the measurement of CALLEE_LOCAL
+CALLER=1 # The CPU that wakes up other CPUs
+CALLEE_LOCAL=2 # the CPU that is called locally
+BUSY_LOCAL=3 # a CPU that bears some load during the measurement of CALLEE_LOCAL
 CALLEE_REMOTE=57 # a "remote" CPU, a.k.a. on a different socket
 BUSY_REMOTE=58
 NTIMES=100 # the number of measurements
