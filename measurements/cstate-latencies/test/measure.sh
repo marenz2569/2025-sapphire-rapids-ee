@@ -20,11 +20,11 @@ mkdir -p data
 rm -rf data_txt || true
 mkdir -p data_txt
 
-CALLER=14 # The CPU that wakes up other CPUs
-CALLEE_LOCAL=15 # the CPU that is called locally
-BUSY_LOCAL=16 # a CPU that bears some load during the measurement of CALLEE_LOCAL
-CALLEE_REMOTE=56 # a "remote" CPU, a.k.a. on a different socket
-BUSY_REMOTE=57
+CALLER=15 # The CPU that wakes up other CPUs
+CALLEE_LOCAL=16 # the CPU that is called locally
+BUSY_LOCAL=17 # a CPU that bears some load during the measurement of CALLEE_LOCAL
+CALLEE_REMOTE=57 # a "remote" CPU, a.k.a. on a different socket
+BUSY_REMOTE=58
 NTIMES=100 # the number of measurements
 FREQS=( 800000 900000 1000000 1100000 1200000 1300000 1400000 1500000 1600000 1700000 1800000 1900000 2000000 ) # the supported frequencies
 GOVERNORS=( "performance" "powersave" )
@@ -55,6 +55,7 @@ do
 		taskset -c $BUSY_LOCAL ./while_true &
 		for FREQ in ${FREQS[@]}
 		do
+			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 			sleep 0.1
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
@@ -69,6 +70,7 @@ do
 		taskset -c $BUSY_LOCAL ./while_true &
 		for FREQ in ${FREQS[@]}
 		do
+			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
 			sleep 0.1
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
@@ -84,6 +86,7 @@ do
 		taskset -c $BUSY_REMOTE ./while_true &
 		for FREQ in ${FREQS[@]}
 		do
+			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
 			sleep 0.1
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_active_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
