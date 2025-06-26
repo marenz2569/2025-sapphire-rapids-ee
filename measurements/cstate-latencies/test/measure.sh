@@ -34,12 +34,13 @@ CSTATES=`ls /sys/devices/system/cpu/cpu0/cpuidle/` # here, the C-states are stor
 
 echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
-#disable all
+#enable all
 for CSTATE in $CSTATES
 do
-	echo 1 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
+	echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 done
 
+CSTATES=`echo state3`
 
 for CSTATE in $CSTATES
 do
