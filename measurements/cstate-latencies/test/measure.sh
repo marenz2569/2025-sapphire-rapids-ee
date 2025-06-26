@@ -26,11 +26,11 @@ BUSY_LOCAL=3 # a CPU that bears some load during the measurement of CALLEE_LOCAL
 CALLEE_REMOTE=57 # a "remote" CPU, a.k.a. on a different socket
 BUSY_REMOTE=58
 # NTIMES=100 # the number of measurements
-NTIMES=1000 # the number of measurements
+NTIMES=200 # the number of measurements
 FREQS=( 800000 900000 1000000 1100000 1200000 1300000 1400000 1500000 1600000 1700000 1800000 1900000 2000000 ) # the supported frequencies
 # GOVERNORS=( "performance" "powersave" )
 GOVERNORS=( "performance" )
-WAIT_US=10000 # how long to wait between measurements (so that the callee can fall back to idle)
+WAIT_US=100000 # how long to wait between measurements (so that the callee can fall back to idle)
 
 CSTATES=`ls /sys/devices/system/cpu/cpu0/cpuidle/` # here, the C-states are stored
 
