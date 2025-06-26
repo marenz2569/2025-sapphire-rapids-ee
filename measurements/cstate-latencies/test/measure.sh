@@ -26,7 +26,7 @@ BUSY_LOCAL=3 # a CPU that bears some load during the measurement of CALLEE_LOCAL
 CALLEE_REMOTE=57 # a "remote" CPU, a.k.a. on a different socket
 BUSY_REMOTE=58
 # NTIMES=100 # the number of measurements
-NTIMES=200 # the number of measurements
+NTIMES=1000 # the number of measurements
 FREQS=( 800000 900000 1000000 1100000 1200000 1300000 1400000 1500000 1600000 1700000 1800000 1900000 2000000 ) # the supported frequencies
 # GOVERNORS=( "performance" "powersave" )
 GOVERNORS=( "performance" )
@@ -58,7 +58,7 @@ do
 		do
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
-			sleep 0.1
+			sleep 1
 
 			# local
 			# Prevent the current socket to go into a package c-state
@@ -70,20 +70,20 @@ do
 			killall while_true
 			wait
 
-			# remote idle
-			taskset -c $BUSY_LOCAL ./while_true &
-			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_idle_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
-			killall perf
-			killall while_true
-			wait
-
 			# remote active
 			taskset -c $BUSY_LOCAL ./while_true &
 			taskset -c $BUSY_REMOTE ./while_true &
 			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_active_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_active_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
+			killall perf
+			killall while_true
+			wait
+
+			# remote idle
+			taskset -c $BUSY_LOCAL ./while_true &
+			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_idle_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
 			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
 			killall while_true
