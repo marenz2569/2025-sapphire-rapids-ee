@@ -13,26 +13,39 @@ if [ ! -d "$DIR_NAME/dependencies" ]; then
 
     git clone https://github.com/marenz2569/intel-uncore-freq-dumper
 
+    git clone https://github.com/tud-zih-energy/FIRESTARTER.git
+
+
     mkdir intel-uncore-freq-dumper-build
     cd intel-uncore-freq-dumper-build
     cmake ../intel-uncore-freq-dumper -G Ninja
     ninja
     cd ..
+
+    mkdir FIRESTARTER-build
+    cd FIRESTARTER-build
+    cmake ../FIRESTARTER -G Ninja
+    ninja
 else
     echo "Skipping dependency download."
 fi
 
+IUFD=$DIR_NAME/dependecies/intel-uncore-freq-dumper-build/src/intel-uncore-freq-dumper
+FIRESTARTER=$DIR_NAME/dependecies/FIRESTARTER-build/src/FIRESTARTER
 
 cd $DIR_NAME
 
 OUTFOLDER="results/$(hostname)-$(date +"%Y-%m-%d")"
 
-IUFD=$DIR_NAME/dependecies/intel-uncore-freq-dumper-build/src/intel-uncore-freq-dumper
 
 BINDLIST=2
 
+mkdir -p $OUTFOLDER/{lic0,lic1,lic2,lic3}
+
 for (( i = 0; i < 1000 ; i++ ))
 do
+    echo "Running iteration $i/1000"
+    
     taskset -c 1 sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic0/uncore-freq-$i.csv &
     $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/lic0/firestarter-$i.csv
     wait
