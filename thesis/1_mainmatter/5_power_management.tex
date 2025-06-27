@@ -247,11 +247,14 @@ Outliers make this plot noiser than the other ones in this section.
 
 \section{Idle State Latencies}
 
-\begin{figure}[]
+\begin{figure}[!ht]
     \centering
-    \includegraphics[width=\columnwidth]{fig/C_state_latencies.pdf}
-    \caption{\label{fig:c6_latencies}C-state latencies measured using methodology described by Schöne et al.}
+    \includegraphics[height=\columnwidth,angle=90]{fig/C_state_latencies.pdf}
+    \caption{\label{fig:c6_latencies}C-state latency of C6 measured using methodology developed by Schöne et al. 
+The dotted line displays the hardcoded wakeup latency in the \protect\textbf{intel\_idle} kernel module.
+\protect\footnotemark}
 \end{figure}
+\footnotetext{data structure \protect\textbf{spr\_cstates} in \protect\url{https://github.com/torvalds/linux/blob/72840238e2bcb8fb24cb35d8d1d5a822c04e62a4/drivers/idle/intel\_idle.c}}
 
 \begin{itemize}
     \item Anomaly with perfomance governor at \SI{2.0}{\GHz}, C6 not used?
