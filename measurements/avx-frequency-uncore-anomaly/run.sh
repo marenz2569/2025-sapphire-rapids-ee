@@ -30,8 +30,9 @@ else
     echo "Skipping dependency download."
 fi
 
-IUFD=$DIR_NAME/dependecies/intel-uncore-freq-dumper-build/src/intel-uncore-freq-dumper
-FIRESTARTER=$DIR_NAME/dependecies/FIRESTARTER-build/src/FIRESTARTER
+IUFD=$DIR_NAME/dependencies/intel-uncore-freq-dumper-build/src/intel-uncore-freq-dumper
+FIRESTARTER=$DIR_NAME/dependencies/FIRESTARTER-build/src/FIRESTARTER
+ISST=$HOME/linux/tools/power/x86/intel-speed-select/intel-speed-select
 ISST=$HOME/linux/tools/power/x86/intel-speed-select/intel-speed-select
 
 cd $DIR_NAME
@@ -41,6 +42,7 @@ OUTFOLDER="results/$(hostname)-$(date +"%Y-%m-%d")"
 # TODO: remove this once the branch is merged
 source ~/lab_management_scripts/.venv/bin/activate
 elab frequency 3800
+echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 elab ht disable
 
 # Configure ISST to use 
