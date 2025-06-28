@@ -32,13 +32,28 @@ fi
 
 IUFD=$DIR_NAME/dependecies/intel-uncore-freq-dumper-build/src/intel-uncore-freq-dumper
 FIRESTARTER=$DIR_NAME/dependecies/FIRESTARTER-build/src/FIRESTARTER
+ISST=$HOME/linux/tools/power/x86/intel-speed-select/intel-speed-select
 
 cd $DIR_NAME
 
 OUTFOLDER="results/$(hostname)-$(date +"%Y-%m-%d")"
 
+# TODO: remove this once the branch is merged
+source ~/lab_management_scripts/.venv/bin/activate
+elab frequency 3800
+elab ht disable
 
-BINDLIST=2
+# Configure ISST to use 
+sudo $ISST base-freq disable
+sudo $ISST turbo-freq disable
+sudo $ISST core-power disable
+sudo $ISST -c 0-55 core-power assoc --clos 1
+sudo $ISST -c 0 core-power assoc --clos 0
+sudo $ISST core-power config -c 1 -m 1600
+sudo $ISST core-power enable
+
+BINDLIST=0-7
+UNCORE_READER_CORE=8
 
 mkdir -p $OUTFOLDER/{lic0,lic1,lic2,lic3}
 
@@ -46,19 +61,19 @@ for (( i = 0; i < 1000 ; i++ ))
 do
     echo "Running iteration $i/1000"
     
-    taskset -c 1 sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic0/uncore-freq-$i.csv &
+    taskset -c $UNCORE_READER_CORE sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic0/uncore-freq-$i.csv &
     $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100  | tail -n 9 > $OUTFOLDER/lic0/firestarter-$i.csv
     wait
 
-    taskset -c 1 sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic1/uncore-freq-$i.csv &
+    taskset -c $UNCORE_READER_CORE sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic1/uncore-freq-$i.csv &
     $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $OUTFOLDER/lic1/firestarter-$i.csv
     wait
 
-    taskset -c 1 sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic2/uncore-freq-$i.csv &
+    taskset -c $UNCORE_READER_CORE sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic2/uncore-freq-$i.csv &
     $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 --run-instruction-groups=REG:100 | tail -n 9 > $OUTFOLDER/lic2/firestarter-$i.csv
     wait
 
-    taskset -c 1 sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic3/uncore-freq-$i.csv &
+    taskset -c $UNCORE_READER_CORE sudo $IUFD --measurement-interval 1 --measurement-duration 10000 --start-delta 5000 --stop-delta 2000 --outfile $OUTFOLDER/lic3/uncore-freq-$i.csv &
     $FIRESTARTER -b $BINDLIST --measurement --start-delta=5000 --start-delta=2000 -t 10 --run-instruction-groups=L3_L:100 | tail -n 9 > $OUTFOLDER/lic3/$i.csv
     wait
 done
