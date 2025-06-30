@@ -42,7 +42,7 @@ OUTFOLDER="results/$(hostname)-$(date +"%Y-%m-%d")"
 # TODO: remove this once the branch is merged
 # elab frequency 3800
 # echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-# elab ht disable
+elab ht disable
 
 # Configure ISST to use 
 sudo $ISST base-freq disable
