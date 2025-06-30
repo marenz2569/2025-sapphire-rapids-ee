@@ -1,0 +1,3 @@
+name,num_timepoints,duration_ms,average,stddev
+package_00_die_00,788,7984,1.4e+06,0
+package_01_die_00,788,7984,1.40787e+06,26923.9
