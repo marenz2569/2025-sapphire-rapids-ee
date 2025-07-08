@@ -24,10 +24,9 @@ This change requires us to validate that core frequencies are independent of eac
 We adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
 For the measurement we disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
-The frequency of this core has been measured while another core running at the highest frequency (\SI{3800}{\MHz}), either idling or also running a while true loop.
+The frequency of this core has been measured while another core is running with turbo frequencies, either idling or also running a while true loop.
 The measurement has been repeated for all combinations of cores on a socket.
-We could not detect a change in frequency, therefore Sapphire Rapids must implements some scheme of frequency duty cycling for cores running with mixed frequencies on the same voltage regulator or let a core with a lower frequency core run with a suboptimal energy efficiency by using a higher than required voltage.
-\todoms{Both options are not optimal, but the second should be worse in terms of EE.}
+We could not detect a change in frequency, this is consitent with the previous Intel Server processor Skylake-SP.
 
 \section{AVX Frequencies}
 \label{sec:avx-frequencies}
@@ -82,7 +81,7 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 In~\cite{Downs_2020_AVX_Downclocking}, Downs measured the influence of AVX throttling on Ice Lake by infering the license level based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark.
 However they were only able to trigger two out of the three license level, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy'' classes.
 Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench'' with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
-They we also only able to show two out of the four license levels.
+They were also only able to show two out of the four license levels.
 
 \begin{figure}[]
     \centering
@@ -144,6 +143,9 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
 \section{AVX Frequency Anomalies}
+
+\subsection{Throttling at Low Frequencies}
+
 During testing, I populatated workload on different sets of CPU cores.
 I discovered that firstly, the reported AVX limits as described in~\figref{validated-p0n-frequencies} are worst-case limits and achieving higher turbo frequencies is possible and secondly throttling of the core frequency at \SI{800}{\MHz}.
 To measure these anomalies, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
@@ -174,6 +176,37 @@ More work is required to understand these in detail.
 %     \includegraphics[width=\columnwidth]{fig/core-power-regulators-package-power.pdf}
 %     \caption{\label{fig:avx-anomaly-package-power}}
 % \end{figure}
+
+
+\subsection{AVX Frequency Model}
+
+\subsection{Uncore Frequency Selection}
+
+\begin{figure}[t!]
+    \subfloat[Cumulative distribution of drawn package power.]{%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-package-power-ecdf.pdf}%
+        \label{fig:avx-frequency-uncore-anomaly-package-power-ecdf}%
+    }\hfill
+    \subfloat[Cumulative distribution of uncore frequency.]{%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-uncore-freq-ecdf.pdf}%
+        \label{fig:avx-frequency-uncore-anomaly-uncore-freq-ecdf}%
+    }\\
+    \subfloat[Cumulative distribution of the performance deviation relative to the mean perfomance.
+    The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the nunber of executed instruction per cycle.]{%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-performance-ecdf.pdf}%
+        \label{fig:c}%
+    }\hfill
+    \subfloat[Cumulative distribution of the deviation from the maximal energy efficiency.
+    The energy efficiency is modeled as the performance divided by the packager power.]{%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-energy-efficiency-ecdf.pdf}%
+        \label{fig:d}%
+    }
+    \caption{Metrics of the uncore frequency anomaly measurement.
+    We show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different license levels, as Cumulative distributions.
+    \figref{avx-frequency-uncore-anomaly-package-power-ecdf} shows the increase in package power for \SI{35}{\percent} of the samples.
+    This increase is caused by the increase in uncore frequency shown in~\figref{avx-frequency-uncore-anomaly-uncore-freq-ecdf}.}
+    \label{fig:avx-frequency-uncore-anomaly}
+\end{figure}
 
 
 \section{Intel speed select}
