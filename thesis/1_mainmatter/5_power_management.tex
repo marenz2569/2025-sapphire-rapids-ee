@@ -143,13 +143,18 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
 \section{AVX Frequency Anomalies}
+\label{sec:avx-anomalies}
+
+To further test the effect of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
+The measurement is repeated for different settings of the core, uncore frequency and two different workload population orders.
+
+I discovered that firstly, throttling of the core frequency at \SI{800}{\MHz} with some AVX licenses, secondly that the reported AVX limits as described in~\figref{validated-p0n-frequencies} are worst-case limits and achieving higher turbo frequencies is possible.
+The first effect is described in \secref{avx-anomalies-low-freq}, the second in \secref{avx-anomalies-model}.
+I further found an anomaly in the uncore frequency selection which is described in \secref{avx-anomalies-uncore-freqency}.
 
 \subsection{Throttling at Low Frequencies}
+\label{sec:avx-anomalies-low-freq}
 
-During testing, I populatated workload on different sets of CPU cores.
-I discovered that firstly, the reported AVX limits as described in~\figref{validated-p0n-frequencies} are worst-case limits and achieving higher turbo frequencies is possible and secondly throttling of the core frequency at \SI{800}{\MHz}.
-To measure these anomalies, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
-I repeat the measurement for different settings of the core, uncore frequency and different population order.
 \todoms{describe the population order}
 %\todoms{Remove package power plot.}
 \todoms{Remove automatic uncore freqency.}
@@ -159,11 +164,6 @@ The average core frequency is displayed in~\figref{avx-anomaly-core-frequency}.
 % and the package power in~\figref{avx-anomaly-package-power}.
 For core frequencies which are below the nominal frequency of \SI{2}{\GHz}, I expect that the frequency is met and not throttled.
 This is also the case, expect for the AVX512 and AMX frequency levels at \SI{800}{\MHz} core frequency, which are throttled up to around \SI{600}{\MHz}.
-For higher than nominal frequencies the effect of RAPL is visible.
-With increasing core count some workloads are thottled below the level shown in~\figref{p0n-frequencies}.
-Strangly using a different pattern of populating the workloads on CPUs, we can archieve higher turbo frequencies outside of the limits shown in~\figref{p0n-frequencies}.
-This shows that the opportunistic AVX frequencies and RAPL are two worst case models which are used for setting the core frequency, however other (unknown) models in the CPUs power management are present that create this behaviour.
-More work is required to understand these in detail.
 
 \begin{figure}[]
     \centering
@@ -171,16 +171,18 @@ More work is required to understand these in detail.
     \caption{\label{fig:avx-anomaly-core-frequency}Average core frequency across the cores running the workload.}
 \end{figure}
 
-% \begin{figure}[]
-%     \centering
-%     \includegraphics[width=\columnwidth]{fig/core-power-regulators-package-power.pdf}
-%     \caption{\label{fig:avx-anomaly-package-power}}
-% \end{figure}
-
 
 \subsection{AVX Frequency Model}
+\label{sec:avx-anomalies-model}
+
+For higher than nominal frequencies the effect of RAPL is visible.
+With increasing core count some workloads are thottled below the level shown in~\figref{p0n-frequencies}.
+Strangly using a different pattern of populating the workloads on CPUs, we can archieve higher turbo frequencies outside of the limits shown in~\figref{p0n-frequencies}.
+This shows that the opportunistic AVX frequencies and RAPL are two worst case models which are used for setting the core frequency, however other models in the CPUs power management are present that create this behaviour.
+Further work is required to understand these in detail.
 
 \subsection{Uncore Frequency Selection}
+\label{sec:avx-anomalies-uncore-freqency}
 
 \begin{figure}[t!]
     \subfloat[Cumulative distribution of drawn package power.]{%
