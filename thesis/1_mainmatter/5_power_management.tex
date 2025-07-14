@@ -19,14 +19,14 @@
 
 \section{Shared Frequency Domains}
 % measurements/shared-frequency-domains 
-Starting with Sapphire Rapids, Intel changed their design on server processors to have shared FIVR for a set of up to four cores~\cite{Intel_2022_ISSCC}.
-This change requires us to validate that core frequencies are independent of each other.
-We adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
+Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which have the same core micro-architecture~\cite{Schoene_2024_Alder_Lake}.
+To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
-For the measurement we disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
+For the measurement I disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
 The frequency of this core has been measured while another core is running with turbo frequencies, either idling or also running a while true loop.
-The measurement has been repeated for all combinations of cores on a socket.
-We could not detect a change in frequency, this is consitent with the previous Intel Server processor Skylake-SP.
+It was repeated for all combinations of cores on a socket.
+I could not detect any shared core frequency domains, this is consitent with the previous Intel generation Skylake-SP.
+\todoms{Check if I can cite the Skylake-SP here}
 
 \section{AVX Frequencies}
 \label{sec:avx-frequencies}
@@ -91,12 +91,10 @@ They were also only able to show two out of the four license levels.
     In the first bucket the SSE and AVX2 license bands share the same frequency.}
 \end{figure}
 
-Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
-Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
+%Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
+%Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
 \todoms{Show the license levels on SPR barnard (same processor as laukemann)}
-%\todoms{explain cdyn bench measurement}
-% We propose a method to measure if small kernels trigger the power management of a core to stay in one license level.
 To associate which events trigger the processor cores to be part of a license level, we design a microbenchmark that executes small kernels on a fixed number of threads and measure the resulting core frequencies.
 This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
 However, we can only read the license level based on the maximal turbo frequency.
@@ -106,10 +104,6 @@ We will dissect ``Intel Speed Select'' in~\secref{isst}.
 
 To validate the claim that the frequency limiting is independent of the ``Intel Speed Select Core-Power'' mechanisms, we prototype this measurement with four different FIRESTARTER kernels.
 The result is displayed in~\figref{validated-p0n-frequencies}. We can clearly validate the findings of~\figref{p0n-frequencies}.
-However, the power consumption of the AMX kernel has inconsistent jumps that change with multiple measurements.
-%\todoms{Display the different FIRESTARTER kernels and show that not only the user instruction set, but also the number of memory accesses are influencing the resulting license level.}
-\todoms{Validate this claim: We have validated that a logic is triggering, different C state levels of unused threads or a change in uncore frequency?}
-
 
 \begin{figure}[]
     \centering
@@ -120,11 +114,6 @@ However, the power consumption of the AMX kernel has inconsistent jumps that cha
 \end{figure}
 
 \todoms{Rerun the measurements on banard.}
-
-% \todoms{One plot with four Firestarter kernels, RAPL package vs max RAPL package on pkg0 with ISST, and frequency of thread zero to show that these two mechanisms are independent of each other. On all number of cores.}
-
-\todoms{More details for cdyn measurement}
-
 
 \begin{itemize}
     % \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
