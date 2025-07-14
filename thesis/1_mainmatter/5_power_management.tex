@@ -19,7 +19,7 @@
 
 \section{Shared Frequency Domains}
 % measurements/shared-frequency-domains 
-Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which have the same core micro-architecture~\cite{Schoene_2024_Alder_Lake}.
+Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which has the same core micro-architecture as Sapphire Rappids~\cite{Schoene_2024_Alder_Lake}.
 To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
 For the measurement I disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
@@ -114,20 +114,6 @@ The result is displayed in~\figref{validated-p0n-frequencies}. We can clearly va
 \end{figure}
 
 \todoms{Rerun the measurements on banard.}
-
-\begin{itemize}
-    % \item one kernel on all cores of a socket -> we can read the frequency of the cores -> license.
-    % \item problem: other throttling mechanisms (rapl).
-    % intel speed select CLOS groups, one priority core, all other no priority.
-    % we can read the frequency on the priority core.
-    \item (again) question: what uses power on the processor? (execution and memory movement)
-    why did the other two author fail at showing all levels?
-    % \item Plot shows that memory accesses are important for changing the license level.
-    \item make the case for memory size in loop and number of different instructions
-    \item explain the kernels and their parameter.
-    \item derive the rules for the classes
-\end{itemize}
-
 \todoms{How can we read the cdynn classes from the PMU (per core)?}
 \todoms{How are instructions and memory accesses mapped to the cdynn classes?}
 
@@ -145,9 +131,6 @@ I further found an anomaly in the uncore frequency selection which is described 
 \label{sec:avx-anomalies-low-freq}
 
 \todoms{describe the population order}
-%\todoms{Remove package power plot.}
-\todoms{Remove automatic uncore freqency.}
-\todoms{fix colors selection for the license levels}
 \todoms{Add uncore frequency as a new plot.}
 The average core frequency is displayed in~\figref{avx-anomaly-core-frequency}.
 % and the package power in~\figref{avx-anomaly-package-power}.
