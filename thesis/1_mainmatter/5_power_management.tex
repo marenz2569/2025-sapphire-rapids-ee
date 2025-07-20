@@ -26,7 +26,7 @@ For the measurement I disabled C-states, changed the cores to the lowest frequen
 The frequency of this core has been measured while another core is running with turbo frequencies, either idling or also running a while true loop.
 It was repeated for all combinations of cores on a socket.
 I could not detect any shared core frequency domains, this is consitent with the previous Intel generation Skylake-SP.
-\todoms{Check if I can cite the Skylake-SP here}
+\todoms{Check if I can cite the Skylake-SP here. There should be a reference in the software optimization guide.}
 
 \section{AVX Frequencies}
 \label{sec:avx-frequencies}
@@ -34,7 +34,7 @@ I could not detect any shared core frequency domains, this is consitent with the
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
 This allows AVX2 instructions to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
 The concept has been extended with a new class for AVX512 instructions with the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
-With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' classes by their power consumption~\cite{papazian_new_2020}.
+With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
 With the addition of the AMX instruction set Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
 The used instruction set together with the power consumption are mapped to four license levels which determine the opportunistic AVX turbo frequencies based on the number of active cores.
 The mapping from instruction set and power usage are displayed in~\tabref{avx-classes}~\cite{ServeTheHome_Emerald_Rapids_2023}.
@@ -67,16 +67,25 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
         \hline
         \diagbox[width=0.24\textwidth]{$C_{dyn}$\\Class}{Instruction\\Class} & SSE & AVX2 & AVX512 & AMX \\
         \hline
-        0 (SSE Frequency) & 128 Light & \cellcolor{red!15}{\textbf{256 Light}} & 512 Ultra-Light & \\
+        0 (SSE Frequency) & 128 Light & \cellcolor{red!15}{\textbf{256 Light}\protect\footnotemark} & 512 Ultra-Light & \\
         \hline
-        1 (AVX2 Frequency) & 128 Heavy & \cellcolor{red!15}{\textbf{256 Moderate}} & 512 Light & AMX Light \\
+        1 (AVX2 Frequency) & 128 Heavy & \cellcolor{red!15}{\textbf{256 Moderate}\protect\footnotemark} & 512 Light & AMX Light \\
         \hline
-        2 (AVX512 Frequency) & & 256 Heavy & \cellcolor{red!15}{\textbf{512 Moderate}} & AMX Moderate \\
+        2 (AVX512 Frequency) & & 256 Heavy & \cellcolor{red!15}{\textbf{512 Moderate}\protect\footnotemark} & AMX Moderate \\
         \hline
-        3 (AMX Frequency) & & & \cellcolor{red!15}{\textbf{512 Heavy}} & AMX Heavy \\
+        3 (AMX Frequency) & & & \cellcolor{red!15}{\textbf{512 Heavy}\protect\footnotemark} & AMX Heavy \\
         \hline
 	\end{tabular}
 \end{table}
+
+\addtocounter{footnote}{-3}
+\footnotetext[\thefootnote]{\texttt{FIRESTARTER -i 6 -\phantom{}-run-instruction-groups=REG:100}}
+\addtocounter{footnote}{1}
+\footnotetext[\thefootnote]{\texttt{FIRESTARTER -i 6 -\phantom{}-run-instruction-groups=REG:100,L1\_L:100}}
+\addtocounter{footnote}{1}
+\footnotetext[\thefootnote]{\texttt{FIRESTARTER -\phantom{}-run-instruction-groups=REG:100}}
+\addtocounter{footnote}{1}
+\footnotetext[\thefootnote]{\texttt{FIRESTARTER -\phantom{}-run-instruction-groups=L3\_L:100}}
 
 In~\cite{Downs_2020_AVX_Downclocking}, Downs measured the influence of AVX throttling on Ice Lake by infering the license level based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark.
 However they were only able to trigger two out of the three license level, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy'' classes.
@@ -95,22 +104,23 @@ They were also only able to show two out of the four license levels.
 %Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
 \todoms{Show the license levels on SPR barnard (same processor as laukemann)}
-To associate which events trigger the processor cores to be part of a license level, we design a microbenchmark that executes small kernels on a fixed number of threads and measure the resulting core frequencies.
+To associate which events trigger the processor cores to be part of a license level, I designed a microbenchmark that executes small compute kernels on a fixed number of threads and measure the resulting core frequencies.
 This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
 However, we can only read the license level based on the maximal turbo frequency.
 To ensure that we do not trigger other power limiting mechanisms, e.g. RAPL, we utilize ``Intel Speed Select Core-Power'' to set one thread to priority group zero and all other to priority group 1 with a fixed low maximum frequency.
 The measurement of frequency is done on the thread in group zero, which should run at the maximum turbo frequency.
-We will dissect ``Intel Speed Select'' in~\secref{isst}.
+``Intel Speed Select'' will be described in more detail in~\secref{isst}.
 
 To validate the claim that the frequency limiting is independent of the ``Intel Speed Select Core-Power'' mechanisms, we prototype this measurement with four different FIRESTARTER kernels.
-The result is displayed in~\figref{validated-p0n-frequencies}. We can clearly validate the findings of~\figref{p0n-frequencies}.
+The result is displayed in~\figref{validated-p0n-frequencies}.
+We can clearly validate the findings of~\figref{p0n-frequencies}.
 
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/validate-avx-frequency-license-bands.pdf}
     \caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
     The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
-    In the first bucket the SSE and AVX2 license bands share the same frequency. We make shure that the package power does not exceed the maximum of \SI{350}{\watt} of our test platfrom.}
+    In the first bucket the SSE and AVX2 license bands share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
 \end{figure}
 
 \todoms{Rerun the measurements on banard.}
