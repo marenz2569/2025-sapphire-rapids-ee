@@ -158,17 +158,31 @@ It is already present even with the lowest uncore frequency of \SI{800}{\MHz} an
     \caption{\label{fig:avx-anomalies-performance}Average core frequency across the cores running the workload with no limit on the core frequency resulting in a maximal turbo frequency of \SI{3800}{\MHz}.}
 \end{figure}
 
+
 \subsection{AVX Frequency Model}
 \label{sec:avx-anomalies-model}
 
 For higher than nominal frequencies the effect of RAPL is visible.
 With increasing core count some workloads are thottled below the level shown in~\figref{p0n-frequencies}.
-Strangly using a different pattern of populating the workloads on CPUs, we can archieve higher turbo frequencies outside of the limits shown in~\figref{p0n-frequencies}.
+This is displayed in~\figref{avx-anomalies-performance}.
+Higher uncore frequencies result in stronger throttling of core frequencies.
+Strangly, using a different pattern of populating the workloads on CPUs (displayed with fully colored dots), we can achieve higher turbo frequencies outside of the limits shown in~\figref{p0n-frequencies}.
 This shows that the opportunistic AVX frequencies and RAPL are two worst case models which are used for setting the core frequency, however other models in the CPUs power management are present that create this behaviour.
 Further work is required to understand these in detail.
 
 \subsection{Uncore Frequency Selection}
 \label{sec:avx-anomalies-uncore-freqency}
+
+During testing I found that the selection of the uncore frequency is not deterministic for the AMX frequency level.
+I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on \SI{8}{} cores with hyperthreading disabled.
+The expect outcome would be the same performance and power consumption across all runs.
+I saw a two different levels of power consumption with the AMX frequency level, displayed in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
+This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{65}{\percent} and \SI{2.5}{\GHz} for \SI{35}{\percent} of the samples.
+We do not see a major deviation of performance across the samples, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
+This results in a suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples which caused a selection of the higher uncore frequency.
+This is shown in~\figref{avx-frequency-uncore-anomaly-max-ee}.
+I also detected a reduction in energy efficiency for some samples of the SSE frequency license, however I could not associate this to a specific change with the metrics I measured.
+
 
 \begin{figure}[t!]
     \subfloat[Cumulative distribution of drawn package power.]{%
@@ -182,15 +196,15 @@ Further work is required to understand these in detail.
     \subfloat[Cumulative distribution of the performance deviation relative to the mean perfomance.
     The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the nunber of executed instruction per cycle.]{%
         \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-performance-ecdf.pdf}%
-        \label{fig:c}%
+        \label{fig:avx-frequency-uncore-anomaly-mean-perf}%
     }\hfill
     \subfloat[Cumulative distribution of the deviation from the maximal energy efficiency.
     The energy efficiency is modeled as the performance divided by the packager power.]{%
         \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-energy-efficiency-ecdf.pdf}%
-        \label{fig:d}%
+        \label{fig:avx-frequency-uncore-anomaly-max-ee}%
     }
     \caption{Metrics of the uncore frequency anomaly measurement.
-    We show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different license levels, as Cumulative distributions.
+    We show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different license levels, as cumulative distributions.
     \figref{avx-frequency-uncore-anomaly-package-power-ecdf} shows the increase in package power for \SI{35}{\percent} of the samples.
     This increase is caused by the increase in uncore frequency shown in~\figref{avx-frequency-uncore-anomaly-uncore-freq-ecdf}.}
     \label{fig:avx-frequency-uncore-anomaly}
