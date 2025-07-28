@@ -3,6 +3,9 @@
 # TODO: add build for this module
 module load firestarter-metric-metricq
 
+elab ht disable
+elab frequency performance
+
 echo "it is $(date)"
 
 git clone -b marenz.hati-config git@github.com:marenz2569/roco2.git || true
@@ -20,7 +23,7 @@ make -j
 
 cd ../../
 
-export GOMP_CPU_AFFINITY=0-223
+export GOMP_CPU_AFFINITY=0-111
 export METRICQ_METRICS=elab.hati.pdu.power
 
 echo "environment variables:"
