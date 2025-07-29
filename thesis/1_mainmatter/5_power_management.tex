@@ -18,7 +18,7 @@
 \end{itemize}
 
 \section{Shared Frequency Domains}
-% measurements/shared-frequency-domains 
+% measurements/shared-frequency-domains
 Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which has the same core micro-architecture as Sapphire Rappids~\cite{Schoene_2024_Alder_Lake}.
 To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
@@ -53,7 +53,7 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 %         AVX512 & 512 Ultra-Light & 512 Light & 512 Moderate & 512 Heavy \\
 %         AMX & & AMX Light & AMX Moderate & AMX Heavy \\
 %         \hline \hline
-%         Turbo Frequency & SSE & AVX2 & AVX512 & AMX \\ 
+%         Turbo Frequency & SSE & AVX2 & AVX512 & AMX \\
 %         \hline
 % 	\end{tabular}
 % \end{table}
@@ -240,14 +240,20 @@ Second, the time until the execution time of the compute loop matches the expect
 Then the measurements waits a random time between \SI{0}{\us} and \SI{5000}{\us} before being repeated for \SI{1000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
-In~\figref{pstate_latencies_time_dependance} we can observe this behaviour for frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}, whilst the transition latency from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} is unaffected by wait times.
 We split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher latency of \SI{600}{\us} instead of \SI{500}{\us}.
-Above this interval we see a different behaviour when switching to a higher frequency of \SI{1.9}{\GHz} and above.
-Some source/target frequency pairs emit a higher transition latency, especially when switching to \SI{1.9}{\GHz} and \SI{2.0}{\GHz} from a lower frequency.
+
 The expected worst case transition latency falls between \SI{1100}{\us} and \SI{2000}{\us}.
 This can be read from the 95th percentile plot in~\figref{pstate_latencies_95percentQuantile}.
 Outliers make this plot noiser than the other ones in this section.
+Above this interval we see a different behaviour when switching to a higher frequency of \SI{1.9}{\GHz} and above.
+Latencies are generally higher in this area, with some samples showing a even higher transition latency.
+The higher latency is time dependent, which is shown in~\figref{pstate_latencies_time_dependance}.
+We show an example of this higher latency which is also time dependent in~\figref{pstate_latencies_time_dependance}.
+For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz}, \SI{2.0}{\GHz}, ... and \SI{2.4}{\GHz}, whilst the transition latency from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} is not influenced by wait or transition times.
+Some source/target frequency pairs emit a higher transition latency, especially when switching to \SI{1.9}{\GHz} and \SI{2.0}{\GHz} from a lower frequency.
+This can be explain by~\figref{pstate_latencies_time_dependance}, here frequency switches to a higher frequencies have gradually fewer samples that are above a transition latency of around \SI{875}{\us}.
+
 
 \begin{figure}[]
     \begin{subfigure}[t]{0.45\linewidth}
@@ -285,7 +291,7 @@ Outliers make this plot noiser than the other ones in this section.
 \begin{figure}[!ht]
     \centering
     \includegraphics[height=\columnwidth,angle=90]{fig/C_state_latencies.pdf}
-    \caption{\label{fig:c6_latencies}C-state latency of C6 measured using methodology developed by Schöne et al. 
+    \caption{\label{fig:c6_latencies}C-state latency of C6 measured using methodology developed by Schöne et al.
 The dotted line displays the hardcoded wakeup latency in the \protect\textbf{intel\_idle} kernel module.
 \protect\footnotemark}
 \end{figure}
