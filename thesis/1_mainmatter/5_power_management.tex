@@ -237,22 +237,29 @@ ftalat measures the execution time of a compute loop with a fixed processor freq
 The measurement methodology is as follows:
 First, a frequency change is requested.
 Second, the time until the execution time of the compute loop matches the expected for the requested frequency is measured.
-Then the measurements waits a random time between \SI{0}{\us} and \SI{5000}{\us} before being repeated for \SI{1000}{} times.
+The frequency is switched back and a random time between \SI{0}{\us} and \SI{5000}{\us} is waited before being repeated for \SI{1000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
 We split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
+\todoms{Check}
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher latency of \SI{600}{\us} instead of \SI{500}{\us}.
-
-The expected worst case transition latency falls between \SI{1100}{\us} and \SI{2000}{\us}.
-This can be read from the 95th percentile plot in~\figref{pstate_latencies_95percentQuantile}.
-Outliers make this plot noiser than the other ones in this section.
 Above this interval we see a different behaviour when switching to a higher frequency of \SI{1.9}{\GHz} and above.
 Latencies are generally higher in this area, with some samples showing a even higher transition latency.
-The higher latency is time dependent, which is shown in~\figref{pstate_latencies_time_dependance}.
-We show an example of this higher latency which is also time dependent in~\figref{pstate_latencies_time_dependance}.
-For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz}, \SI{2.0}{\GHz}, ... and \SI{2.4}{\GHz}, whilst the transition latency from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} is not influenced by wait or transition times.
-Some source/target frequency pairs emit a higher transition latency, especially when switching to \SI{1.9}{\GHz} and \SI{2.0}{\GHz} from a lower frequency.
-This can be explain by~\figref{pstate_latencies_time_dependance}, here frequency switches to a higher frequencies have gradually fewer samples that are above a transition latency of around \SI{875}{\us}.
+In \figref{pstate_latencies_95percentQuantile} I display the 95th percentile plot for the transition latency.
+This was chossen behause of many outliers probably caused by measurement noise and allow us to estimate the worst case transtion latency to between \SI{1100}{\us} and \SI{2000}{\us}.
+
+The higher latencies depends on the time between the last frequency change, as shown in~\figref{pstate_latencies_time_dependance}.
+The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display any depdency between the latency and wait time between the transtion as expected from previous processor generations.
+This is consitent with testing performed on a Skylake-SP system.
+For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above, we see two regions.
+The first in the range of \SI{1000}{\us} and around \SI{1500}{\us}, emits the same behavour as explain above.
+At around \SI{2000}{\us} we see a repeating pattern with a period of \SI{1600}{\us}, which intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
+Interestingly the number of samples which are above around a transition latency of around \SI{900}{\us} decrease with an increase in frequency change.
+Similar results have been reported by Schöne et al. for transition latencies of Alder Lake processors~\cite{Schoene_2024_Alder_Lake}.
+Furthermore do most samples not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
+I conclude that for the region with the higher transtion latency the mechanisms as described by Schöne et al. is not applicable~\cite{skylake_paper}.
+The power management seems to have an additional mechanisms that requies a frequency change to be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
+Further work is required for explaing what causes the high latencies for some frequency changes.
 
 
 \begin{figure}[]
@@ -273,7 +280,7 @@ This can be explain by~\figref{pstate_latencies_time_dependance}, here frequency
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/ftalat_scatter_wait_transition_latency_hati.pdf}
-    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between frequency transitions on the transition latency. Displayed for frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}.}
+    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time last frequency change detection events for the transition from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}. For better lines for bins of size \SI{1600}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively.}
 \end{figure}
 
 \begin{figure}[]
