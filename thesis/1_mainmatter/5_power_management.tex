@@ -229,6 +229,7 @@ I also detected a reduction in energy efficiency for some samples of the SSE fre
 
 
 \section{P-State Latencies}
+\label{sec:pstate_latencies}
 
 \todoms{Describe DVFS, latencies occur between switches, cite ftalat paper, schoene skylake and alderlake for comparison.}
 
@@ -237,7 +238,7 @@ ftalat measures the execution time of a compute loop with a fixed processor freq
 The measurement methodology is as follows:
 First, a frequency change is requested.
 Second, the time until the execution time of the compute loop matches the expected for the requested frequency is measured.
-The frequency is switched back and a random time between \SI{0}{\us} and \SI{5000}{\us} is waited before being repeated for \SI{1000}{} times.
+The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for \SI{4000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
 We split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
@@ -253,7 +254,7 @@ The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display 
 This is consitent with testing performed on a Skylake-SP system.
 For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above, we see two regions.
 The first in the range of \SI{1000}{\us} and around \SI{1500}{\us}, emits the same behavour as explain above.
-At around \SI{2000}{\us} we see a repeating pattern with a period of \SI{1600}{\us}, which intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
+At around \SI{2000}{\us} we see a repeating pattern with a period of \SI{1625}{\us}, which intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
 Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} decrease with an increase in frequency change.
 Similar results have been reported by Schöne et al. for transition latencies of Alder Lake processors~\cite{Schoene_2024_Alder_Lake}.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
@@ -281,7 +282,7 @@ Further work is required to explain the cause of the high latencies for some fre
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/ftalat_scatter_wait_transition_latency_hati.pdf}
-    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time last frequency change detection events for the transition from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, \SI{2.0}{} and \SI{2.1}{\GHz}. For better lines for bins of size \SI{1600}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively.}
+    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between the detection events of transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, ..., \SI{2.9}{\GHz}. For better lines for bins of size \SI{1625}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively. These plots are included for frequency transitions in~\appref{pstate_latencies_scatter_complete}}
 \end{figure}
 
 \begin{figure}[]
