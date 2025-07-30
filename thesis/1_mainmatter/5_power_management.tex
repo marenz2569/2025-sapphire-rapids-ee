@@ -254,12 +254,13 @@ This is consitent with testing performed on a Skylake-SP system.
 For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above, we see two regions.
 The first in the range of \SI{1000}{\us} and around \SI{1500}{\us}, emits the same behavour as explain above.
 At around \SI{2000}{\us} we see a repeating pattern with a period of \SI{1600}{\us}, which intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
-Interestingly the number of samples which are above around a transition latency of around \SI{900}{\us} decrease with an increase in frequency change.
+Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} decrease with an increase in frequency change.
 Similar results have been reported by Schöne et al. for transition latencies of Alder Lake processors~\cite{Schoene_2024_Alder_Lake}.
-Furthermore do most samples not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
+Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
 I conclude that for the region with the higher transtion latency the mechanisms as described by Schöne et al. is not applicable~\cite{skylake_paper}.
 The power management seems to have an additional mechanisms that requies a frequency change to be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
-Further work is required for explaing what causes the high latencies for some frequency changes.
+This could be linked to external power managment that has to increase the voltage for the specific core which could be bound to such period.
+Further work is required to explain the cause of the high latencies for some frequency changes.
 
 
 \begin{figure}[]
