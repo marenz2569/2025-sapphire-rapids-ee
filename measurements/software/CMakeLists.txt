@@ -31,3 +31,4 @@ include(InstallIntelUncoreFrequencyDumper.cmake)
 include(InstallRoco2.cmake)
 
 add_subdirectory(avx-frequency-license-bands)
+add_subdirectory(avx-frequency-license-bands-validation)
