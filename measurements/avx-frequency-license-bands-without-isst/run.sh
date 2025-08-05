@@ -48,14 +48,15 @@ sudo modprobe intel_rapl_msr
 core_frequencies=(800 1600 2000 performance)
 uncore_frequencies=(0x0808 0x1010 0x1919 0x0819)
 
-# column per column on hati's socket 0
-alt_order=(0 4 7 11 14 18 21 24 28 32 35 39 42 47 50 53 1 5 8 12 15 19 22 25 29 33 36 40 43 47 51 54 2 6 9 13 15 20 23 26 30 34 37 40 44 48 52 55 3 10 17 27 31 38 45 49)
+# populate alternating over the tiles of socket 0
+# python3 -c 'print(" ".join([ str(14*i + j) for j in range(14) for i in range(4) ]))'
+alt_order=(0 14 28 42 1 15 29 43 2 16 30 44 3 17 31 45 4 18 32 46 5 19 33 47 6 20 34 48 7 21 35 49 8 22 36 50 9 23 37 51 10 24 38 52 11 25 39 53 12 26 40 54 13 27 41 55)
 
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for core_frequency in "${core_frequencies[@]}"; do
     for uncore_frequency in "${uncore_frequencies[@]}"; do
         mkdir -p $OUTFOLDER/$core_frequency/$uncore_frequency/{rows,columns}/{lic0,lic1,lic2,lic3} || true
-        
+
         elab frequency $core_frequency
         sudo wrmsr -a 0x620 $uncore_frequency
 
