@@ -1,0 +1,29 @@
+diff --git a/tools/power/x86/intel-speed-select/isst-core-mbox.c b/tools/power/x86/intel-speed-select/isst-core-mbox.c
+index c81ecd602bcf..aed7da0e239d 100644
+--- a/isst-core-mbox.c
++++ b/isst-core-mbox.c
+@@ -19,13 +19,15 @@ static int mbox_get_trl_max_levels(void)
+ {
+ 	if (is_emr_platform())
+ 		return MAX_TRL_LEVELS_EMR;
++	if (is_spr_platform())
++		return 4;
+
+         return 3;
+ }
+
+ static char *mbox_get_trl_level_name(int level)
+ {
+-	if (is_emr_platform()) {
++	if (is_emr_platform() || is_spr_platform()) {
+ 		static char level_str[18];
+
+ 		if (level >= MAX_TRL_LEVELS_EMR)
+@@ -812,6 +814,7 @@ static int mbox_get_fact_info(struct isst_id *id, int level, int fact_bucket, st
+ 	fact_info->lp_ratios[0] = resp & 0xff;
+ 	fact_info->lp_ratios[1] = (resp >> 8) & 0xff;
+ 	fact_info->lp_ratios[2] = (resp >> 16) & 0xff;
++	fact_info->lp_ratios[3] = (resp >> 24) & 0xff;
+
+ 	ret = _get_fact_bucket_info(id, level, fact_info->bucket_info);
+ 	if (ret)
