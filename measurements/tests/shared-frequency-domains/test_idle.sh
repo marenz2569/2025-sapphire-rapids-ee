@@ -14,6 +14,7 @@
 # enable all cstates
 echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable > /dev/null
 
+echo on | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
 echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
 echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
 echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
