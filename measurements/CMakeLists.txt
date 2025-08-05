@@ -6,3 +6,4 @@ include(cmake/GitSubmoduleUpdate.cmake)
 git_submodule_update()
 
 add_subdirectory(software)
+add_subdirectory(tests)
