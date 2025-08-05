@@ -74,8 +74,8 @@ toggleCstates () {
 # set core frequencies
 # parameters: $1: min frequency in kHz, $2: max frequency in kHz
 setFrequency () {
-    echo "$1" > /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq
-    echo "$2" > /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
+    echo -n "$1" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq
+    echo -n "$2" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
 }
 
 # 1) workload on p-core
@@ -110,8 +110,9 @@ echo -e "${section_begin}1.1) turbo enabled,  performance governor, automatic un
 setFrequency 800000 3800000
 sudo wrmsr 0x620 0x0819
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.1.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.1.uncore.log 2> /dev/null
+wait
 
 # 1.2) turbo disabled, performance governor, 2.0 GHz core frequency, automatic uncore frequency selection in full range
 echo -e "${section_begin}1.2) turbo disabled, performance governor, 2.0 GHz core frequency, automatic uncore frequency selection in full range${section_end}"
@@ -119,8 +120,9 @@ echo -e "${section_begin}1.2) turbo disabled, performance governor, 2.0 GHz core
 setFrequency 2000000 2000000
 sudo wrmsr 0x620 0x0819
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.2.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.2.uncore.log 2> /dev/null
+wait
 
 # 1.3) turbo disabled, performance governor, 0.8 GHz core frequency, automatic uncore frequency selection in full range
 echo -e "${section_begin}1.3) turbo disabled, performance governor, 0.8 GHz core frequency, automatic uncore frequency selection in full range${section_end}"
@@ -128,8 +130,9 @@ echo -e "${section_begin}1.3) turbo disabled, performance governor, 0.8 GHz core
 setFrequency 800000 800000
 sudo wrmsr 0x620 0x0819
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.3.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.3.uncore.log 2> /dev/null
+wait
 
 # 1.4) turbo disabled, performance governor, 0.8 GHz core frequency, uncore frequency at 0.8 GHz
 echo -e "${section_begin}1.4) turbo disabled, performance governor, 0.8 GHz core frequency, uncore frequency at 0.8 GHz${section_end}"
@@ -137,8 +140,9 @@ echo -e "${section_begin}1.4) turbo disabled, performance governor, 0.8 GHz core
 setFrequency 800000 800000
 sudo wrmsr 0x620 0x0808
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.4.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.4.uncore.log 2> /dev/null
+wait
 
 # 1.5) turbo disabled, performance governor, 0.8 GHz core frequency, uncore frequency at 2.5 GHz
 echo -e "${section_begin}1.5) turbo disabled, performance governor, 0.8 GHz core frequency, uncore frequency at 2.5 GHz${section_end}"
@@ -146,8 +150,9 @@ echo -e "${section_begin}1.5) turbo disabled, performance governor, 0.8 GHz core
 setFrequency 800000 800000
 sudo wrmsr 0x620 0x1919
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.5.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.5.uncore.log 2> /dev/null
+wait
 
 # 1.6) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 0.8 GHz
 echo -e "${section_begin}1.6) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 0.8 GHz${section_end}"
@@ -155,8 +160,9 @@ echo -e "${section_begin}1.6) turbo disabled, performance governor, 2.0 GHz core
 setFrequency 2000000 2000000
 sudo wrmsr 0x620 0x0808
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.6.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.6.uncore.log 2> /dev/null
+wait
 
 # 1.7) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 2.0 GHz
 echo -e  "${section_begin}1.7) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 2.0 GHz${section_end}"
@@ -164,8 +170,9 @@ echo -e  "${section_begin}1.7) turbo disabled, performance governor, 2.0 GHz cor
 setFrequency 2000000 2000000
 sudo wrmsr 0x620 0x1414
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.7.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.7.uncore.log 2> /dev/null
+wait
 
 # 1.8) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 2.5 GHz
 echo -e "${section_begin}1.8) turbo disabled, performance governor, 2.0 GHz core frequency, uncore frequency at 2.5 GHz${section_end}"
@@ -173,8 +180,9 @@ echo -e "${section_begin}1.8) turbo disabled, performance governor, 2.0 GHz core
 setFrequency 2000000 2000000
 sudo wrmsr 0x620 0x1919
 
-OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock,uncore_clock/clockticks/ -a -A -C 0 taskset -c 0 timeout 10s ./while_true.out &
-sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile /dev/stdout 2> /dev/null
+OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o 1.8.perf.log taskset -c 0 timeout 10s ./while_true.out &
+sudo /home/s2599166/intel-uncore-freq-dumper/build/src/intel-uncore-freq-dumper --outfile 1.8.uncore.log 2> /dev/null
+wait
 
 # switch back to green governor
 setGovernor "powersave"
