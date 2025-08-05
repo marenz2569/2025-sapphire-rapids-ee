@@ -11,13 +11,6 @@
 #
 # You should have received a copy of the GNU General Public License along with "Energy Efficiency Features of the Intel Alder Lake Architecture" Artifact Collection. If not, see <https://www.gnu.org/licenses/>.
 
-# enable all cstates
-echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable > /dev/null
-
-echo on | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
-echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
-echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
-echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
 echo off | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
 
 # for all 56 CPUs
@@ -43,8 +36,3 @@ for CPU1 in $CPUS; do
     fi
   done
 done
-
-echo on | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
-echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
-echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
-echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
