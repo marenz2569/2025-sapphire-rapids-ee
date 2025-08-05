@@ -12,7 +12,6 @@ ExternalProject_Add(
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND     ""
 	INSTALL_COMMAND   tar xvf ${CMAKE_CURRENT_BINARY_DIR}/libnl-3-dev/data.tar.zst -C ${CMAKE_CURRENT_BINARY_DIR}/libnl3-src
-	TEST_COMMAND      ""
 	DOWNLOAD_EXTRACT_TIMESTAMP ON
 )
 
@@ -25,7 +24,6 @@ ExternalProject_Add(
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND     ""
 	INSTALL_COMMAND   tar xvf ${CMAKE_CURRENT_BINARY_DIR}/libnl-genl-3-dev/data.tar.zst -C ${CMAKE_CURRENT_BINARY_DIR}/libnl3-src
-	TEST_COMMAND      ""
 	DOWNLOAD_EXTRACT_TIMESTAMP ON
 )
 
@@ -39,7 +37,6 @@ ExternalProject_Add(
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND     ""
 	INSTALL_COMMAND   tar xvf ${CMAKE_CURRENT_BINARY_DIR}/libnl-genl-3/data.tar.zst -C ${CMAKE_CURRENT_BINARY_DIR}/libnl3-src
-	TEST_COMMAND      ""
 	DOWNLOAD_EXTRACT_TIMESTAMP ON
 )
 
@@ -53,6 +50,5 @@ ExternalProject_Add(
 	CONFIGURE_COMMAND ""
 	BUILD_COMMAND     ""
 	INSTALL_COMMAND   tar xvf ${CMAKE_CURRENT_BINARY_DIR}/libnl-3/data.tar.zst -C ${CMAKE_CURRENT_BINARY_DIR}/libnl3-src
-	TEST_COMMAND      ""
 	DOWNLOAD_EXTRACT_TIMESTAMP ON
 )
