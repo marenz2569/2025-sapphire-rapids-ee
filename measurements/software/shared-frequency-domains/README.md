@@ -10,7 +10,7 @@ C-states have to be enabled. These files should hold the value 0: `/sys/devices/
 
 - Tests under idle conditions
 - All cores a set to a low frequency (800 MHz) in sysfs
-- One of the cores is set to a high frequency (2400 MHz) in sysfs (`CPU2` in the script)
+- One of the cores is set to a high frequency (3800 MHz) in sysfs (`CPU2` in the script)
 - If a CPU (`CPU2`) is said to influence another, setting its frequency in sysfs influences the frequency of the other CPU (`CPU1`) even if  `CPU1` is idling
 - Each CPU is tested as an influencing CPU with a high frequency
 - The frequency of the influenced core (`CPU1`) is measured using `perf stat`
@@ -19,7 +19,7 @@ C-states have to be enabled. These files should hold the value 0: `/sys/devices/
 
 - Tests under active conditions
 - All cores a set to a low frequency (800 MHz) in sysfs
-- One of the cores is set to a high frequency (2400 MHz) in sysfs (`CPU2` in the script)
+- One of the cores is set to a high frequency (3800 MHz) in sysfs (`CPU2` in the script)
 - If a CPU (`CPU2`) is said to influence another, setting its frequency in sysfs influences the frequency of the other CPU (`CPU1`) if `CPU1` is active (executing a `while(1);` loop)
 - The frequency of the influenced core (`CPU1`) is measured using `perf stat`
 
