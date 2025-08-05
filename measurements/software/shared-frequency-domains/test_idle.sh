@@ -15,8 +15,8 @@
 echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable > /dev/null
 
 echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null
-echo 800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
-echo 3800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
+echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
+echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
 echo off | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
 
 # for all 56 CPUs
@@ -29,11 +29,11 @@ for CPU1 in $CPUS; do
       continue
     fi
     # set low frequency on all CPUs
-    echo 800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
-    echo 800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
+    echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
+    echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
     # set high frequency on the influential CPU
-    echo 3800 | sudo tee /sys/bus/cpu/devices/cpu${CPU2}/cpufreq/scaling_min_freq > /dev/null
-    echo 3800 | sudo tee /sys/bus/cpu/devices/cpu${CPU2}/cpufreq/scaling_max_freq > /dev/null
+    echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu${CPU2}/cpufreq/scaling_min_freq > /dev/null
+    echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu${CPU2}/cpufreq/scaling_max_freq > /dev/null
     # test frequency via perf
     FREQ=`taskset -c ${CPU1} perf stat --log-fd 1 -e cycles -x ' ' timeout 1s $WHILE_TRUE | grep -v "not counted" - | awk '{print $1}' `
     # it should be 800 MHz, test with 20% addition.
@@ -44,6 +44,6 @@ for CPU1 in $CPUS; do
 done
 
 echo on | sudo tee /sys/devices/system/cpu/smt/control > /dev/null
-echo 800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
-echo 3800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
+echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq > /dev/null
+echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq > /dev/null
 echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null

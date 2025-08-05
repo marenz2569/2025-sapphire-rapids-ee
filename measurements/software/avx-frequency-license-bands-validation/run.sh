@@ -5,8 +5,8 @@ mkdir -p $RESULTS_FOLDER/{normal,alt}/{lic0,lic1,lic2,lic3} || true
 echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable
 
 echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-echo 3800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-echo 3800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
+echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
+echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 echo off | sudo tee /sys/devices/system/cpu/smt/control
 
 # Configure ISST to use
@@ -59,6 +59,6 @@ done
 sudo $ISST core-power disable
 
 echo on | sudo tee /sys/devices/system/cpu/smt/control
-echo 800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-echo 3800 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
+echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
+echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
