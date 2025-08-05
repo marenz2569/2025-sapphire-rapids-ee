@@ -42,17 +42,19 @@ for ((i = 0 ; i < 56 ; i++)); do
         ALT_BINDLIST="$ALT_BINDLIST,${alt_order[i]}"
     fi
 
+    # sudo, as we need to access /sys/class/powercap
+
     # Normal bindlist
-    $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/normal/lic0/$i.csv
-    $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $RESULTS_FOLDER/normal/lic1/$i.csv
-    $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/normal/lic2/$i.csv
-    $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=L3_L:100         | tail -n 9 > $RESULTS_FOLDER/normal/lic3/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/normal/lic0/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $RESULTS_FOLDER/normal/lic1/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/normal/lic2/$i.csv
+    sudo $FIRESTARTER -b $BINDLIST     --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=L3_L:100         | tail -n 9 > $RESULTS_FOLDER/normal/lic3/$i.csv
 
     # Alternating bindlist
-    $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/alt/lic0/$i.csv
-    $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $RESULTS_FOLDER/alt/lic1/$i.csv
-    $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/alt/lic2/$i.csv
-    $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=L3_L:100         | tail -n 9 > $RESULTS_FOLDER/alt/lic3/$i.csv
+    sudo $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/alt/lic0/$i.csv
+    sudo $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT -i 6 --run-instruction-groups=REG:100,L1_L:100 | tail -n 9 > $RESULTS_FOLDER/alt/lic1/$i.csv
+    sudo $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/alt/lic2/$i.csv
+    sudo $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=L3_L:100         | tail -n 9 > $RESULTS_FOLDER/alt/lic3/$i.csv
 done
 
 # Reset ISST
