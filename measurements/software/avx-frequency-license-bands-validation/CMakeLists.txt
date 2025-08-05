@@ -3,7 +3,7 @@ add_test_with_output(
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/run.sh
 )
 
-# 56 * 8 * 250 (10s measurement) * 2 (to be safe)
+# 56 * 8 * 10 (measurement duration) * 2 (to be safe)
 set_tests_properties(avx-frequency-license-bands-validation PROPERTIES TIMEOUT 8960)
 
 ExternalProject_Get_Property(isst-v1.22 INSTALL_DIR)
