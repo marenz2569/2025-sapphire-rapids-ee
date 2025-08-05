@@ -5,9 +5,6 @@ mkdir -p $RESULTS_FOLDER/{normal,alt}/{lic0,lic1,lic2,lic3} || true
 echo off | sudo tee /sys/devices/system/cpu/smt/control
 
 # Configure ISST to use
-sudo $ISST base-freq disable
-sudo $ISST turbo-freq disable
-sudo $ISST core-power disable
 sudo $ISST -c 0-55 core-power assoc --clos 1
 sudo $ISST -c 0 core-power assoc --clos 0
 sudo $ISST core-power config -c 1 -m 1600
@@ -51,6 +48,3 @@ for ((i = 0 ; i < 56 ; i++)); do
     sudo -E $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=REG:100          | tail -n 9 > $RESULTS_FOLDER/alt/lic2/$i.csv
     sudo -E $FIRESTARTER -b $ALT_BINDLIST --measurement --start-delta=$START_DELTA --stop-delta=$STOP_DELTA -t $TIMEOUT      --run-instruction-groups=L3_L:100         | tail -n 9 > $RESULTS_FOLDER/alt/lic3/$i.csv
 done
-
-# Reset ISST
-sudo $ISST core-power disable

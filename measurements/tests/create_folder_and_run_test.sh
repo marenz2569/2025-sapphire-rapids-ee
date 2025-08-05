@@ -15,6 +15,11 @@ echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_gover
 echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
+# Disable ISST
+sudo $ISST base-freq disable
+sudo $ISST turbo-freq disable
+sudo $ISST core-power disable
+
 # Execute the command of the measurement passed via the arguments
 exec $@
 
@@ -28,3 +33,8 @@ echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable
 echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
+
+# Disable ISST
+sudo $ISST base-freq disable
+sudo $ISST turbo-freq disable
+sudo $ISST core-power disable
