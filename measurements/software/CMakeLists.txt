@@ -32,4 +32,5 @@ include(InstallRoco2.cmake)
 
 add_subdirectory(avx-frequency-license-bands)
 add_subdirectory(avx-frequency-license-bands-validation)
+add_subdirectory(shared-frequency-domains)
 add_subdirectory(while-true)
