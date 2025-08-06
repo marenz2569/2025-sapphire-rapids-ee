@@ -1,7 +1,0 @@
-# Loop @ Start frequency 3001000Hz took 1059.80 cycles
-# Interval [1058 ; 1062]
-# Q1 : 1058 ; Q3 : 1058
-# Loop @ Target frequency 3000000Hz took 1059.94 cycles
-# Interval [1058 ; 1062]
-# Q1 : 1056 ; Q3 : 1058
-# Warning: confidence intervals overlap considerably, alternatives are equal with selected confidence level
