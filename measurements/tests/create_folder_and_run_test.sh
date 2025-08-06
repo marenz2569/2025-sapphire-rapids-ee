@@ -1,40 +1,35 @@
 #!/usr/bin/env bash
 
+# Reset the the SMT control, cpu frequency and intel-speed-select back to defaults.
+# The first argument specifes which cpu governor should be applied
+function reset_cpu_controls() {
+    # Switch all cpus on
+    echo on | sudo tee /sys/devices/system/cpu/smt/control
+
+    # Enable cstates
+    echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable
+
+    # Use specified governor
+    echo $1 | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+    # Restore full cpu frequency range
+    echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
+    echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
+
+    # Disable ISST
+    sudo $ISST base-freq disable
+    sudo $ISST turbo-freq disable
+    sudo $ISST core-power disable
+}
+
 # Create the folder for the results of measurement
 export RESULTS_FOLDER=${TEST_ROOT}/$(uname -n)/${TEST_NAME}/$(date +"%Y-%m-%d-%H%M")
 mkdir -p $RESULTS_FOLDER
 
-# switch all cpus on
-echo on | sudo tee /sys/devices/system/cpu/smt/control
-
-# enable cstates
-echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable
-
-# use performance governor
-echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
-
-# Disable ISST
-sudo $ISST base-freq disable
-sudo $ISST turbo-freq disable
-sudo $ISST core-power disable
+reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
 exec $@
 
-# switch all cpus on
-echo on | sudo tee /sys/devices/system/cpu/smt/control
-
-# enable cstates
-echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/*/disable
-
-# use powersave governor
-echo "powersave" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
-
-# Disable ISST
-sudo $ISST base-freq disable
-sudo $ISST turbo-freq disable
-sudo $ISST core-power disable
+# Switch back to a green governor
+reset_cpu_controls "powersave"
