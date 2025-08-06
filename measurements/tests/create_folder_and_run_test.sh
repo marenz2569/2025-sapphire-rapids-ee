@@ -16,10 +16,17 @@ function reset_cpu_controls() {
     echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
     echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
-    # Disable ISST
-    sudo $ISST base-freq disable
-    sudo $ISST turbo-freq disable
-    sudo $ISST core-power disable
+    # Test if kernel supports the ISST interface
+    $(test -e /dev/isst)
+    isst_found=$?
+
+    if [ $isst_found -eq 0 ]
+    then
+        # Disable ISST
+        sudo $ISST base-freq disable
+        sudo $ISST turbo-freq disable
+        sudo $ISST core-power disable
+    fi
 }
 
 # Create the folder for the results of measurement
