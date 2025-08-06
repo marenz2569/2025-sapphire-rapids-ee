@@ -13,10 +13,10 @@ sudo $ISST core-power enable
 # Set the FIRESTARTER measurement core to 0
 export FIRESTARTER_PERF_CPU=0
 
-# Run each firestarter measurement for 60 seconds and cut away the first and last 5 seconds of the measurement data
+# Run each firestarter measurement for 10 seconds and cut away the first 5 and last 2 seconds of the measurement data
 START_DELTA=5000
-STOP_DELTA=5000
-TIMEOUT=60
+STOP_DELTA=2000
+TIMEOUT=10
 
 # column per column on socket 0
 alt_order=(0 4 7 11 14 18 21 24 28 32 35 39 42 47 50 53 1 5 8 12 15 19 22 25 29 33 36 40 43 47 51 54 2 6 9 13 16 20 23 26 30 34 37 41 44 48 52 55 3 10 17 27 31 38 45 49)
