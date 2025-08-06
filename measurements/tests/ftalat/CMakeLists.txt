@@ -4,7 +4,7 @@ add_test_with_output(
 )
 
 # 1 day
-set_tests_properties(avx-frequency-license-bands-validation PROPERTIES TIMEOUT 86400)
+set_tests_properties(ftalat PROPERTIES TIMEOUT 86400)
 
 # Master as of May 28 18:18:31 2025
 build_ftalat(

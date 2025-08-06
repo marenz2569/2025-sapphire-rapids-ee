@@ -3,5 +3,6 @@ include(InstallIntelSpeedSelect.cmake)
 include(InstallFirestarter.cmake)
 include(InstallIntelUncoreFrequencyDumper.cmake)
 include(InstallRoco2.cmake)
+include(InstallFtalat.cmake)
 
 add_subdirectory(while-true)
