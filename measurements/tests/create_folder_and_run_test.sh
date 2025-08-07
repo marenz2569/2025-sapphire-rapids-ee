@@ -36,8 +36,7 @@ mkdir -p $RESULTS_FOLDER
 reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
-exec $@
+$@
 
-# TODO: BUG: this reset does not happen after the exec
 # Switch back to a green governor
 reset_cpu_controls "powersave"
