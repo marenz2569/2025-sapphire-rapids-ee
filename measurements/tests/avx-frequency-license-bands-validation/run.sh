@@ -19,7 +19,7 @@ STOP_DELTA=5000
 TIMEOUT=60
 
 # column per column on socket 0
-alt_order=(0 4 7 11 14 18 21 24 28 32 35 39 42 47 50 53 1 5 8 12 15 19 22 25 29 33 36 40 43 47 51 54 2 6 9 13 16 20 23 26 30 34 37 41 44 48 52 55 3 10 17 27 31 38 45 49)
+alt_order=(0 4 7 11 14 18 21 24 28 32 35 39 42 46 50 53 1 5 8 12 15 19 22 25 29 33 36 40 43 47 51 54 2 6 9 13 16 20 23 26 30 34 37 41 44 48 52 55 3 10 17 27 31 38 45 49)
 
 # Measurement loop. Run all experiments with all number of cores on socket 0.
 for ((i = 0 ; i < 56 ; i++)); do
