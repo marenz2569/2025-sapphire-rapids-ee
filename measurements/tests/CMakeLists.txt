@@ -18,7 +18,7 @@ function(add_test_with_output)
     endif()
 
     add_test(NAME ${TEST_NAME}
-        COMMAND ${add_test_with_output__source_dir}/create_folder_and_run_test.sh ${TEST_COMMAND}
+        COMMAND ${add_test_with_output__source_dir}/test_wrapper.sh ${TEST_COMMAND}
     )
 
     set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT TEST_NAME=${TEST_NAME})
