@@ -11,6 +11,9 @@ source functions.sh
 export RESULTS_FOLDER=${TEST_ROOT}/$(uname -n)/${TEST_NAME}/$(date +"%Y-%m-%d-%H%M")
 mkdir -p $RESULTS_FOLDER
 
+# Write the current git-rev into the results folder
+git describe --always --abbrev=40 --dirty > $RESULTS_FOLDER/git-tag
+
 reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
