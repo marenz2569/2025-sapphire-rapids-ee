@@ -17,7 +17,7 @@ function(add_test_with_output)
         message(FATAL_ERROR "Called add_test_with_output without COMMAND.")
     endif()
 
-    add_test(NAME ${TEST_NAME}
+    add_test(NAME measurement/${TEST_NAME}
         COMMAND ${add_test_with_output__source_dir}/test_wrapper.sh ${TEST_COMMAND}
     )
 
