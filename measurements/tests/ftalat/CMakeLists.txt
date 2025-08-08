@@ -1,4 +1,4 @@
-add_test_with_output(
+add_measurement(
     NAME ftalat
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/run.sh
 )
