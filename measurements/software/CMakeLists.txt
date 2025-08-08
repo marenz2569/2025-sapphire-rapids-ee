@@ -6,4 +6,5 @@ include(InstallRoco2.cmake)
 include(InstallFtalat.cmake)
 include(InstallFirestarterMetricMetricq.cmake)
 
+add_subdirectory(cond-wait)
 add_subdirectory(while-true)
