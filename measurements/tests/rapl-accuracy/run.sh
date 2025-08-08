@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: add build for this module
-module load firestarter-metric-metricq
-
 echo off | sudo tee /sys/devices/system/cpu/smt/control
 
 export GOMP_CPU_AFFINITY=0-111

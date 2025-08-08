@@ -8,3 +8,7 @@ set_tests_properties(measurement/rapl-accuracy PROPERTIES TIMEOUT 38880)
 
 ExternalProject_Get_Property(roco2-marenz.hati-config INSTALL_DIR)
 set_property(TEST measurement/rapl-accuracy APPEND PROPERTY ENVIRONMENT ROCO2=${INSTALL_DIR}/roco2_hati)
+
+ExternalProject_Get_Property(firestarter-metric-metricq-cca7e030f813398b07542610f01425172b1bf2fc INSTALL_DIR)
+set_property(TEST measurement/rapl-accuracy PROPERTY ENVIRONMENT_MODIFICATION "LD_LIBRARY_PATH=path_list_prepend:${INSTALL_DIR}")
+set_property(TEST measurement/rapl-accuracy APPEND PROPERTY ENVIRONMENT FIRESTARTER_METRIC_METRICQ_DUMPER=${INSTALL_DIR}/metric-metricq-dumper)
