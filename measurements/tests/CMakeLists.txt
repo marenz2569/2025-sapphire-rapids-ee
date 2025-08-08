@@ -30,6 +30,7 @@ endfunction()
 
 add_subdirectory(avx-frequency-license-bands)
 add_subdirectory(avx-frequency-license-bands-validation)
+add_subdirectory(cstate-latencies)
 add_subdirectory(shared-frequency-domains)
 add_subdirectory(rapl-accuracy)
 add_subdirectory(ftalat)

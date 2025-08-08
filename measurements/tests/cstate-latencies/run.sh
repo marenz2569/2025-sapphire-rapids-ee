@@ -11,14 +11,7 @@
 #
 # You should have received a copy of the GNU General Public License along with "Energy Efficiency Features of the Intel Alder Lake Architecture" Artifact Collection. If not, see <https://www.gnu.org/licenses/>.
 
-gcc -pthread cond_wait.c -o cond_wait
-gcc while_true.c -o while_true
-
-rm -rf data || true
-mkdir -p data
-
-rm -rf data_txt || true
-mkdir -p data_txt
+mkdir -p $RESULTS_FOLDER/{data,data_txt}
 
 CALLER=1 # The CPU that wakes up other CPUs
 CALLEE_LOCAL=2 # the CPU that is called locally
@@ -34,15 +27,11 @@ WAIT_US=100000 # how long to wait between measurements (so that the callee can f
 
 CSTATES=`ls /sys/devices/system/cpu/cpu0/cpuidle/` # here, the C-states are stored
 
-echo "performance" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-
-#enable all
+# disable all cstates
 for CSTATE in $CSTATES
 do
-	echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
+	echo 1 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 done
-
-CSTATES=`echo state3`
 
 for CSTATE in $CSTATES
 do
@@ -62,40 +51,39 @@ do
 
 			# local
 			# Prevent the current socket to go into a package c-state
-			taskset -c $BUSY_LOCAL ./while_true &
-			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
-			taskset -c $CALLEE_LOCAL perf record -e power:cpu_idle -C $CALLEE_LOCAL -o data/perf.data.${GOVERNOR}_local_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
-			./cond_wait $CALLER $CALLEE_LOCAL $NTIMES $WAIT_US
+			taskset -c $BUSY_LOCAL $WHILE_TRUE &
+			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_local_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
+			taskset -c $CALLEE_LOCAL perf record -e power:cpu_idle -C $CALLEE_LOCAL -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_local_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_LOCAL &
+			$COND_WAIT $CALLER $CALLEE_LOCAL $NTIMES $WAIT_US
 			killall perf
-			killall while_true
+			kill $(pgrep -f $WHILE_TRUE)
 			wait
 
 			# remote active
-			taskset -c $BUSY_LOCAL ./while_true &
-			taskset -c $BUSY_REMOTE ./while_true &
-			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_active_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_active_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
+			taskset -c $BUSY_LOCAL $WHILE_TRUE &
+			taskset -c $BUSY_REMOTE $WHILE_TRUE &
+			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_remote_active_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_remote_active_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			$COND_WAIT $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
-			killall while_true
+			kill $(pgrep -f $WHILE_TRUE)
 			wait
 
 			# remote idle
-			taskset -c $BUSY_LOCAL ./while_true &
-			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o data/perf.data.${GOVERNOR}_remote_idle_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
-			./cond_wait $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
+			taskset -c $BUSY_LOCAL $WHILE_TRUE &
+			taskset -c $CALLER perf record -e sched:sched_waking -C $CALLER -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_remote_idle_caller.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			taskset -c $CALLEE_REMOTE perf record -e power:cpu_idle -C $CALLEE_REMOTE -o $RESULTS_FOLDER/data/perf.data.${GOVERNOR}_remote_idle_callee.$CSTATE.$FREQ.$CALLER.$CALLEE_REMOTE &
+			$COND_WAIT $CALLER $CALLEE_REMOTE $NTIMES $WAIT_US
 			killall perf
-			killall while_true
+			kill $(pgrep -f $WHILE_TRUE)
 			wait
 		done
 	done
 done
 
-cd data
-for file in ./*; do 
-    if [ -f "$file" ]; then 
+cd $RESULTS_FOLDER/data
+for file in ./*; do
+    if [ -f "$file" ]; then
         perf script --ns -i $file > ../data_txt/$file
-    fi 
+    fi
 done
-cd ..
