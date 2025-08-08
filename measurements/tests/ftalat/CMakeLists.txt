@@ -4,7 +4,7 @@ add_test_with_output(
 )
 
 # 1 day
-set_tests_properties(ftalat PROPERTIES TIMEOUT 86400)
+set_tests_properties(measurement/ftalat PROPERTIES TIMEOUT 86400)
 
 # Master as of May 28 18:18:31 2025
 build_ftalat(
@@ -20,7 +20,7 @@ build_ftalat(
 )
 
 ExternalProject_Get_Property(ftalat-345d02344cbd878c64c0c280f2853d5c107cd7b6-scaling_setspeed INSTALL_DIR)
-set_property(TEST ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_SETSPEED=${INSTALL_DIR}/ftalat)
+set_property(TEST measurement/ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_SETSPEED=${INSTALL_DIR}/ftalat)
 
 ExternalProject_Get_Property(ftalat-345d02344cbd878c64c0c280f2853d5c107cd7b6-scaling_max_freq INSTALL_DIR)
-set_property(TEST ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_MAX_FREQ=${INSTALL_DIR}/ftalat)
+set_property(TEST measurement/ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_MAX_FREQ=${INSTALL_DIR}/ftalat)

@@ -21,11 +21,11 @@ function(add_test_with_output)
         COMMAND ${add_test_with_output__source_dir}/test_wrapper.sh ${TEST_COMMAND}
     )
 
-    set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT TEST_NAME=${TEST_NAME})
+    set_property(TEST measurement/${TEST_NAME} APPEND PROPERTY ENVIRONMENT TEST_NAME=${TEST_NAME})
 
     # Import ISST as we need to reset it to defaults
     ExternalProject_Get_Property(isst-v1.22 INSTALL_DIR)
-    set_property(TEST ${TEST_NAME} APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
+    set_property(TEST measurement/${TEST_NAME} APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
 endfunction()
 
 add_subdirectory(avx-frequency-license-bands)
