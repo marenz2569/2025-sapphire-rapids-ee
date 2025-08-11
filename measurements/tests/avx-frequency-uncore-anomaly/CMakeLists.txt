@@ -13,3 +13,8 @@ set_property(TEST measurement/avx-frequency-uncore-anomaly APPEND PROPERTY ENVIR
 
 ExternalProject_Get_Property(intel-uncore-freq-dumper-a150b9a6af1decadf43bfa82a02f0882301210df INSTALL_DIR)
 set_property(TEST measurement/avx-frequency-uncore-anomaly APPEND PROPERTY ENVIRONMENT IUFD=${INSTALL_DIR}/intel-uncore-freq-dumper)
+
+add_measurement(
+    NAME avx-frequency-uncore-anomaly/reboot
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/reboot.sh
+)
