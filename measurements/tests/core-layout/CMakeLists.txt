@@ -5,4 +5,5 @@ add_measurement(
 
 set_tests_properties(measurement/core-layout PROPERTIES TIMEOUT 1200)
 
-set_property(TEST measurement/core-layout APPEND PROPERTY ENVIRONMENT STREAM=$<TARGET_FILE:stream>)
+ExternalProject_Get_Property(stream INSTALL_DIR)
+set_property(TEST measurement/core-layout APPEND PROPERTY ENVIRONMENT STREAM=${INSTALL_DIR}/stream)
