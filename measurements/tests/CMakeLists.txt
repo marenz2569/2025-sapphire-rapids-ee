@@ -31,11 +31,13 @@ endfunction()
 add_subdirectory(avx-frequency-license-bands)
 add_subdirectory(avx-frequency-license-bands-validation)
 add_subdirectory(avx-frequency-license-bands-without-isst)
+add_subdirectory(avx-frequency-uncore-anomaly)
 add_subdirectory(core-layout)
 add_subdirectory(cstate-latencies)
-add_subdirectory(shared-frequency-domains)
-add_subdirectory(rapl-accuracy)
+add_subdirectory(dump-msr)
 add_subdirectory(ftalat)
+add_subdirectory(rapl-accuracy)
+add_subdirectory(shared-frequency-domains)
 
 add_test(NAME tooling/reset-cpu-to-performance
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/reset_cpu.sh performance
