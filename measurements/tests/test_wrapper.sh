@@ -14,6 +14,9 @@ mkdir -p $RESULTS_FOLDER
 # Write the current git-rev into the results folder
 git describe --always --abbrev=40 --dirty > $RESULTS_FOLDER/git-tag
 
+# Write the current /proc/cmdline into the results folder
+cat /proc/cmdline > $RESULTS_FOLDER/proc-cmdline
+
 reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
