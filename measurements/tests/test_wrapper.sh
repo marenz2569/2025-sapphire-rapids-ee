@@ -17,6 +17,9 @@ git describe --always --abbrev=40 --dirty > $RESULTS_FOLDER/git-tag
 # Write the current /proc/cmdline into the results folder
 cat /proc/cmdline > $RESULTS_FOLDER/proc-cmdline
 
+# Write lsmod into the results folder
+lsmod > $RESULTS_FOLDER/lsmod
+
 reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
