@@ -29,5 +29,8 @@ function reset_cpu_controls() {
     fi
 
     # Enable RAPL readout
-    sudo modprobe intel_rapl_msr
+    lsmod | grep -w intel_rapl_msr && echo "intel_rapl_msr already loaded" || { echo "Loading intel_rapl_msr module"; sudo modprobe intel_rapl_msr ; }
+
+    # Enable MSR readout
+    lsmod | grep -w msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
 }
