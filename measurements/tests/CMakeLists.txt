@@ -30,6 +30,7 @@ endfunction()
 
 add_subdirectory(avx-frequency-license-bands)
 add_subdirectory(avx-frequency-license-bands-validation)
+add_subdirectory(avx-frequency-license-bands-without-isst)
 add_subdirectory(core-layout)
 add_subdirectory(cstate-latencies)
 add_subdirectory(shared-frequency-domains)

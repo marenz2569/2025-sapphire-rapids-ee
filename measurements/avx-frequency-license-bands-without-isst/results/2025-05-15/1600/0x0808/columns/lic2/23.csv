@@ -1,9 +1,0 @@
-metric,num_timepoints,duration_ms,average,stddev
-"ipc-estimate",24,0,3.14409,0.0304168
-"perf-freq",73,7208,1.59386,0.000640277
-"perf-ipc",74,7308,3.96228,0.00567718
-"sysfs-powercap-rapl",73,7208,274.22,1.04977
-"sysfs-powercap-rapl/package-0",73,7208,150.022,0.800667
-"sysfs-powercap-rapl/package-0-dram",73,7208,12.074,0.0676196
-"sysfs-powercap-rapl/package-1",73,7208,100.892,0.575521
-"sysfs-powercap-rapl/package-1-dram",73,7208,11.231,0.0630291
