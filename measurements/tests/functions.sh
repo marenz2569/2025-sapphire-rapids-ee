@@ -27,4 +27,7 @@ function reset_cpu_controls() {
         sudo $ISST turbo-freq disable
         sudo $ISST core-power disable
     fi
+
+    # Enable RAPL readout
+    sudo modprobe intel_rapl_msr
 }
