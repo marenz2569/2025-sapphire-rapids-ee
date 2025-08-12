@@ -20,7 +20,7 @@ jobs:
         sudo rm -rf /usr/local/.ghcup
     - name: Install dependencies
       run: |
-        sudo apt install libblas-dev liblapack-dev libprotobuf-dev libnuma-dev
+        sudo apt install libblas-dev liblapack-dev libprotobuf-dev libnuma-dev ninja-build
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
@@ -31,8 +31,8 @@ jobs:
     - name: Run CMake configure
       run: |
         cd build
-        cmake ../measurements
+        cmake -G Ninja ../measurements
     - name: Build
       run: |
         cd build
-        make -j4
+        ninja
