@@ -18,6 +18,9 @@ jobs:
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf /opt/ghc
         sudo rm -rf /usr/local/.ghcup
+    - name: Install dependecies
+      run: |
+        sudo apt install libblas-dev liblapack-dev libprotobuf-dev
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
