@@ -20,7 +20,7 @@ jobs:
         sudo rm -rf /usr/local/.ghcup
     - name: Install dependencies
       run: |
-        sudo apt install libblas-dev liblapack-dev libprotobuf-dev protobuf-compiler libnuma-dev ninja-build
+        sudo apt install libblas-dev liblapack-dev libprotobuf-dev protobuf-compiler libnuma-dev libcpufreq-dev ninja-build
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
