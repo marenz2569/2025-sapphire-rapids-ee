@@ -31,10 +31,10 @@
 // than the cache itself
 #define L1_DATA_SIZE 16 * 1024
 // This buffer must not fit into the L2 Cache
-#define L3_DATA_SIZE 2 * 1024 * 1024
+#define L3_DATA_SIZE 4 * 1024 * 1024
 #define CACHE_LINE 64
 #define RAND_NUM 1234567
-#define MAX_CYCLES 1000
+#define MAX_CYCLES 2000
 
 #ifndef DEFAULT_UNCORE_RANGE
 const uint64_t default_uncore_range = 0x0819;
