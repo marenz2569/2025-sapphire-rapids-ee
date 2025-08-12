@@ -1,0 +1,35 @@
+name: Build
+
+on: [push, pull_request]
+
+
+jobs:
+  build-measurements:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Try to clean up some things
+      run: |
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/.ghcup
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+    - name: Create build directory
+      run: |
+          mkdir build
+    - name: Run CMake configure
+      run: |
+        cd build
+        cmake ../measurements
+    - name: Build
+      run: |
+        cd build
+        make -j4
