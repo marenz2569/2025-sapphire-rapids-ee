@@ -19,7 +19,6 @@
 #include <asm/unistd.h>
 #include <fcntl.h>
 
-#include <signal.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -142,7 +141,7 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
   return current;
 }
 
-void main() {
+int main() {
   // tested UFS frequencies
   uint64_t settings[] = {
       0x404,  0x505,  0x606,  0x707,  0x808,  0x909,  0xa0a,  0xb0b,  0xc0c,
@@ -198,7 +197,7 @@ void main() {
         l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
                                &cycles_switch, &cycles_duration,
                                &performance_after, msr_fd, settings[target]);
-        printf("%d00 MHz->%d00Mhz Cycles per access before:%lu after:%lu, "
+        printf("%lu00 MHz->%lu00Mhz Cycles per access before:%lu after:%lu, "
                "switch after %lu cycles, took %lu cycles\n",
                0xFF & settings[source], 0xFF & settings[target],
                performance_before, performance_after, cycles_switch,
@@ -222,4 +221,6 @@ void main() {
            performance_before, performance_after, cycles_switch,
            cycles_duration);
   }
+
+  return EXIT_SUCCESS;
 }
