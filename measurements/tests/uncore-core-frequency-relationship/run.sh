@@ -113,5 +113,3 @@ sudo wrmsr 0x620 0x1919
 OMP_NUM_THREADS=1 perf stat -I 1000 -e cycles,task-clock -a -A -C 0 -o $RESULTS_FOLDER/1.8.perf.log taskset -c 0 timeout 10s $WHILE_TRUE &
 sudo $IUFD --outfile $RESULTS_FOLDER/1.8.uncore.log 2> /dev/null
 wait
-
-sudo wrmsr 0x620 0x0819
