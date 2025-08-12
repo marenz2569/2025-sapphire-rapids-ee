@@ -202,6 +202,7 @@ int main() {
   uint64_t performance_before, performance_after, cycles_switch,
       cycles_duration;
 
+#ifdef MANUAL_FREQUENCY_LATENCY
   // for each source target combination:
   for (uint64_t source = 0; source < getNumberOfUncoreStepIn100KHzSteps();
        source++) {
@@ -238,7 +239,9 @@ int main() {
       }
     }
   }
+#endif
 
+#ifdef AUTOMATIC_FREQUENCY_LATENCY
   // set default again
   pwrite(msr_fd, &default_uncore_range, sizeof(default_uncore_range), 0x620);
   for (int i = 0; i < 1000; i++) {
@@ -256,6 +259,7 @@ int main() {
            performance_before, performance_after, cycles_switch,
            cycles_duration);
   }
+#endif
 
   return EXIT_SUCCESS;
 }

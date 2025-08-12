@@ -8,4 +8,5 @@ include(InstallFirestarterMetricMetricq.cmake)
 include(InstallStream.cmake)
 
 add_subdirectory(cond-wait)
+add_subdirectory(uncore-frequency-switching-latency)
 add_subdirectory(while-true)
