@@ -19,6 +19,7 @@
 #include <asm/unistd.h>
 #include <fcntl.h>
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -26,11 +27,20 @@
 #include <string.h>
 #include <unistd.h>
 
+// This buffer must fit into the L1d Cache, therefore it should be a lot smaller
+// than the cache itself
 #define L1_DATA_SIZE 16 * 1024
+// This buffer must not fit into the L2 Cache
 #define L3_DATA_SIZE 2 * 1024 * 1024
 #define CACHE_LINE 64
 #define RAND_NUM 1234567
 #define MAX_CYCLES 1000
+
+#ifndef DEFAULT_UNCORE_RANGE
+const uint64_t default_uncore_range = 0x0819;
+#else
+const uint64_t default_uncore_range = DEFAULT_UNCORE_RANGE;
+#endif
 
 /**
  * Returns time stamp counter
@@ -110,7 +120,7 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
   void *current = (void *)*buffer;
 
   if (target != 0)
-    pwrite(fd, &target, 8, 0x620);
+    pwrite(fd, &target, sizeof(default_uncore_range), 0x620);
 
   uint64_t start = rdtsc();
   uint64_t last_reading = start;
@@ -141,19 +151,39 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
   return current;
 }
 
+/**
+ * Return the number of 100kHz uncore steps that are inside the range of
+ * default_uncore_range.
+ */
+size_t getNumberOfUncoreStepIn100KHzSteps() {
+  const uint8_t start = (default_uncore_range >> 8) & 0xff;
+  const uint8_t stop = default_uncore_range & 0xff;
+
+  assert((start <= stop) &&
+         "Given uncore start value is not smaller equal to the stop value.");
+
+  return stop - start + 1;
+}
+
+/**
+ * Fill the buffer provided with fixed uncore frequencies in 100kHz steps from
+ * the range defined with default_uncore_range.
+ */
+void fillFixedUncoreFrequenciesBuffer(uint64_t *buffer) {
+  assert(buffer && "Buffer not provided.");
+
+  const uint8_t start = (default_uncore_range >> 8) & 0xff;
+  const uint8_t stop = default_uncore_range & 0xff;
+
+  for (uint8_t freq = start; freq <= stop; freq++) {
+    buffer[freq - start] = (freq << 8) | freq;
+  }
+}
+
 int main() {
   // tested UFS frequencies
-  uint64_t settings[] = {
-      0x404,  0x505,  0x606,  0x707,  0x808,  0x909,  0xa0a,  0xb0b,  0xc0c,
-      0xd0d,  0xe0e,  0xf0f,  0x1010, 0x1111, 0x1212, 0x1313, 0x1414, 0x1515,
-      0x1616, 0x1717, 0x1818, 0x1919, 0x1a1a, 0x1b1b, 0x1c1c, 0x1d1d, 0x1e1e,
-      0x1f1f, 0x2020, 0x2121, 0x2222, 0x2323, 0x2424, 0x2525, 0x2626, 0x2727,
-      0x2828, 0x2929, 0x2a2a, 0x2b2b, 0x2c2c, 0x2d2d, 0x2e2e, 0x2f2f};
-
-  // read on command line
-  uint64_t default_setting = 0x82f;
-  // nr of tested UFS frequencies
-  int nr_settings = 43;
+  uint64_t *settings = malloc(getNumberOfUncoreStepIn100KHzSteps());
+  fillFixedUncoreFrequenciesBuffer(settings);
 
   // open fd for switching msr
   int msr_fd = open("/dev/cpu/0/msr", O_RDWR);
@@ -173,10 +203,13 @@ int main() {
       cycles_duration;
 
   // for each source target combination:
-  for (uint64_t source = 0; source < nr_settings; source++)
-    for (uint64_t target = 0; target < nr_settings; target++) {
-      if (source == target)
+  for (uint64_t source = 0; source < getNumberOfUncoreStepIn100KHzSteps();
+       source++) {
+    for (uint64_t target = 0; target < getNumberOfUncoreStepIn100KHzSteps();
+         target++) {
+      if (source == target) {
         continue;
+      }
       // repeat measurement 1000 times
       for (int i = 0; i < 1000; i++) {
         // set default
@@ -204,8 +237,10 @@ int main() {
                cycles_duration);
       }
     }
+  }
+
   // set default again
-  pwrite(msr_fd, &default_setting, 8, 0x620);
+  pwrite(msr_fd, &default_uncore_range, sizeof(default_uncore_range), 0x620);
   for (int i = 0; i < 1000; i++) {
     // first train for local access (L1)
     l1_buffer = run_buffer(l1_buffer, nr * 10000, MAX_CYCLES,
