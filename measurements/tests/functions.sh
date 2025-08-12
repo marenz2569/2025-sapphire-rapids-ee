@@ -16,6 +16,9 @@ function reset_cpu_controls() {
     echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
     echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
+    # Restore uncore frequency range
+    sudo wrmsr 0x620 0x0819
+
     # Test if kernel supports the ISST interface
     $(test -e /dev/isst)
     isst_found=$?
