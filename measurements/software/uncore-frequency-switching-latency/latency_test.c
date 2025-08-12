@@ -36,12 +36,6 @@
 #define RAND_NUM 1234567
 #define MAX_CYCLES 2000
 
-#ifndef DEFAULT_UNCORE_RANGE
-const uint64_t default_uncore_range = 0x0819;
-#else
-const uint64_t default_uncore_range = DEFAULT_UNCORE_RANGE;
-#endif
-
 /**
  * Returns time stamp counter
  */
@@ -105,22 +99,18 @@ static __inline__ test_buffer_t run_buffer_plain(test_buffer_t buffer,
 
 /**
  * Jump around nr_accesses times in pointer chasing buffer
- * Will take rdtsc for each access, will change UFS target register (given as
- * fd) to target Will check for first latency that takes longer then max_cycles
- * cycles Will report the time between write to UFS register until this gap as
- * change Will report the gap as duration Will report the average latecies
- * before/after the gap as report/after
+ * Will take rdtsc for each access. Will check for first latency that takes
+ * longer then max_cycles cycles Will report the time between write to UFS
+ * register until this gap as change Will report the gap as duration Will report
+ * the average latecies before/after the gap as report/after
  */
 
 static __inline__ test_buffer_t
 run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
            uint64_t *before, uint64_t *change, uint64_t *duration,
-           uint64_t *after, int fd, uint64_t target) {
+           uint64_t *after) {
   size_t nr = 0;
   void *current = (void *)*buffer;
-
-  if (target != 0)
-    pwrite(fd, &target, sizeof(default_uncore_range), 0x620);
 
   uint64_t start = rdtsc();
   uint64_t last_reading = start;
@@ -155,7 +145,7 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
  * Return the number of 100kHz uncore steps that are inside the range of
  * default_uncore_range.
  */
-size_t getNumberOfUncoreStepIn100KHzSteps() {
+size_t getNumberOfUncoreStepIn100KHzSteps(const uint64_t default_uncore_range) {
   const uint8_t start = (default_uncore_range >> 8) & 0xff;
   const uint8_t stop = default_uncore_range & 0xff;
 
@@ -169,7 +159,8 @@ size_t getNumberOfUncoreStepIn100KHzSteps() {
  * Fill the buffer provided with fixed uncore frequencies in 100kHz steps from
  * the range defined with default_uncore_range.
  */
-void fillFixedUncoreFrequenciesBuffer(uint64_t *buffer) {
+void fillFixedUncoreFrequenciesBuffer(uint64_t *buffer,
+                                      const uint64_t default_uncore_range) {
   assert(buffer && "Buffer not provided.");
 
   const uint8_t start = (default_uncore_range >> 8) & 0xff;
@@ -181,14 +172,19 @@ void fillFixedUncoreFrequenciesBuffer(uint64_t *buffer) {
 }
 
 int main() {
-  // tested UFS frequencies
-  uint64_t *settings = malloc(getNumberOfUncoreStepIn100KHzSteps());
-  fillFixedUncoreFrequenciesBuffer(settings);
-
   // open fd for switching msr
   int msr_fd = open("/dev/cpu/0/msr", O_RDWR);
   // report it, should be > 0 ;)
   printf("fd=%d\n", msr_fd);
+
+  // Read the current uncore frequency setting
+  uint64_t default_uncore_range;
+  pread(msr_fd, &default_uncore_range, sizeof(default_uncore_range), 0x620);
+
+  // tested UFS frequencies
+  uint64_t *settings =
+      malloc(getNumberOfUncoreStepIn100KHzSteps(default_uncore_range));
+  fillFixedUncoreFrequenciesBuffer(settings, default_uncore_range);
 
   // create pointer chasing buffers
   test_buffer_t l1_buffer = create_buffer(L1_DATA_SIZE);
@@ -204,9 +200,11 @@ int main() {
 
 #ifdef MANUAL_FREQUENCY_LATENCY
   // for each source target combination:
-  for (uint64_t source = 0; source < getNumberOfUncoreStepIn100KHzSteps();
+  for (uint64_t source = 0;
+       source < getNumberOfUncoreStepIn100KHzSteps(default_uncore_range);
        source++) {
-    for (uint64_t target = 0; target < getNumberOfUncoreStepIn100KHzSteps();
+    for (uint64_t target = 0;
+         target < getNumberOfUncoreStepIn100KHzSteps(default_uncore_range);
          target++) {
       if (source == target) {
         continue;
@@ -214,12 +212,12 @@ int main() {
       // repeat measurement 1000 times
       for (int i = 0; i < 1000; i++) {
         // set default
-        pwrite(msr_fd, &settings[source], 8, 0x620);
+        pwrite(msr_fd, &settings[source], sizeof(settings[source]), 0x620);
 
         // run in default
-        l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                               &cycles_switch, &cycles_duration,
-                               &performance_after, msr_fd, 0);
+        l3_buffer =
+            run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
+                       &cycles_switch, &cycles_duration, &performance_after);
         /*                printf(
                                 "default %d00 MHz->%d00Mhz Cycles per access
            before:%lu after:%lu, switch after %lu cycles, took %lu cycles\n",
@@ -228,9 +226,10 @@ int main() {
            cycles_switch, cycles_duration);
         */
         // switch to target and measure
-        l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                               &cycles_switch, &cycles_duration,
-                               &performance_after, msr_fd, settings[target]);
+        pwrite(msr_fd, &settings[target], sizeof(settings[target]), 0x620);
+        l3_buffer =
+            run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
+                       &cycles_switch, &cycles_duration, &performance_after);
         printf("%lu00 MHz->%lu00Mhz Cycles per access before:%lu after:%lu, "
                "switch after %lu cycles, took %lu cycles\n",
                0xFF & settings[source], 0xFF & settings[target],
@@ -241,18 +240,19 @@ int main() {
   }
 #endif
 
-#ifdef AUTOMATIC_FREQUENCY_LATENCY
   // set default again
   pwrite(msr_fd, &default_uncore_range, sizeof(default_uncore_range), 0x620);
+
+#ifdef AUTOMATIC_FREQUENCY_LATENCY
   for (int i = 0; i < 1000; i++) {
     // first train for local access (L1)
-    l1_buffer = run_buffer(l1_buffer, nr * 10000, MAX_CYCLES,
-                           &performance_before, &cycles_switch,
-                           &cycles_duration, &performance_after, msr_fd, 0);
+    l1_buffer =
+        run_buffer(l1_buffer, nr * 10000, MAX_CYCLES, &performance_before,
+                   &cycles_switch, &cycles_duration, &performance_after);
     // then: go to offcore (L3)
-    l3_buffer = run_buffer(l3_buffer, nr * 1000, MAX_CYCLES,
-                           &performance_before, &cycles_switch,
-                           &cycles_duration, &performance_after, msr_fd, 0);
+    l3_buffer =
+        run_buffer(l3_buffer, nr * 1000, MAX_CYCLES, &performance_before,
+                   &cycles_switch, &cycles_duration, &performance_after);
     // then: report performance stuff :)
     printf("L1->L3 Cycles per access before:%lu after:%lu, switch after %lu "
            "cycles, took %lu cycles\n",
@@ -260,6 +260,9 @@ int main() {
            cycles_duration);
   }
 #endif
+
+  // set default again
+  pwrite(msr_fd, &default_uncore_range, sizeof(default_uncore_range), 0x620);
 
   return EXIT_SUCCESS;
 }
