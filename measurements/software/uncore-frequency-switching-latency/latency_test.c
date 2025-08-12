@@ -183,7 +183,8 @@ int main() {
 
   // tested UFS frequencies
   uint64_t *settings =
-      malloc(getNumberOfUncoreStepIn100KHzSteps(default_uncore_range));
+      malloc(getNumberOfUncoreStepIn100KHzSteps(default_uncore_range) *
+             sizeof(uint64_t));
   fillFixedUncoreFrequenciesBuffer(settings, default_uncore_range);
 
   // create pointer chasing buffers
