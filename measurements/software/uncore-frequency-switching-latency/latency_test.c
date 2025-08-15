@@ -141,16 +141,20 @@ static __inline__ test_buffer_t run_buffer_plain(test_buffer_t buffer,
  * \arg before The average load latency in cyles before the frequency change
  * occured
  * \arg change The number of cycles before the frequency change occured
+ * \arg before_timestamp The timestamp before the detected frequency change
+ * \arg at_timestamp The timestamp after the detected frequency change
  * \arg duration The duration of the load above the max_cycles theshold
  * \arg after The average load latency in cycles after the frequency change
  * \returns The last used pointer of the buffer of pointers
  */
 static __inline__ test_buffer_t
 run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
-           uint64_t *before, uint64_t *change, uint64_t *duration,
-           uint64_t *after) {
+           uint64_t *before, uint64_t *change, uint64_t *before_timestamp,
+           uint64_t *at_timestamp, uint64_t *duration, uint64_t *after) {
   *before = 0;
   *change = 0;
+  *before_timestamp = 0;
+  *at_timestamp = 0;
   *duration = 0;
   *after = 0;
 
@@ -179,6 +183,8 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
       *before =
           (timestamp_before_gap - start_timestamp) / nb_of_accesses_before_gap;
       *duration = timestamp_at_gap - timestamp_before_gap;
+      *before_timestamp = timestamp_before_gap;
+      *at_timestamp = timestamp_at_gap;
 
       frequency_change_detected = true;
     }
@@ -248,7 +254,7 @@ int main() {
 
   // gathered results
   uint64_t performance_before, performance_after, cycles_switch,
-      cycles_duration;
+      cycles_duration, at_timestamp, before_timestamp;
 
   unsigned long waitTimeUs = 0;
 
@@ -278,9 +284,9 @@ int main() {
         pwrite(msr_fd, &settings[source], sizeof(settings[source]), 0x620);
 
         // run in default
-        l3_buffer =
-            run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                       &cycles_switch, &cycles_duration, &performance_after);
+        l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
+                               &cycles_switch, &before_timestamp, &at_timestamp,
+                               &cycles_duration, &performance_after);
         /*                printf(
                                 "default %d00 MHz->%d00Mhz Cycles per access
            before:%lu after:%lu, switch after %lu cycles, took %lu cycles\n",
@@ -290,14 +296,15 @@ int main() {
         */
         // switch to target and measure
         pwrite(msr_fd, &settings[target], sizeof(settings[target]), 0x620);
-        l3_buffer =
-            run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                       &cycles_switch, &cycles_duration, &performance_after);
+        l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
+                               &cycles_switch, &before_timestamp, &at_timestamp,
+                               &cycles_duration, &performance_after);
         printf("%lu00 MHz->%lu00Mhz Cycles per access before:%lu after:%lu, "
-               "switch after %lu cycles, took %lu cycles\n",
+               "switch after %lu cycles, took %lu cycles, switch timestamp "
+               "before %lu, after %lu\n",
                0xFF & settings[source], 0xFF & settings[target],
                performance_before, performance_after, cycles_switch,
-               cycles_duration);
+               cycles_duration, before_timestamp, at_timestamp);
       }
     }
   }
@@ -318,18 +325,18 @@ int main() {
     wait(waitTimeUs);
 
     // first train for local access (L1)
-    l1_buffer =
-        run_buffer(l1_buffer, nr * 10000, MAX_CYCLES, &performance_before,
-                   &cycles_switch, &cycles_duration, &performance_after);
+    l1_buffer = run_buffer(
+        l1_buffer, nr * 10000, MAX_CYCLES, &performance_before, &cycles_switch,
+        &before_timestamp, &at_timestamp, &cycles_duration, &performance_after);
     // then: go to offcore (L3)
-    l3_buffer =
-        run_buffer(l3_buffer, nr * 1000, MAX_CYCLES, &performance_before,
-                   &cycles_switch, &cycles_duration, &performance_after);
+    l3_buffer = run_buffer(
+        l3_buffer, nr * 1000, MAX_CYCLES, &performance_before, &cycles_switch,
+        &before_timestamp, &at_timestamp, &cycles_duration, &performance_after);
     // then: report performance stuff :)
     printf("L1->L3 Cycles per access before:%lu after:%lu, switch after %lu "
-           "cycles, took %lu cycles\n",
+           "cycles, took %lu cycles, switch timestamp before %lu, after %lu\n",
            performance_before, performance_after, cycles_switch,
-           cycles_duration);
+           cycles_duration, before_timestamp, at_timestamp);
   }
 #endif
 
