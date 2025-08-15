@@ -49,8 +49,8 @@ function reset_cpu_controls() {
     if [[ $isst_found -eq 0 ]]
     then
         # Disable ISST
-        sudo "${ISST}" base-freq disable
-        sudo "${ISST}" turbo-freq disable
-        sudo "${ISST}" core-power disable
+        sudo $ISST base-freq disable
+        sudo $ISST turbo-freq disable
+        sudo $ISST core-power disable
     fi
 }
