@@ -168,7 +168,8 @@ run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
   bool frequency_change_detected = false;
   uint64_t timestamp_at_gap, timestamp_before_gap, nb_of_accesses_before_gap;
 
-  for (size_t nr = 0; nr < nr_accesses;
+  // start at 1 to make sure that we do not divide by zero
+  for (size_t nr = 1; nr < nr_accesses;
        nr++, last_timestamp = current_timestamp) {
     // Read the pointer chaser and measure the timestamp after the load
     current = (*(void **)current);
