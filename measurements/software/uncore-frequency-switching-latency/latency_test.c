@@ -20,6 +20,7 @@
 #include <fcntl.h>
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -98,45 +99,61 @@ static __inline__ test_buffer_t run_buffer_plain(test_buffer_t buffer,
 }
 
 /**
- * Jump around nr_accesses times in pointer chasing buffer
- * Will take rdtsc for each access. Will check for first latency that takes
- * longer then max_cycles cycles Will report the time between write to UFS
- * register until this gap as change Will report the gap as duration Will report
- * the average latecies before/after the gap as report/after
+ * Follow the pointer chasing buffer by loading the new address from the buffer.
+ * \arg buffer The pointer to the buffer of pointers
+ * \arg nr_accesses The total number of accesses of the buffer
+ * \arg max_cycles The load latency threshold value used to detect that the
+ * frequency changed
+ * \arg before The average load latency in cyles before the frequency change
+ * occured
+ * \arg change The number of cycles before the frequency change occured
+ * \arg duration The duration of the load above the max_cycles theshold
+ * \arg after The average load latency in cycles after the frequency change
+ * \returns The last used pointer of the buffer of pointers
  */
-
 static __inline__ test_buffer_t
 run_buffer(test_buffer_t buffer, size_t nr_accesses, uint64_t max_cycles,
            uint64_t *before, uint64_t *change, uint64_t *duration,
            uint64_t *after) {
-  size_t nr = 0;
-  void *current = (void *)*buffer;
+  *before = 0;
+  *change = 0;
+  *duration = 0;
+  *after = 0;
 
-  uint64_t start = rdtsc();
-  uint64_t last_reading = start;
-  uint64_t current_reading, mid = 0, mid2, nr_before;
-  while (nr < nr_accesses) {
-    nr++;
+  void *current = (void *)*buffer;
+  const uint64_t start_timestamp = rdtsc();
+
+  // the timestamp after the last load
+  uint64_t last_timestamp = start_timestamp;
+  // the timestamp after the current load
+  uint64_t current_timestamp;
+  bool frequency_change_detected = false;
+  uint64_t timestamp_at_gap, timestamp_before_gap, nb_of_accesses_before_gap;
+
+  for (size_t nr = 0; nr < nr_accesses;
+       nr++, last_timestamp = current_timestamp) {
+    // Read the pointer chaser and measure the timestamp after the load
     current = (*(void **)current);
-    current_reading = rdtsc();
-    if ((mid == 0) && ((current_reading - last_reading) > max_cycles)) {
-      mid = current_reading;
-      mid2 = last_reading;
-      nr_before = nr;
-      *before = (mid2 - start) / nr_before;
-      *duration = mid - mid2;
+    current_timestamp = rdtsc();
+
+    if ((!frequency_change_detected) &&
+        (current_timestamp - last_timestamp > max_cycles)) {
+      timestamp_at_gap = current_timestamp;
+      timestamp_before_gap = last_timestamp;
+
+      nb_of_accesses_before_gap = nr;
+      *before =
+          (timestamp_before_gap - start_timestamp) / nb_of_accesses_before_gap;
+      *duration = timestamp_at_gap - timestamp_before_gap;
+
+      frequency_change_detected = true;
     }
-    last_reading = current_reading;
   }
-  if (mid == 0) {
-    *before = 0;
-    *after = 0;
-    *change = 0, *duration = 0;
-  } else {
-    *after = (current_reading - mid) / (nr - nr_before);
-    //	printf("%lu %lu %lu
-    //%lu\n",(current_reading-mid),nr,nr_before,(mid2-start)/nr_before);
-    *change = mid2 - start;
+
+  if (frequency_change_detected) {
+    *after = (current_timestamp - timestamp_at_gap) /
+             (nr_accesses - nb_of_accesses_before_gap);
+    *change = timestamp_before_gap - start_timestamp;
   }
   return current;
 }
