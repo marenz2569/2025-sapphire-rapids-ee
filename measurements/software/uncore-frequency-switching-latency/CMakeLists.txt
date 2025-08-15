@@ -5,7 +5,7 @@ add_executable(
     latency_test.c
 )
 
-set_target_properties(uncore-frequency-manual-switching-latency PROPERTIES COMPILE_FLAGS "-DMANUAL_FREQUENCY_LATENCY")
+set_target_properties(uncore-frequency-manual-switching-latency PROPERTIES COMPILE_FLAGS "-DMANUAL_FREQUENCY_LATENCY -DNB_WAIT_RANDOM -DNB_WAIT_US=20000")
 
 # Measure latency of automatic latency change
 add_executable(
@@ -13,4 +13,4 @@ add_executable(
     latency_test.c
 )
 
-set_target_properties(uncore-frequency-automatic-switching-latency PROPERTIES COMPILE_FLAGS "-DAUTOMATIC_FREQUENCY_LATENCY")
+set_target_properties(uncore-frequency-automatic-switching-latency PROPERTIES COMPILE_FLAGS "-DAUTOMATIC_FREQUENCY_LATENCY -DNB_WAIT_RANDOM -DNB_WAIT_US=20000")

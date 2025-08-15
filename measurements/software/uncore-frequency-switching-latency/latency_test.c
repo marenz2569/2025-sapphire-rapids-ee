@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 // This buffer must fit into the L1d Cache, therefore it should be a lot smaller
@@ -36,6 +37,39 @@
 #define CACHE_LINE 64
 #define RAND_NUM 1234567
 #define MAX_CYCLES 2000
+
+// from
+// http://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
+static unsigned long x = 123456789, y = 362436069, z = 521288629;
+
+unsigned long xorshf96() { // period 2^96-1
+  unsigned long t;
+  x ^= x << 16;
+  x ^= x >> 5;
+  x ^= x << 1;
+
+  t = x;
+  x = y;
+  y = z;
+  z = t ^ x ^ y;
+
+  return z;
+}
+
+unsigned long long getusec() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  return (unsigned long long)tv.tv_usec +
+         (unsigned long long)tv.tv_sec * 1000000;
+}
+
+inline void wait(unsigned long time_in_us) {
+  unsigned long long before_time, after_time;
+  before_time = getusec();
+  do {
+    after_time = getusec();
+  } while (after_time - before_time < time_in_us);
+}
 
 /**
  * Returns time stamp counter
@@ -216,6 +250,8 @@ int main() {
   uint64_t performance_before, performance_after, cycles_switch,
       cycles_duration;
 
+  unsigned long waitTimeUs = 0;
+
 #ifdef MANUAL_FREQUENCY_LATENCY
   // for each source target combination:
   for (uint64_t source = 0;
@@ -229,6 +265,15 @@ int main() {
       }
       // repeat measurement 1000 times
       for (int i = 0; i < 1000; i++) {
+#ifdef NB_WAIT_RANDOM
+        waitTimeUs = xorshf96() % NB_WAIT_US;
+#else
+        waitTimeUs = NB_WAIT_US;
+#endif
+
+        // Wait some time
+        wait(waitTimeUs);
+
         // set default
         pwrite(msr_fd, &settings[source], sizeof(settings[source]), 0x620);
 
@@ -263,6 +308,15 @@ int main() {
 
 #ifdef AUTOMATIC_FREQUENCY_LATENCY
   for (int i = 0; i < 1000; i++) {
+#ifdef NB_WAIT_RANDOM
+    waitTimeUs = xorshf96() % NB_WAIT_US;
+#else
+    waitTimeUs = NB_WAIT_US;
+#endif
+
+    // Wait some time
+    wait(waitTimeUs);
+
     // first train for local access (L1)
     l1_buffer =
         run_buffer(l1_buffer, nr * 10000, MAX_CYCLES, &performance_before,
