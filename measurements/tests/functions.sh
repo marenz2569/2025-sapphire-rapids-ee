@@ -3,7 +3,8 @@
 # Reset the the SMT control, cpu frequency and intel-speed-select back to defaults.
 # The first argument specifes which cpu governor should be applied
 function reset_cpu_controls() {
-    local hostname=$(hostname)
+    local hostname
+    hostname=$(hostname)
 
     # Switch all cpus on
     echo on | sudo tee /sys/devices/system/cpu/smt/control
@@ -20,14 +21,16 @@ function reset_cpu_controls() {
     # Enable MSR readout
     lsmod | grep -w msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
 
-    if [[ $hostname -eq "hati" ]]; then
+    if [[ $hostname = "hati" ]]
+    then
         # Restore full cpu frequency range
         echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
         echo 3800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
         # Restore uncore frequency range
         sudo wrmsr -a 0x620 0x0819
-    else if [[ $hostname -eq "ariel" ]]; then
+    elif [[ $hostname = "ariel" ]]
+    then
         # Restore full cpu frequency range
         echo 1200000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
         echo 3001000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
@@ -40,13 +43,14 @@ function reset_cpu_controls() {
     fi
 
     # Test if kernel supports the ISST interface
-    $(test -e /dev/isst_interface)
+    test -e /dev/isst_interface
     isst_found=$?
 
-    if [[ $isst_found -eq 0 ]]; then
+    if [[ $isst_found -eq 0 ]]
+    then
         # Disable ISST
-        sudo $ISST base-freq disable
-        sudo $ISST turbo-freq disable
-        sudo $ISST core-power disable
+        sudo "${ISST}" base-freq disable
+        sudo "${ISST}" turbo-freq disable
+        sudo "${ISST}" core-power disable
     fi
 }
