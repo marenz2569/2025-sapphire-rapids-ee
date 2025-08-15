@@ -43,8 +43,7 @@ function reset_cpu_controls() {
     $(test -e /dev/isst_interface)
     isst_found=$?
 
-    if [ $isst_found -eq 0 ]
-    then
+    if [[ $isst_found -eq 0 ]]; then
         # Disable ISST
         sudo $ISST base-freq disable
         sudo $ISST turbo-freq disable
