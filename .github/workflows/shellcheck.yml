@@ -1,0 +1,24 @@
+name: Build
+
+on: [push, pull_request]
+
+
+jobs:
+  build-measurements:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt install shellcheck
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+    - name: Emit shellcheck warning and errors on all .sh files
+      run: |
+        find -type f -name '*.sh' | xargs -I{} shellcheck -S warning {}
