@@ -40,7 +40,7 @@ function reset_cpu_controls() {
     fi
 
     # Test if kernel supports the ISST interface
-    $(test -e /dev/isst)
+    $(test -e /dev/isst_interface)
     isst_found=$?
 
     if [ $isst_found -eq 0 ]
