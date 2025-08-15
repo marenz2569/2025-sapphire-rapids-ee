@@ -1,4 +1,4 @@
-name: Build
+name: build-measurements
 
 on: [push, pull_request]
 
