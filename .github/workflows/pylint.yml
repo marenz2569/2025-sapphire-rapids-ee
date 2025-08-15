@@ -24,6 +24,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: '0'
-    - name: Emit pylint warnings .py files
+    - name: Emit pylint warnings on all .py files
       run: |
-        find -type f -name '*.sh' | xargs -I{} pylint {}
+        find -type f -name '*.py' | xargs -I{} pylint {}
