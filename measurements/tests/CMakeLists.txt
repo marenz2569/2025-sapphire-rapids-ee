@@ -47,3 +47,8 @@ add_test(NAME tooling/reset-cpu-to-performance
 add_test(NAME tooling/reset-cpu-to-powersave
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/reset_cpu.sh powersave
 )
+
+# Import ISST as we need to reset it to defaults
+ExternalProject_Get_Property(isst-v1.22 INSTALL_DIR)
+set_property(TEST tooling/reset-cpu-to-performance APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
+set_property(TEST tooling/reset-cpu-to-powersave APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
