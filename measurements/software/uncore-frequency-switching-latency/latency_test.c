@@ -250,7 +250,7 @@ int main() {
   test_buffer_t l3_buffer = create_buffer(L3_DATA_SIZE);
 
   // nr of accesses for pointer chasing
-  size_t nr = 200000;
+  size_t nr = 100000;
 
   // gathered results
   uint64_t performance_before, performance_after, cycles_switch,
@@ -325,13 +325,13 @@ int main() {
     wait(waitTimeUs);
 
     // first train for local access (L1)
-    l1_buffer = run_buffer(l1_buffer, nr, MAX_CYCLES, &performance_before,
-                           &cycles_switch, &before_timestamp, &at_timestamp,
-                           &cycles_duration, &performance_after);
+    l1_buffer = run_buffer(
+        l1_buffer, nr * 10000, MAX_CYCLES, &performance_before, &cycles_switch,
+        &before_timestamp, &at_timestamp, &cycles_duration, &performance_after);
     // then: go to offcore (L3)
-    l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                           &cycles_switch, &before_timestamp, &at_timestamp,
-                           &cycles_duration, &performance_after);
+    l3_buffer = run_buffer(
+        l3_buffer, nr * 1000, MAX_CYCLES, &performance_before, &cycles_switch,
+        &before_timestamp, &at_timestamp, &cycles_duration, &performance_after);
     // then: report performance stuff :)
     printf("L1->L3 Cycles per access before:%lu after:%lu, switch after %lu "
            "cycles, took %lu cycles, switch timestamp before %lu, after %lu\n",
