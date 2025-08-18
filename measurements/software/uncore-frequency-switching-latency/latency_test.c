@@ -36,7 +36,9 @@
 #define L3_DATA_SIZE 4 * 1024 * 1024
 #define CACHE_LINE 64
 #define RAND_NUM 1234567
-#define MAX_CYCLES 2000
+// Detection threshold of 0.1us on a processor with a base frequency of 2GHz.
+// 200 cycles / 2GHz = 0.1us
+#define MAX_CYCLES 200
 
 // from
 // http://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
@@ -250,14 +252,14 @@ int main() {
 
   test_buffer_t l3_buffer = create_buffer(L3_DATA_SIZE);
 
-  // nr of accesses for pointer chasing
-  size_t nr = 100000;
+  // nr of accesses for pointer chasing.
+  // Set this value large enough so that the resulting execution speed of the
+  // pointer chaser will contain the frequency switch.
+  size_t nr = 50000;
 
   // gathered results
   uint64_t performance_before, performance_after, cycles_switch,
       cycles_duration, at_timestamp, before_timestamp;
-
-  unsigned long waitTimeUs = 0;
 
 #ifdef MANUAL_FREQUENCY_LATENCY
   // for each source target combination:
@@ -272,22 +274,22 @@ int main() {
       }
       // repeat measurement 1000 times
       for (int i = 0; i < 1000; i++) {
-#ifdef NB_WAIT_RANDOM
-        waitTimeUs = xorshf96() % NB_WAIT_US;
-#else
-        waitTimeUs = NB_WAIT_US;
-#endif
+        unsigned long waitTimeIterations = 0;
 
-        // Wait some time
-        wait(waitTimeUs);
+#ifdef NB_WAIT_RANDOM
+        waitTimeIterations = xorshf96() % NB_WAIT_ITERATIONS;
+#else
+        waitTimeIterations = NB_WAIT_ITERATIONS;
+#endif
 
         // set default
         pwrite(msr_fd, &settings[source], sizeof(settings[source]), 0x620);
 
-        // run in default
-        l3_buffer = run_buffer(l3_buffer, nr, MAX_CYCLES, &performance_before,
-                               &cycles_switch, &before_timestamp, &at_timestamp,
-                               &cycles_duration, &performance_after);
+        // run in default and wait an additional number of iterations
+        l3_buffer =
+            run_buffer(l3_buffer, nr + waitTimeIterations, MAX_CYCLES,
+                       &performance_before, &cycles_switch, &before_timestamp,
+                       &at_timestamp, &cycles_duration, &performance_after);
         /*                printf(
                                 "default %d00 MHz->%d00Mhz Cycles per access
            before:%lu after:%lu, switch after %lu cycles, took %lu cycles\n",
@@ -316,19 +318,19 @@ int main() {
 
 #ifdef AUTOMATIC_FREQUENCY_LATENCY
   for (int i = 0; i < 1000; i++) {
+    unsigned long waitTimeIterations = 0;
+
 #ifdef NB_WAIT_RANDOM
-    waitTimeUs = xorshf96() % NB_WAIT_US;
+    waitTimeIterations = xorshf96() % NB_WAIT_ITERATIONS;
 #else
-    waitTimeUs = NB_WAIT_US;
+    waitTimeIterations = NB_WAIT_ITERATIONS;
 #endif
 
-    // Wait some time
-    wait(waitTimeUs);
-
     // first train for local access (L1)
-    l1_buffer = run_buffer(
-        l1_buffer, nr * 10000, MAX_CYCLES, &performance_before, &cycles_switch,
-        &before_timestamp, &at_timestamp, &cycles_duration, &performance_after);
+    l1_buffer =
+        run_buffer(l1_buffer, nr * 10000 + waitTimeIterations, MAX_CYCLES,
+                   &performance_before, &cycles_switch, &before_timestamp,
+                   &at_timestamp, &cycles_duration, &performance_after);
     // then: go to offcore (L3)
     l3_buffer = run_buffer(
         l3_buffer, nr * 1000, MAX_CYCLES, &performance_before, &cycles_switch,
