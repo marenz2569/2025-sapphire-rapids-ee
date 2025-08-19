@@ -81,7 +81,7 @@ do
 	done
 done
 
-cd $RESULTS_FOLDER/data
+cd $RESULTS_FOLDER/data || exit
 for file in ./*; do
     if [ -f "$file" ]; then
         perf script --ns -i $file > ../data_txt/$file

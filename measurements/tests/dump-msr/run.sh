@@ -2,8 +2,8 @@
 
 # Traverse to the path of this script
 # https://stackoverflow.com/a/24112741
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-cd "$parent_path"
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit ; pwd -P )
+cd "$parent_path" || exit
 
 lsmod | grep -w msr && echo "MSR already loaded" || { echo "Loading MSR module"; sudo modprobe msr ; }
 
