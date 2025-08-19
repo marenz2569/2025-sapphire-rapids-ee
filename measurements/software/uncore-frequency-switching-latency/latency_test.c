@@ -36,9 +36,9 @@
 #define L3_DATA_SIZE 4 * 1024 * 1024
 #define CACHE_LINE 64
 #define RAND_NUM 1234567
-// Detection threshold of 0.1us on a processor with a base frequency of 2GHz.
-// 200 cycles / 2GHz = 0.1us
-#define MAX_CYCLES 200
+// Detection threshold of 0.5us on a processor with a base frequency of 2GHz.
+// 1000 cycles / 2GHz = 0.5us
+#define MAX_CYCLES 1000
 
 // from
 // http://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
