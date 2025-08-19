@@ -1,0 +1,30 @@
+name: latex
+
+on: [push, pull_request]
+
+jobs:
+  latex:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
+    container:
+      image: ghcr.io/xu-cheng/texlive-debian
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+    - name: Build pdf
+      run: |
+        cd thesis
+        make all
+    - uses: actions/upload-artifact@v4
+      with:
+        name: PDF
+        path: thesis/main.pdf
+    - uses: actions/upload-artifact@v4
+      with:
+        name: PDFX
+        path: thesis/main_pdfx.pdf
