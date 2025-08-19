@@ -10,7 +10,7 @@ echo 2000000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 echo 2000000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
 # shellcheck disable=SC2024
-sudo taskset -c 0 stdbuf -oL $UFS_MANUAL > $RESULTS_FOLDER/manual.2200.out
+sudo taskset -c 0 stdbuf -oL $UFS_MANUAL > $RESULTS_FOLDER/manual.2000.out
 
 # Run at lowest frequency
 echo 800000 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
