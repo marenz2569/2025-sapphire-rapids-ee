@@ -39,11 +39,11 @@ do
 	echo "Enabling $(cat /sys/devices/system/cpu/cpu0/cpuidle/$CSTATE/name)"
 	echo 0 | sudo tee /sys/devices/system/cpu/cpu*/cpuidle/$CSTATE/disable
 
-	for GOVERNOR in ${GOVERNORS[@]}
+	for GOVERNOR in "${GOVERNORS[@]}"
 	do
 		echo $GOVERNOR | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
-		for FREQ in ${FREQS[@]}
+		for FREQ in "${FREQS[@]}"
 		do
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
 			echo $FREQ | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq

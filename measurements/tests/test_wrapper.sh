@@ -25,7 +25,7 @@ lsmod > $RESULTS_FOLDER/lsmod
 reset_cpu_controls "performance"
 
 # Execute the command of the measurement passed via the arguments
-$@
+"$@"
 
 # Switch back to a green governor
 reset_cpu_controls "powersave"

@@ -7,4 +7,4 @@ cd "$parent_path" || exit
 
 source ./functions.sh
 
-reset_cpu_controls $@
+reset_cpu_controls "$@"
