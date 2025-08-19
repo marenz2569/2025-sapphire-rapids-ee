@@ -33,7 +33,7 @@ for CPU1 in $CPUS; do
     # test frequency via perf
     FREQ=`taskset -c ${CPU1} perf stat --log-fd 1 -e cycles -x ' ' timeout 1s $WHILE_TRUE | grep -v "not counted" - | awk '{print $1}' `
     # it should be 800 MHz, test with 20% addition.
-    if [ $FREQ -gt $(echo "scale=0; 800000000 * 1.2 / 1" | bc -l) ]; then
+    if [ $FREQ -gt "$(echo "scale=0; 800000000 * 1.2 / 1" | bc -l)" ]; then
       echo "cpu $CPU2 influences cpu $CPU1: frequency of cpu $CPU1 is $FREQ Hz instead of 800MHz"
     fi
     sleep 1

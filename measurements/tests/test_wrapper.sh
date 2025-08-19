@@ -8,7 +8,9 @@ cd "$parent_path" || exit
 source functions.sh
 
 # Create the folder for the results of measurement
-export RESULTS_FOLDER=${TEST_ROOT}/$(uname -n)/${TEST_NAME}/$(date +"%Y-%m-%d-%H%M")
+uname_n=$(uname -n)
+date_string=$(date +"%Y-%m-%d-%H%M")
+export RESULTS_FOLDER=${TEST_ROOT}/${uname_n}/${TEST_NAME}/${date_string}
 mkdir -p $RESULTS_FOLDER
 
 # Write the current git-rev into the results folder

@@ -3,12 +3,13 @@
 # Test if the processor supports scaling_available_frequencies
 # If it does, we will use the userspace governour and write to scaling_setspeed
 # if not, we use the performance governor and write to scaling_max_speed
-$(test -e /sys/bus/cpu/devices/cpu0/cpufreq/scaling_available_frequencies)
+test -e /sys/bus/cpu/devices/cpu0/cpufreq/scaling_available_frequencies
+# shellcheck disable=SC2319
 scaling_available_frequencies_found=$?
 
 if [ $scaling_available_frequencies_found -eq 0 ]
 then
-	frequencies=(`cat /sys/bus/cpu/devices/cpu0/cpufreq/scaling_available_frequencies`)
+	IFS=" " read -r -a frequencies <<< "$(cat /sys/bus/cpu/devices/cpu0/cpufreq/scaling_available_frequencies)"
 
 	echo userspace | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_governor
 	# Set all threads to the lowest frequency
@@ -19,7 +20,7 @@ else
 	min_frequency=`cat /sys/bus/cpu/devices/cpu0/cpufreq/scaling_min_freq`
 	max_frequency=`cat /sys/bus/cpu/devices/cpu0/cpufreq/scaling_max_freq`
     for ((i = min_frequency ; i <= max_frequency ; i+=100000)); do
-		frequencies+=($i)
+		frequencies+=( "$i" )
 	done
 
 	echo performance | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_governor
@@ -54,6 +55,7 @@ do
 			continue
 		fi
 		echo "Running $START -> $TARGET"
+		# shellcheck disable=SC2024
 		sudo $FTALAT $START $TARGET > $RESULTS_FOLDER/${START}_${TARGET}.txt
 	done
 done
