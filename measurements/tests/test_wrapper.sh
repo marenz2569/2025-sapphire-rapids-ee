@@ -30,6 +30,7 @@ mkdir $RESULTS_FOLDER/hwloc-topology
 sudo $HWLOC_GATHER_TOPOLOGY --io --dmi --dt $RESULTS_FOLDER/hwloc-topology/hwloc-gather-topology
 
 # dump lshw xml file
+# shellcheck disable=SC2024
 sudo lshw -xml > $RESULTS_FOLDER/lshw.xml
 
 # Execute the command of the measurement passed via the arguments
