@@ -265,6 +265,10 @@ void *latency_routine(void *args_void) {
     // write the latency results
     for (int i = 0; i < args->num_thread_locations; i++) {
       for (int j = 0; j < args->num_thread_locations; j++) {
+        // Skip output for omitted experiments
+        if (i == j) {
+          continue;
+        }
         for (int r = 0; r < args->num_repetitions; r++) {
           for (int k = 0; k < args->num_cache_lines; k++) {
             fprintf(file, "%lu,%lu,%d,%d,%lu,%lu,%lu\n",
