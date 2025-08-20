@@ -24,6 +24,8 @@ lsmod > $RESULTS_FOLDER/lsmod
 
 reset_cpu_controls "performance"
 
+sudo lshw -xml > $RESULTS_FOLDER/lshw.xml
+
 # Execute the command of the measurement passed via the arguments
 "$@"
 
