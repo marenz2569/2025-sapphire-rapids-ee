@@ -213,7 +213,7 @@ void *latency_routine(void *args_void) {
         continue;
       }
       if (token != 0) {
-        if (pin_to_cpu(args->thread_locations[i]) == ERROR) {
+        if (pin_to_cpu(args->thread_locations[j]) == ERROR) {
           free(latency_results);
           free(count_results);
           free(flush_results);
