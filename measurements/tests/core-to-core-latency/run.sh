@@ -2,10 +2,6 @@
 
 mkdir $RESULTS_FOLDER/{lowest_uncore,highest_uncore,nominal_uncore}
 
-# set nominal core frequency
-echo "2000000" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq
-echo "2000000" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
-
 cd $RESULTS_FOLDER/nominal_uncore
 
 # do a ping pong between the cores 0 and 1, repeat each pingpong for 100 times,
