@@ -13,6 +13,9 @@ date_string=$(date +"%Y-%m-%d-%H%M")
 export RESULTS_FOLDER=${TEST_ROOT}/${uname_n}/${TEST_NAME}/${date_string}
 mkdir -p $RESULTS_FOLDER
 
+# Reset to a specified system state
+reset_cpu_controls "performance"
+
 # Write the current git-rev into the results folder
 git describe --always --abbrev=40 --dirty > $RESULTS_FOLDER/git-tag
 
@@ -22,8 +25,11 @@ cat /proc/cmdline > $RESULTS_FOLDER/proc-cmdline
 # Write lsmod into the results folder
 lsmod > $RESULTS_FOLDER/lsmod
 
-reset_cpu_controls "performance"
+# dump hwloc topology information
+mkdir $RESULTS_FOLDER/hwloc-topology
+sudo $HWLOC_GATHER_TOPOLOGY --io --dmi --dt > $RESULTS_FOLDER/hwloc-topology/hwloc-gather-topology
 
+# dump lshw xml file
 sudo lshw -xml > $RESULTS_FOLDER/lshw.xml
 
 # Execute the command of the measurement passed via the arguments

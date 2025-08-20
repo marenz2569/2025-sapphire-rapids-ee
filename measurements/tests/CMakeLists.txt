@@ -26,6 +26,10 @@ function(add_measurement)
     # Import ISST as we need to reset it to defaults
     ExternalProject_Get_Property(isst-v1.22 INSTALL_DIR)
     set_property(TEST measurement/${TEST_NAME} APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
+
+    # Import hwloc-gather-topology
+    ExternalProject_Get_Property(hwloc-v1.12.1 INSTALL_DIR)
+    set_property(TEST measurement/${TEST_NAME} APPEND PROPERTY ENVIRONMENT HWLOC_GATHER_TOPOLOGY=${INSTALL_DIR}/bin/hwloc-gather-topology)
 endfunction()
 
 add_subdirectory(avx-frequency-license-bands)
@@ -52,3 +56,8 @@ add_test(NAME tooling/reset-cpu-to-powersave
 ExternalProject_Get_Property(isst-v1.22 INSTALL_DIR)
 set_property(TEST tooling/reset-cpu-to-performance APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
 set_property(TEST tooling/reset-cpu-to-powersave APPEND PROPERTY ENVIRONMENT ISST=${INSTALL_DIR}/intel-speed-select)
+
+# Import hwloc-gather-topology
+ExternalProject_Get_Property(hwloc-v1.12.1 INSTALL_DIR)
+set_property(TEST tooling/reset-cpu-to-performance APPEND PROPERTY ENVIRONMENT HWLOC_GATHER_TOPOLOGY=${INSTALL_DIR}/bin/hwloc-gather-topology)
+set_property(TEST tooling/reset-cpu-to-powersave APPEND PROPERTY ENVIRONMENT HWLOC_GATHER_TOPOLOGY=${INSTALL_DIR}/bin/hwloc-gather-topology)
