@@ -27,7 +27,7 @@ lsmod > $RESULTS_FOLDER/lsmod
 
 # dump hwloc topology information
 mkdir $RESULTS_FOLDER/hwloc-topology
-sudo $HWLOC_GATHER_TOPOLOGY --io --dmi --dt > $RESULTS_FOLDER/hwloc-topology/hwloc-gather-topology
+sudo $HWLOC_GATHER_TOPOLOGY --io --dmi --dt $RESULTS_FOLDER/hwloc-topology/hwloc-gather-topology
 
 # dump lshw xml file
 sudo lshw -xml > $RESULTS_FOLDER/lshw.xml
