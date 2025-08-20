@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long, missing-module-docstring, missing-class-docstring, missing-function-docstring
+
 from typing import NamedTuple, List, Self
 
 def number_of_indents(line: str) -> int:
@@ -69,7 +71,7 @@ class Profile(NamedTuple):
                         turbo_levels += TurboRatioLevel.parse(level, unparsed_trl_lines)
             else:
                 unparsed_trl_lines.append(line)
-        
+
         return Profile(package_int, die_int, cpu_int, profile_int, turbo_levels)
 
 class IsstPerfProfile(NamedTuple):
@@ -77,6 +79,7 @@ class IsstPerfProfile(NamedTuple):
 
     @staticmethod
     def parse(file_name: str) -> Self:
+        # pylint: disable=consider-using-with, unspecified-encoding
         fp = open(file_name, 'r')
 
         profiles = []
