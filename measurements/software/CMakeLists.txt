@@ -4,6 +4,7 @@ include(InstallFirestarter.cmake)
 include(InstallIntelUncoreFrequencyDumper.cmake)
 include(InstallRoco2.cmake)
 include(InstallFtalat.cmake)
+include(InstallHwloc.cmake)
 include(InstallFirestarterMetricMetricq.cmake)
 include(InstallStream.cmake)
 
