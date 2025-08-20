@@ -2,7 +2,7 @@
 
 mkdir $RESULTS_FOLDER/{lowest_uncore,highest_uncore,nominal_uncore}
 
-cd $RESULTS_FOLDER/nominal_uncore
+cd $RESULTS_FOLDER/nominal_uncore || exit
 
 # do a ping pong between the cores 0 and 1, repeat each pingpong for 100 times,
 # use 1000 caches lines, each with a size of 64B and repeat the measurement for 1000 times.
@@ -12,7 +12,7 @@ taskset -c 0,1 $ATOMIC_LATENCIES 0,1 100 1000 64 1000
 # Set lowest uncore frequency
 sudo wrmsr -a 0x620 0x0808
 
-cd $RESULTS_FOLDER/lowest_uncore
+cd $RESULTS_FOLDER/lowest_uncore || exit
 
 # do a ping pong between the cores 0 and 1, repeat each pingpong for 100 times,
 # use 1000 caches lines, each with a size of 64B and repeat the measurement for 1000 times.
@@ -22,7 +22,7 @@ taskset -c 0,1 $ATOMIC_LATENCIES 0,1 100 1000 64 1000
 # Set highest uncore frequency
 sudo wrmsr -a 0x620 0x1919
 
-cd $RESULTS_FOLDER/highest_uncore
+cd $RESULTS_FOLDER/highest_uncore || exit
 
 # do a ping pong between the cores 0 and 1, repeat each pingpong for 100 times,
 # use 1000 caches lines, each with a size of 64B and repeat the measurement for 1000 times.
