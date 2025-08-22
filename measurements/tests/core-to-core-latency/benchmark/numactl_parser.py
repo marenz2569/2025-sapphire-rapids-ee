@@ -20,7 +20,7 @@ class NumaNodes(NamedTuple):
     def parse(numactl_output: str):
         nodes = []
         for line in numactl_output.splitlines():
-            m = re.match(r"node (?P<node_id>\d+) cpus: (?P<cpu_list>.*+)", line)
+            m = re.match(r"node (?P<node_id>\d+) cpus: (?P<cpu_list>.+)", line)
             if not m:
                 continue
 
