@@ -31,4 +31,4 @@ class NumaNodes(NamedTuple):
     @staticmethod
     def get_numa_nodes():
         numactl = subprocess.check_output(["numactl", "-H"])
-        return NumaNodes.parse(numactl.encode('utf-8'))
+        return NumaNodes.parse(numactl.decode('utf-8'))
