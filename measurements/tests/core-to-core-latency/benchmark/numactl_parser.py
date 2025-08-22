@@ -2,7 +2,10 @@
 
 import re
 import subprocess
-from typing import NamedTuple, List, Self
+try:
+    from typing import NamedTuple, List, Self
+except:
+    from typing_extensions import NamedTuple, List, Self
 
 class NumaNode(NamedTuple):
     node_id: int
