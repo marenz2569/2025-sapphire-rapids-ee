@@ -5,6 +5,7 @@ import subprocess
 from utils.numactl_parser import NumaNode, NumaNodes
 from utils.lscpu_parser import LscpuInformation
 from typing import List
+import glob
 
 def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
     cpus = list()
@@ -19,14 +20,19 @@ def disable_smt():
     subprocess.run(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True)
 
 def set_core_frequency(freq_in_khz: int):
-    subprocess.run(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
-    subprocess.run(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
+    scaling_min_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq')
+    for file in scaling_min_freq_files:
+        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True)
+
+    scaling_max_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq')
+    for file in scaling_max_freq_files:
+        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True)
 
 def set_uncore_frequency(frequency_in_100mhz: int):
     uncore_frequency_string = hex(frequency_in_100mhz << 8 | frequency_in_100mhz)
     subprocess.run(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True)
 
-def measure(nodes: NumaNodes):
+def measure(nodes: List[NumaNode]):
     all_cpus = get_all_cpus(nodes)
 
     # We loop over all numa nodes and measure the cache line latencies from
