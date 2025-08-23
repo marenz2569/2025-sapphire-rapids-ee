@@ -62,7 +62,7 @@ def main():
 
             # Only run the measurement on socket 0
             # Assume that each socket has the same number of NUMA nodes
-            filtered_nodes = list(filter(lambda node: node.node_id < len(nodes.nodes) // lscpu.num_sockets, nodes.nodes))
+            filtered_nodes = list(filter(lambda node: node.node_id < (len(nodes.nodes) // lscpu.num_sockets), nodes.nodes))
 
             print(f'Running measurement (core frequency: {core_frequency}kHz, uncore frequency: {uncore_frequency}00MHz) on nodes {filtered_nodes}')
 
