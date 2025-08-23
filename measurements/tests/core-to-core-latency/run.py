@@ -56,7 +56,7 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                     continue
 
                 # For two cpus in the same NUMA node, we do not need to measure twice
-                if other_cpu in node.cpu_list and other_cpu > this_cpu:
+                if other_cpu in node.cpu_list and this_cpu > other_cpu:
                     continue
 
                 # Create the directory for the measurement results
