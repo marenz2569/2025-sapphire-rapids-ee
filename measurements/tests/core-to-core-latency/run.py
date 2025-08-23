@@ -39,6 +39,12 @@ def set_uncore_frequency(frequency_in_100mhz: int):
 def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
     all_cpus = get_all_cpus(nodes)
 
+    if 'ATOMIC_LATENCIES' not in os.environ:
+        print('ATOMIC_LATENCIES env variable is not set')
+        exit(1)
+
+    atomic_latencies = os.environ['ATOMIC_LATENCIES']
+
     # We loop over all numa nodes and measure the cache line latencies from
     # all CPUs in this NUMA node to all CPUs.
     # The memory is always allocated in the source node
@@ -65,7 +71,7 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                 subprocess.run(
                     ['numactl',
                      f'--membind={node.node_id}',
-                     './software/atomic-latencies/atomic-latencies',
+                     atomic_latencies,
                      # do a ping pong between the cores this_cpu and other_cpu
                      f'{this_cpu},{other_cpu}',
                      # repeat each pingpong for 100 times
