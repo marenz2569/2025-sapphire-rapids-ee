@@ -83,11 +83,11 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                      # repeat the measurement for 100 times
                      '100'],
                     # Run it in the created directory. This will save flush_results.txt and latency_results.txt
-                    cwd=outfolder.absolute,
+                    cwd=outfolder,
                     capture_output=True,
                     text=True)
 
-                with open(Path(outfolder / 'settings.json').absolute, 'w') as f:
+                with open(Path(outfolder / 'settings.json'), 'w') as f:
                     json.dump(settings, f)
 
                 # Duplicate the entries if we are in the same NUMA node
@@ -99,9 +99,9 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                     os.makedirs(copied_outfolder)
 
                     # Copy the results folder content
-                    shutil.copy(Path(outfolder / 'flush_results.txt').absolute, copied_outfolder)
-                    shutil.copy(Path(outfolder / 'latency_results.txt').absolute, copied_outfolder)
-                    with open(Path(copied_outfolder / 'settings.json').absolute, 'w') as f:
+                    shutil.copy(Path(outfolder / 'flush_results.txt'), copied_outfolder)
+                    shutil.copy(Path(outfolder / 'latency_results.txt'), copied_outfolder)
+                    with open(Path(copied_outfolder / 'settings.json'), 'w') as f:
                         json.dump(settings, f)
 
 def main():
@@ -137,7 +137,7 @@ def main():
 
             # Create folder for the measurements
             uncore_folder = core_folder / f'{uncore_frequency}'
-            os.makedirs(uncore_folder.absolute)
+            os.makedirs(uncore_folder)
 
             # Only run the measurement on socket 0
             # Assume that each socket has the same number of NUMA nodes
