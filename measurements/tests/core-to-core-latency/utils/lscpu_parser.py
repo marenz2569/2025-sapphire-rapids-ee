@@ -11,7 +11,7 @@ class LscpuInformation(NamedTuple):
     def parse(lscpu_output: str):
         num_sockets = 1
         for line in lscpu_output.splitlines():
-            m = re.match(r"\w+Socket\(s\):\w+(?P<num_sockets>\d+)", line)
+            m = re.match(r"Socket\(s\):\s+(?P<num_sockets>\d+)", line)
             if m:
                 num_sockets = int(m.group('num_sockets'))
 
