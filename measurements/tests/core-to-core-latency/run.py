@@ -16,15 +16,15 @@ def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
     return cpus
 
 def disable_smt():
-    subprocess.check_output(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True)
+    subprocess.run(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True)
 
 def set_core_frequency(freq_in_khz: int):
-    subprocess.check_output(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
-    subprocess.check_output(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
+    subprocess.run(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
+    subprocess.run(['sudo', 'tee', '/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq'], input=f'{freq_in_khz}', capture_output=True, text=True)
 
 def set_uncore_frequency(frequency_in_100mhz: int):
     uncore_frequency_string = hex(frequency_in_100mhz << 8 | frequency_in_100mhz)
-    subprocess.check_output(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True)
+    subprocess.run(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True)
 
 def measure(nodes: NumaNodes):
     all_cpus = get_all_cpus(nodes)
