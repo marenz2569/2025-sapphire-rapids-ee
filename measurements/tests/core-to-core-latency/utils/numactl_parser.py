@@ -11,7 +11,7 @@ class NumaNode(NamedTuple):
     @staticmethod
     def parse(node_id, cpu_list: str):
         cpu_list_int = list(map(int, cpu_list.split()))
-        return NumaNode(node_id=node_id, cpu_list=cpu_list_int)
+        return NumaNode(node_id=int(node_id), cpu_list=cpu_list_int)
 
 class NumaNodes(NamedTuple):
     nodes: List[NumaNode]
