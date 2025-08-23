@@ -13,7 +13,7 @@ class LscpuInformation(NamedTuple):
         for line in lscpu_output.splitlines():
             m = re.match(r"\w+Socket\(s\):\w+(?P<num_sockets>\d+)", line)
             if m:
-                num_sockets = m.group('num_sockets')
+                num_sockets = int(m.group('num_sockets'))
 
         return LscpuInformation(num_sockets=num_sockets)
 
