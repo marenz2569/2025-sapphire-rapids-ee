@@ -32,7 +32,7 @@ def measure(nodes: NumaNodes):
     # We loop over all numa nodes and measure the cache line latencies from
     # all CPUs in this NUMA node to all CPUs.
     # The memory is always allocated in the source node
-    for node in nodes.nodes:
+    for node in nodes:
         for this_cpu in node.cpu_list:
             for other_cpu in all_cpus:
                 # Create the directory for the measurement results
