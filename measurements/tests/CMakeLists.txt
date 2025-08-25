@@ -32,6 +32,27 @@ function(add_measurement)
     set_property(TEST measurement/${TEST_NAME} APPEND PROPERTY ENVIRONMENT HWLOC_GATHER_TOPOLOGY=${INSTALL_DIR}/bin/hwloc-gather-topology)
 endfunction()
 
+# Function to add the a jupyter notebook.
+# This function executes the given jupyter notebook with the python version provided by the flake.nix in the root directory.
+# Argument NAME: The name of the notebook
+# Argument FILE: The jupyter notebook file that is executed
+function(add_notebook)
+    set(oneValueArgs NAME FILE)
+    cmake_parse_arguments(TEST "" "${oneValueArgs}"
+                          "" ${ARGN} )
+
+    if(NOT DEFINED TEST_NAME)
+        message(FATAL_ERROR "Called add_notebook without NAME.")
+    endif()
+    if(NOT DEFINED TEST_FILE)
+        message(FATAL_ERROR "Called add_notebook without FILE.")
+    endif()
+
+    add_test(NAME notebook/${TEST_NAME}
+        COMMAND nix run ${CMAKE_CURRENT_SOURCE_DIR}\# -- -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 ${TEST_FILE}
+    )
+endfunction()
+
 add_subdirectory(avx-frequency-license-bands)
 add_subdirectory(avx-frequency-license-bands-validation)
 add_subdirectory(avx-frequency-license-bands-without-isst)
