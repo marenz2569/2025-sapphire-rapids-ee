@@ -18,4 +18,4 @@ jobs:
     - uses: cachix/install-nix-action@v31
     - name: Run mypy
       run: |
-        nix run .# -- -m mypy
+        nix run .# -- -m mypy experiment_utils measurements
