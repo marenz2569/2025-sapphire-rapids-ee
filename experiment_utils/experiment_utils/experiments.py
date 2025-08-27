@@ -2,7 +2,7 @@ from datetime import datetime
 import glob
 import os
 from pathlib import Path
-from typing import Callable, List, NamedTuple, Self
+from typing import Callable, List, NamedTuple
 
 """
 The environment folder which is used to find the results folder
@@ -35,7 +35,7 @@ class Experiment(NamedTuple):
     @arg path The path of the experiment data
     """
     @staticmethod
-    def from_path(path: Path) -> Self:
+    def from_path(path: Path) -> 'Experiment':
         assert len(path.parents) >= 2
 
         time = datetime.fromisoformat(path.name)
@@ -49,14 +49,14 @@ class Experiment(NamedTuple):
     @returns The list of experiments
     """
     @staticmethod
-    def get_experiments() -> List[Self]:
+    def get_experiments() -> List['Experiment']:
         root_folder = Experiment.get_results_folder()
 
-        experiment_folders = glob.glob(f'{root_folder.absolute()}/*/*/*')
-        experiment_folders = list(filter(lambda folder: os.path.isdir(folder), experiment_folders))
-        experiment_folders = list(map(lambda folder: Path(folder), experiment_folders))
+        experiment_folders_string = glob.glob(f'{root_folder.absolute()}/*/*/*')
+        experiment_folders_string = list(filter(lambda folder: os.path.isdir(folder), experiment_folders_string))
+        experiment_folders_paths = list(map(Path, experiment_folders_string))
 
-        experiments = list(map(Experiment.from_path, experiment_folders))
+        experiments = list(map(Experiment.from_path, experiment_folders_paths))
 
         return experiments
 
