@@ -36,13 +36,13 @@ class Experiment(NamedTuple):
     """
     @staticmethod
     def from_path(path: Path) -> Self:
-        assert len(path) >= 2
+        assert len(path.parents) >= 2
 
-        time = datetime(path.name)
-        experiment_name = path.parents[0]
-        host = path.parents[1]
+        time = datetime.fromisoformat(path.name)
+        experiment_name = path.parents[0].name
+        host = path.parents[1].name
 
-        return Experiment(host=host, experiment_name=experiment_name, time=time)
+        return Experiment(host=host, experiment_name=experiment_name, time=time, path=path)
 
     """
     Get the list of experiments from the results folder passed via the environment variable
@@ -52,8 +52,9 @@ class Experiment(NamedTuple):
     def get_experiments() -> List[Self]:
         root_folder = Experiment.get_results_folder()
 
-        experiment_folders = glob.glob(f'{root_folder.absolute}/*/*/*')
+        experiment_folders = glob.glob(f'{root_folder.absolute()}/*/*/*')
         experiment_folders = list(filter(lambda folder: os.path.isdir(folder), experiment_folders))
+        experiment_folders = list(map(lambda folder: Path(folder), experiment_folders))
 
         experiments = list(map(Experiment.from_path, experiment_folders))
 
