@@ -7,7 +7,7 @@ from typing import Callable, List, NamedTuple, Self
 """
 The environment folder which is used to find the results folder
 """
-RESULTS_FOLDER_ENV_VAR = 'RESULTS_FOLDER'
+RESULTS_FOLDER_ENV_VAR = 'TEST_ROOT'
 
 """
 Represents the data associated to all experiments.
