@@ -3,7 +3,7 @@ name: mypy
 on: [push, pull_request]
 
 jobs:
-  pylint:
+  mypy:
     strategy:
       fail-fast: true
       matrix:
