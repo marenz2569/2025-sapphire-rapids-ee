@@ -1,0 +1,21 @@
+name: mypy
+
+on: [push, pull_request]
+
+jobs:
+  pylint:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+    - uses: cachix/install-nix-action@v31
+    - name: Run mypy
+      run: |
+        nix run .# -- -m mypy
