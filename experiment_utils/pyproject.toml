@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "experiment_utils"
+version = "0.0.1"
+description = "Utilities that are used by multiple experiments"
+authors = [
+    {name = "Markus Schmidl", email = "markus.schmidl@mailbox.tu-dresden.de"}
+]
+license = "MIT"

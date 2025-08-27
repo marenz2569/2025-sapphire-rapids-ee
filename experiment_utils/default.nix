@@ -1,9 +1,10 @@
 {
   lib,
   buildPythonPackage,
+  setuptools
 }:
 
-buildPythonPackage rec {
+buildPythonPackage {
   pname = "experiment_utils";
   version = "0.0.1";
 
@@ -12,7 +13,12 @@ buildPythonPackage rec {
   # do not run tests
   doCheck = false;
 
-  # specific to buildPythonPackage, see its reference
-  pyproject = false;
-  build-system = [];
+  pythonImportsCheck = [
+    "experiment_utils"
+  ];
+
+  pyproject = true;
+  nativeBuildInputs = [
+    setuptools
+  ];
 }
