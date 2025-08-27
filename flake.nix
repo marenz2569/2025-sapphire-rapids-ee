@@ -20,7 +20,15 @@
           inherit system;
         };
 
-        pythonEnv = pkgs.python3.withPackages (ps: with ps; [
+        python = pkgs.python3.override {
+          self = pkgs.python3;
+          packageOverrides = pyfinal: pyprev: {
+            experiment_utils = pyfinal.callPackage ./experiment_utils { };
+          };
+        };
+
+        pythonEnv = python.withPackages (ps: with ps; [
+          experiment_utils
           ipykernel
           ipython
           jupyter
