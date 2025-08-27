@@ -104,3 +104,16 @@ class ExperimentFilter:
         def filter(experiment: Experiment):
             return experiment.time == time
         return filter
+
+    """
+    Get the latest experiment of a list of experiments
+    @arg experiments The list of experiments
+    @return The latest experiment execution
+    """
+    @staticmethod
+    def get_latest(experiments: List[Experiment]) -> Experiment:
+        assert len(experiments) > 0
+
+        experiments.sort(key=lambda experiment: experiment.time, reverse=True)
+
+        return experiments[0]
