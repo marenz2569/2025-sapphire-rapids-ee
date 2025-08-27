@@ -31,5 +31,5 @@ class Plotting:
     @staticmethod
     def savefig(experiment: Experiment, file_name: str):
         save_dir = Plotting.get_fig_folder() / experiment.experiment_name
-        os.makedirs(save_dir)
+        os.makedirs(save_dir, exist_ok=True)
         plt.savefig(save_dir / file_name, bbox_inches='tight')
