@@ -60,6 +60,14 @@ class Experiment(NamedTuple):
 
         return experiments
 
+    """
+    Get the git revision of the experiment
+    @returns The git revision of the experiment
+    """
+    def get_gitrev(self):
+        with open(self.path / 'git-tag') as f:
+            return f.read()
+
 """
 Class to provide helper functions to filter the list of experiments
 """
