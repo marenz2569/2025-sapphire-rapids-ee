@@ -1,0 +1,16 @@
+{
+    "python.analysis.typeCheckingMode": "strict",
+    "mypy-type-checker.path": [
+        "nix",
+        "run",
+        ".#",
+        "--",
+        "-m",
+        "mypy"
+    ],
+    "mypy-type-checker.interpreter": [
+        "nix",
+        "run",
+        ".#"
+    ]
+}

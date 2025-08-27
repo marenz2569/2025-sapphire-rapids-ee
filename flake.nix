@@ -33,6 +33,7 @@
           ipython
           jupyter
           matplotlib
+          mypy
           numpy
           pandas
           scipy
