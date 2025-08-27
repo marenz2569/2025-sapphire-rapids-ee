@@ -1,4 +1,5 @@
 from matplotlib.pyplot import plt
+import os
 from pathlib import Path
 from .experiments import Experiment
 
@@ -20,5 +21,6 @@ class Plotting:
     """
     @staticmethod
     def savefig(experiment: Experiment, file_name: str):
-        save_path = Plotting.get_fig_folder() / experiment.experiment_name / file_name
-        plt.savefig(save_path, bbox_inches='tight')
+        save_dir = Plotting.get_fig_folder() / experiment.experiment_name
+        os.makedirs(save_dir)
+        plt.savefig(save_dir / file_name, bbox_inches='tight')
