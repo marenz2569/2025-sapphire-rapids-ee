@@ -1,7 +1,8 @@
 {
   lib,
   buildPythonPackage,
-  setuptools
+  setuptools,
+  matplotlib
 }:
 
 buildPythonPackage {
@@ -20,5 +21,9 @@ buildPythonPackage {
   pyproject = true;
   nativeBuildInputs = [
     setuptools
+  ];
+
+  buildInputs = [
+    matplotlib
   ];
 }
