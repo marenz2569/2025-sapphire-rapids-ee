@@ -4,15 +4,24 @@ from pathlib import Path
 from .experiments import Experiment
 
 """
+The environment folder which is used to find the results folder
+"""
+FIG_FOLDER_ENV_VAR = 'FIG_ROOT'
+
+"""
 Function to aid in saving plots
 """
 class Plotting:
     """
-    Get the path of the thesis/fig folder.
+    Get the folder where the results are saved from the FIG_ROOT environment variable.
+    @return The path to the folder where the figs are saved
     """
     @staticmethod
     def get_fig_folder() -> Path:
-        return Path(__file__).parent / '..' / '..' / 'thesis' / 'fig'
+        if FIG_FOLDER_ENV_VAR not in os.environ:
+            raise Exception(f'{FIG_FOLDER_ENV_VAR} env variable not given.')
+
+        return Path(os.environ[FIG_FOLDER_ENV_VAR])
 
     """
     Save an figure of an experiment in the thesis/fig folder.
