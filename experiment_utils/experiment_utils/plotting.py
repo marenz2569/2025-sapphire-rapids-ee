@@ -41,22 +41,24 @@ class Plotting:
     Save an figure of an experiment in the thesis/fig folder.
     @arg experiment The experiment for which the plot will be saved.
     @arg file_name The file name of the plot which will be saved into thesis/fig/experiment_name.
-    @arg annotations_offset The offset of the git revision annotations
+    @arg annotations_y_offset The y offset of the git revision annotations.
+    @arg annotations_y_spacing The y spacing between thethe git revision annotations.
+    @arg annotations_x_offset The x offset of the git revision annotations.
     """
     @staticmethod
-    def savefig(experiment: Experiment, file_name: str, annotations_offset: float=0.1):
+    def savefig(experiment: Experiment, file_name: str, annotations_y_offset: float=0.1, annotations_y_spacing: float=0.0125, annotations_x_offset: float=0.01):
         save_dir = Plotting.get_fig_folder() / experiment.experiment_name
         os.makedirs(save_dir, exist_ok=True)
 
-        plt.figtext(0.1,
+        plt.figtext(0.01,
                     annotations_offset,
                     f'Data created on {experiment.host} with git revision {experiment.get_gitrev().strip()} at {experiment.time}',
                     fontsize=6,
                     va="top",
                     ha="left")
 
-        plt.figtext(0.1,
-                    annotations_offset - 0.0125,
+        plt.figtext(0.01,
+                    annotations_offset - annotations_spacing,
                     f'Plot created with git revision {Plotting.get_gitrev()}',
                     fontsize=6,
                     va="top",
