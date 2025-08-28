@@ -1,6 +1,6 @@
 # pylint: disable=line-too-long, missing-module-docstring, missing-class-docstring, missing-function-docstring
 
-from typing import NamedTuple, List, Self
+from typing import NamedTuple, List
 
 def number_of_indents(line: str) -> int:
     """
@@ -14,7 +14,7 @@ class TurboRatioLevel(NamedTuple):
     max_turbo_frequency_mhz: int
 
     @staticmethod
-    def parse(level: str, lines: List[str]) -> List[Self]:
+    def parse(level: str, lines: List[str]) -> List['TurboRatioLevel']:
         level_parsed = level.split('-')[-1]
 
         turbo_ratio_levels = []
@@ -47,7 +47,7 @@ class Profile(NamedTuple):
     turbo_levels: List[TurboRatioLevel]
 
     @staticmethod
-    def parse(package: str, die: str, cpu: str, profile: str, lines: List[str]) -> Self:
+    def parse(package: str, die: str, cpu: str, profile: str, lines: List[str]) -> 'Profile':
         package_int = int(package.split('-')[-1])
         die_int = int(die.split('-')[-1])
         cpu_int = int(cpu.split('-')[-1])
@@ -78,7 +78,7 @@ class IsstPerfProfile(NamedTuple):
     profiles: List[Profile]
 
     @staticmethod
-    def parse(file_name: str) -> Self:
+    def parse(file_name: str) -> 'IsstPerfProfile':
         # pylint: disable=consider-using-with, unspecified-encoding
         fp = open(file_name, 'r')
 
