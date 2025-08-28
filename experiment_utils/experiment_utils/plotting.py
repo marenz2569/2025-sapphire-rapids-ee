@@ -38,6 +38,18 @@ class Plotting:
         return result.stdout.strip()
 
     """
+    Create a folder for the experiment figures to be saved.
+    @arg experiment The experiment for which data will be saved.
+    @returns The folder where the experiment data should be saved.
+    """
+    @staticmethod
+    def create_save_dir(experiment: Experiment) -> Path:
+        save_dir = Plotting.get_fig_folder() / experiment.experiment_name
+        os.makedirs(save_dir, exist_ok=True)
+
+        return save_dir
+
+    """
     Save an figure of an experiment in the thesis/fig folder.
     @arg experiment The experiment for which the plot will be saved.
     @arg file_name The file name of the plot which will be saved into thesis/fig/experiment_name.
@@ -47,8 +59,7 @@ class Plotting:
     """
     @staticmethod
     def savefig(experiment: Experiment, file_name: str, annotations_y_offset: float=0.1, annotations_y_spacing: float=0.0125, annotations_x_offset: float=0.01):
-        save_dir = Plotting.get_fig_folder() / experiment.experiment_name
-        os.makedirs(save_dir, exist_ok=True)
+        save_dir = Plotting.create_save_dir(experiment)
 
         plt.figtext(annotations_x_offset,
                     annotations_y_offset,
