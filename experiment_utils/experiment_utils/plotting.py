@@ -50,15 +50,15 @@ class Plotting:
         save_dir = Plotting.get_fig_folder() / experiment.experiment_name
         os.makedirs(save_dir, exist_ok=True)
 
-        plt.figtext(0.01,
-                    annotations_offset,
+        plt.figtext(annotations_x_offset,
+                    annotations_y_offset,
                     f'Data created on {experiment.host} with git revision {experiment.get_gitrev().strip()} at {experiment.time}',
                     fontsize=6,
                     va="top",
                     ha="left")
 
-        plt.figtext(0.01,
-                    annotations_offset - annotations_spacing,
+        plt.figtext(annotations_x_offset,
+                    annotations_y_offset - annotations_y_spacing,
                     f'Plot created with git revision {Plotting.get_gitrev()}',
                     fontsize=6,
                     va="top",
