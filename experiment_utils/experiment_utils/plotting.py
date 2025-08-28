@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 from pathlib import Path
+import subprocess
 from .experiments import Experiment
 
 """
@@ -24,6 +25,19 @@ class Plotting:
         return Path(os.environ[FIG_FOLDER_ENV_VAR])
 
     """
+    Get the cuurent git revision
+    @returns The current git revision
+    """
+    @staticmethod
+    def get_gitrev() -> str:
+        result = subprocess.run(['git', 'describe', '--always', '--abbrev=40', '--dirty'],
+                                cwd=Plotting.get_fig_folder(),
+                                capture_output=True,
+                                text=True)
+
+        return result.stdout.strip()
+
+    """
     Save an figure of an experiment in the thesis/fig folder.
     @arg experiment The experiment for which the plot will be saved.
     @arg file_name The file name of the plot which will be saved into thesis/fig/experiment_name.
@@ -32,4 +46,19 @@ class Plotting:
     def savefig(experiment: Experiment, file_name: str):
         save_dir = Plotting.get_fig_folder() / experiment.experiment_name
         os.makedirs(save_dir, exist_ok=True)
+
+        plt.figtext(0.1,
+                    0.1,
+                    f'Data created on {experiment.host} with git revision {experiment.get_gitrev().strip()} at {experiment.time}',
+                    fontsize=6,
+                    va="top",
+                    ha="left")
+
+        plt.figtext(0.1,
+                    0.125,
+                    f'Plot created with git revision {Plotting.get_gitrev()}',
+                    fontsize=6,
+                    va="top",
+                    ha="left")
+
         plt.savefig(save_dir / file_name, bbox_inches='tight')

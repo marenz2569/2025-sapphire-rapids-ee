@@ -66,7 +66,7 @@ class Experiment(NamedTuple):
     """
     def get_gitrev(self):
         with open(self.path / 'git-tag') as f:
-            return f.read()
+            return f.read().strip()
 
 """
 Class to provide helper functions to filter the list of experiments
