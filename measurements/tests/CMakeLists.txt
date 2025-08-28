@@ -49,7 +49,7 @@ function(add_notebook)
     endif()
 
     add_test(NAME notebook/${TEST_NAME}
-        COMMAND nix run ${CMAKE_CURRENT_SOURCE_DIR}\# -- -m jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 ${TEST_FILE}
+        COMMAND nix run ${CMAKE_CURRENT_SOURCE_DIR}\# -- -m jupyter nbconvert --to notebook --execute --ExecutePreprocessor.timeout=600 ${TEST_FILE}
     )
 endfunction()
 
