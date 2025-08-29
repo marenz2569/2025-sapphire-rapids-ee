@@ -34,8 +34,6 @@ Create the figures via CTest.
 Set the environment variables as described in the above section.
 
 # References
-Below is a list of our FIRESTARTER publications. Please preferably cite the latest paper if you use FIRESTARTER for scientific work.
-Below the publication associated to this 
 This is the code-support package for the following thesis.
 Please cite the thesis if you use parts of this repository for scientic work.
 
