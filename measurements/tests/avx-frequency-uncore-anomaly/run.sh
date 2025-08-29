@@ -8,8 +8,6 @@ echo off | sudo tee /sys/devices/system/cpu/smt/control
 BINDLIST=0-7
 UNCORE_READER_CORE=8
 
-mkdir -p $OUTFOLDER/{lic0,lic1,lic2,lic3}
-
 for (( i = 0; i < 100 ; i++ ))
 do
     echo "Running iteration $i/100"
