@@ -1,4 +1,4 @@
-# 2025-diploma-thesis
+# Code support package for "An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features"
 
 This repository contains all files that are required to build the thesis.
 It is structed into the following folders:
