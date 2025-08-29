@@ -24,3 +24,8 @@ set_property(TEST measurement/ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_
 
 ExternalProject_Get_Property(ftalat-345d02344cbd878c64c0c280f2853d5c107cd7b6-scaling_max_freq INSTALL_DIR)
 set_property(TEST measurement/ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_MAX_FREQ=${INSTALL_DIR}/ftalat)
+
+add_notebook(
+    NAME ftalat
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/hati_analyze.ipynb
+)
