@@ -17,3 +17,8 @@ set_property(TEST measurement/avx-frequency-uncore-anomaly APPEND PROPERTY ENVIR
 add_test(NAME measurement/avx-frequency-uncore-anomaly/reboot
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/reboot.sh
 )
+
+add_notebook(
+    NAME avx-frequency-uncore-anomaly
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
+)
