@@ -35,7 +35,7 @@ Set the environment variables as described in the above section.
 
 # References
 This is the code-support package for the following paper.
-Please cite the paper if you use parts of this repository for scientic work.
+Please cite the paper if you use parts of this repository for scientific work.
 
 Markus Schmidl: An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features (2025),
 DOI: 
