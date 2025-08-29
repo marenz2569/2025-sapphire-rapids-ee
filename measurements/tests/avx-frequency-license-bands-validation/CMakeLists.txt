@@ -8,3 +8,8 @@ set_tests_properties(measurement/avx-frequency-license-bands-validation PROPERTI
 
 ExternalProject_Get_Property(FIRESTARTER-marenz.perf_set_cpu INSTALL_DIR)
 set_property(TEST measurement/avx-frequency-license-bands-validation APPEND PROPERTY ENVIRONMENT FIRESTARTER=${INSTALL_DIR}/FIRESTARTER)
+
+add_notebook(
+    NAME avx-frequency-license-bands-validation
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
+)
