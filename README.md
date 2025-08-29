@@ -39,7 +39,7 @@ Below the publication associated to this
 This is the code-support package for the following thesis.
 Please cite the thesis if you use parts of this repository for scientic work.
 
-Markus Schmidl: An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features (Diploma thesis 2025),
+Markus Schmidl: An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features (2025),
 DOI: 
 
 # License
