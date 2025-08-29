@@ -12,3 +12,8 @@ set_property(TEST measurement/cstate-latencies APPEND PROPERTY ENVIRONMENT WHILE
 add_test(NAME measurement/cstate-latencies/reboot
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/reboot.sh
 )
+
+add_notebook(
+    NAME cstate-latencies
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
+)
