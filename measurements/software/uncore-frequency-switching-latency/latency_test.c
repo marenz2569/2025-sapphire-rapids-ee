@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -82,6 +83,38 @@ static __inline__ uint64_t rdtsc(void) {
   return (uint64_t)a | (uint64_t)d << 32;
 }
 
+void *allocate_transparent_huge_pages(size_t buffer_size) {
+  // allocate data with huge pages if possible to do so, we might round up to 16
+  // MB
+  buffer_size = (buffer_size + (16 * 1024 * 1024)) & ~(16 * 1024 * 1024 - 1);
+
+  // Try to use huge pages
+  void *buffer = mmap(NULL, buffer_size, PROT_READ | PROT_WRITE,
+                      MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
+  if (buffer == MAP_FAILED) {
+    // fallback to aligned_alloc if huge pages are not available
+    buffer = aligned_alloc((16 * 1024 * 1024), buffer_size);
+    if (buffer == NULL) {
+      perror("Failed to allocate memory for cache lines");
+      return NULL;
+    } else {
+
+      fprintf(stderr, "Warning: Huge pages unavailable, try setting "
+                      "transparent huge pages.\n");
+      // Hint for transparent huge pages
+      if (madvise(buffer, buffer_size, MADV_HUGEPAGE) != 0) {
+        fprintf(stderr, "Warning: madvise(MADV_HUGEPAGE) failed, transparent "
+                        "huge pages may not be used.\n");
+      }
+    }
+  } else {
+    // zero initialize huge page memory
+    memset(buffer, 0, buffer_size);
+  }
+
+  return buffer;
+}
+
 typedef void **test_buffer_t;
 
 /**
@@ -89,14 +122,17 @@ typedef void **test_buffer_t;
  */
 
 test_buffer_t create_buffer(size_t size) {
-  void **buffer = malloc(size);
+  void **buffer = allocate_transparent_huge_pages(size);
   size_t nr_elements = (size / sizeof(void *));
+
   // only use every nth element (cache line)
   size_t sep_elements = CACHE_LINE / sizeof(void *);
   size_t nr_used_elements = nr_elements / sep_elements;
+
   void **list = malloc(nr_used_elements * sizeof(void *));
   for (size_t i = 0; i < nr_used_elements - 1; i++)
     list[i] = (void *)&buffer[(i + 1) * sep_elements];
+
   srand(RAND_NUM);
   void **current = buffer;
   size_t nr = 0;
@@ -116,6 +152,7 @@ test_buffer_t create_buffer(size_t size) {
   }
   *current = buffer;
   free(list);
+
   return buffer;
 }
 
