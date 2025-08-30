@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# pylint: disable=line-too-long, missing-function-docstring, missing-module-docstring
+
 import json
 import os
+import sys
 import subprocess
-from utils.numactl_parser import NumaNode, NumaNodes
-from utils.lscpu_parser import LscpuInformation
 from typing import List
 import glob
 from pathlib import Path
 import shutil
+from utils.numactl_parser import NumaNode, NumaNodes
+from utils.lscpu_parser import LscpuInformation
 
 def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
-    cpus = list()
+    cpus = []
 
     for node in nodes:
         for cpu in node.cpu_list:
@@ -21,27 +24,27 @@ def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
     return cpus
 
 def disable_smt():
-    subprocess.run(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True)
+    subprocess.run(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True, check=True)
 
 def set_core_frequency(freq_in_khz: int):
     scaling_min_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq')
     for file in scaling_min_freq_files:
-        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True)
+        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True, check=False)
 
     scaling_max_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq')
     for file in scaling_max_freq_files:
-        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True)
+        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True, check=False)
 
 def set_uncore_frequency(frequency_in_100mhz: int):
     uncore_frequency_string = hex(frequency_in_100mhz << 8 | frequency_in_100mhz)
-    subprocess.run(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True)
+    subprocess.run(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True, check=True)
 
 def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
     all_cpus = get_all_cpus(nodes)
 
     if 'ATOMIC_LATENCIES' not in os.environ:
         print('ATOMIC_LATENCIES env variable is not set')
-        exit(1)
+        sys.exit(1)
 
     atomic_latencies = os.environ['ATOMIC_LATENCIES']
 
@@ -85,9 +88,10 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                     # Run it in the created directory. This will save flush_results.txt and latency_results.txt
                     cwd=outfolder,
                     capture_output=True,
-                    text=True)
+                    text=True,
+                    check=True)
 
-                with open(Path(outfolder / 'settings.json'), 'w') as f:
+                with open(Path(outfolder / 'settings.json'), 'w', encoding='utf-8') as f:
                     json.dump(settings, f)
 
                 # Duplicate the entries if we are in the same NUMA node
@@ -101,13 +105,13 @@ def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
                     # Copy the results folder content
                     shutil.copy(Path(outfolder / 'flush_results.txt'), copied_outfolder)
                     shutil.copy(Path(outfolder / 'latency_results.txt'), copied_outfolder)
-                    with open(Path(copied_outfolder / 'settings.json'), 'w') as f:
+                    with open(Path(copied_outfolder / 'settings.json'), 'w', encoding='utf-8') as f:
                         json.dump(settings, f)
 
 def main():
     if 'RESULTS_FOLDER' not in os.environ:
         print('RESULTS_FOLDER env variable is not set')
-        exit(1)
+        sys.exit(1)
     results_foler = Path(os.environ['RESULTS_FOLDER'])
 
     disable_smt()
@@ -120,7 +124,7 @@ def main():
     uncore_frequencies = [ 8, 25 ]
 
     # The settings of the current measurement
-    settings = dict()
+    settings = {}
 
     for core_frequency in core_frequencies:
         # Set the core frequency fixed
