@@ -157,21 +157,6 @@ test_buffer_t create_buffer(size_t size) {
 }
 
 /**
- * Jump around nr_accesses times in pointer chasing buffer
- */
-
-static __inline__ test_buffer_t run_buffer_plain(test_buffer_t buffer,
-                                                 size_t nr_accesses) {
-  size_t nr = 0;
-  void *current = (void *)buffer;
-  while (nr < nr_accesses) {
-    current = (*(void **)current);
-    nr++;
-  }
-  return current;
-}
-
-/**
  * Follow the pointer chasing buffer by loading the new address from the buffer.
  * \arg buffer The pointer to the buffer of pointers
  * \arg nr_accesses The total number of accesses of the buffer
