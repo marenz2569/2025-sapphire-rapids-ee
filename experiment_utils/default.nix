@@ -2,7 +2,9 @@
   lib,
   buildPythonPackage,
   setuptools,
-  matplotlib
+  matplotlib,
+  numpy,
+  pandas
 }:
 
 buildPythonPackage {
@@ -16,6 +18,7 @@ buildPythonPackage {
 
   pythonImportsCheck = [
     "experiment_utils"
+    "experiment_utils.roco2_python"
   ];
 
   pyproject = true;
@@ -25,5 +28,7 @@ buildPythonPackage {
 
   buildInputs = [
     matplotlib
+    numpy
+    pandas
   ];
 }

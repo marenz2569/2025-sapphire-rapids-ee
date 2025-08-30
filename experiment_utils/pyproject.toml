@@ -6,7 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "experiment_utils"
 version = "0.0.1"
 dependencies = [
-  "matplotlib"
+  "matplotlib",
+  "numpy",
+  "pandas"
 ]
 description = "Utilities that are used by multiple experiments"
 authors = [
