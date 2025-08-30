@@ -55,7 +55,7 @@ class Profile(NamedTuple):
 
         turbo_levels = []
         level = ''
-        unparsed_trl_lines = []
+        unparsed_trl_lines: List[str] = []
 
         for line in lines:
             num_indets = number_of_indents(line)
@@ -88,7 +88,7 @@ class IsstPerfProfile(NamedTuple):
         die = ''
         cpu = ''
         profile = ''
-        unparsed_profile_lines = []
+        unparsed_profile_lines: List[str] = []
 
         for line in fp.readlines():
             num_indets = number_of_indents(line)
