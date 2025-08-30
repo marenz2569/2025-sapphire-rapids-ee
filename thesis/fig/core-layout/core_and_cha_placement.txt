@@ -1,0 +1,64 @@
+Socket 0, Tile filed only with rows that contain all (four) CHA boxes
+[[-1, -1, -1, -1], [1, 4, 8, 12], [-1, -1, -1, -1], [3, 6, 10, 13]]
+[[0, -1, 7, 11], [1, 4, 8, 12], [2, 5, 9, -1], [3, 6, 10, 13]]
+Socket 0, Tile filed only with rows that contain all (four) CHA boxes
+[[-1, -1, -1, -1], [15, 19, 21, 25], [16, 20, 22, 26], [-1, -1, -1, -1]]
+[[14, 18, -1, 24], [15, 19, 21, 25], [16, 20, 22, 26], [17, -1, 23, 27]]
+Socket 0, Tile filed only with rows that contain all (four) CHA boxes
+[[28, 32, 35, 39], [-1, -1, -1, -1], [30, 34, 37, 40], [-1, -1, -1, -1]]
+[[28, 32, 35, 39], [29, 33, 36, -1], [30, 34, 37, 40], [31, -1, 38, 41]]
+Socket 0, Tile filed only with rows that contain all (four) CHA boxes
+[[42, 46, 50, 53], [-1, -1, -1, -1], [44, 48, 52, 54], [-1, -1, -1, -1]]
+[[42, 46, 50, 53], [43, 47, 51, -1], [44, 48, 52, 54], [45, 49, -1, 55]]
+Tile 0 of socket 0:
+['CHA: 0 CPU: 0', 'M', 'CHA: 7 CPU: 7', 'CHA: 11 CPU: 11']
+['CHA: 1 CPU: 1', 'CHA: 4 CPU: 4', 'CHA: 8 CPU: 8', 'CHA: 12 CPU: 12']
+['CHA: 2 CPU: 2', 'CHA: 5 CPU: 5', 'CHA: 9 CPU: 9', 'X']
+['CHA: 3 CPU: 3', 'CHA: 6 CPU: 6', 'CHA: 10 CPU: 10', 'CHA: 13 CPU: 13']
+Tile 1 of socket 0:
+['CHA: 14 CPU: 14', 'CHA: 18 CPU: 18', 'M', 'CHA: 24 CPU: 24']
+['CHA: 15 CPU: 15', 'CHA: 19 CPU: 19', 'CHA: 21 CPU: 21', 'CHA: 25 CPU: 25']
+['CHA: 16 CPU: 16', 'CHA: 20 CPU: 20', 'CHA: 22 CPU: 22', 'CHA: 26 CPU: 26']
+['CHA: 17 CPU: 17', 'X', 'CHA: 23 CPU: 23', 'CHA: 27 CPU: 27']
+Tile 2 of socket 0:
+['CHA: 28 CPU: 28', 'CHA: 32 CPU: 32', 'CHA: 35 CPU: 35', 'CHA: 39 CPU: 39']
+['CHA: 29 CPU: 29', 'CHA: 33 CPU: 33', 'CHA: 36 CPU: 36', 'X']
+['CHA: 30 CPU: 30', 'CHA: 34 CPU: 34', 'CHA: 37 CPU: 37', 'CHA: 40 CPU: 40']
+['CHA: 31 CPU: 31', 'M', 'CHA: 38 CPU: 38', 'CHA: 41 CPU: 41']
+Tile 3 of socket 0:
+['CHA: 42 CPU: 42', 'CHA: 46 CPU: 46', 'CHA: 50 CPU: 50', 'CHA: 53 CPU: 53']
+['CHA: 43 CPU: 43', 'CHA: 47 CPU: 47', 'CHA: 51 CPU: 51', 'X']
+['CHA: 44 CPU: 44', 'CHA: 48 CPU: 48', 'CHA: 52 CPU: 52', 'CHA: 54 CPU: 54']
+['CHA: 45 CPU: 45', 'CHA: 49 CPU: 49', 'M', 'CHA: 55 CPU: 55']
+Socket 1, Tile filed only with rows that contain all (four) CHA boxes
+[[-1, -1, -1, -1], [1, 4, 8, 12], [-1, -1, -1, -1], [3, 6, 10, 13]]
+[[0, -1, 7, 11], [1, 4, 8, 12], [2, 5, 9, -1], [3, 6, 10, 13]]
+Socket 1, Tile filed only with rows that contain all (four) CHA boxes
+[[-1, -1, -1, -1], [15, 19, 21, 25], [16, 20, 22, 26], [-1, -1, -1, -1]]
+[[14, 18, -1, 24], [15, 19, 21, 25], [16, 20, 22, 26], [17, -1, 23, 27]]
+Socket 1, Tile filed only with rows that contain all (four) CHA boxes
+[[28, 32, 35, 39], [-1, -1, -1, -1], [30, 34, 37, 40], [-1, -1, -1, -1]]
+[[28, 32, 35, 39], [29, 33, 36, -1], [30, 34, 37, 40], [31, -1, 38, 41]]
+Socket 1, Tile filed only with rows that contain all (four) CHA boxes
+[[42, 46, 50, 53], [-1, -1, -1, -1], [44, 48, 52, 54], [-1, -1, -1, -1]]
+[[42, 46, 50, 53], [43, 47, 51, -1], [44, 48, 52, 54], [45, 49, -1, 55]]
+Tile 0 of socket 1:
+['CHA: 0 CPU: 56', 'M', 'CHA: 7 CPU: 63', 'CHA: 11 CPU: 67']
+['CHA: 1 CPU: 57', 'CHA: 4 CPU: 60', 'CHA: 8 CPU: 64', 'CHA: 12 CPU: 68']
+['CHA: 2 CPU: 58', 'CHA: 5 CPU: 61', 'CHA: 9 CPU: 65', 'X']
+['CHA: 3 CPU: 59', 'CHA: 6 CPU: 62', 'CHA: 10 CPU: 66', 'CHA: 13 CPU: 69']
+Tile 1 of socket 1:
+['CHA: 14 CPU: 70', 'CHA: 18 CPU: 74', 'M', 'CHA: 24 CPU: 80']
+['CHA: 15 CPU: 71', 'CHA: 19 CPU: 75', 'CHA: 21 CPU: 77', 'CHA: 25 CPU: 81']
+['CHA: 16 CPU: 72', 'CHA: 20 CPU: 76', 'CHA: 22 CPU: 78', 'CHA: 26 CPU: 82']
+['CHA: 17 CPU: 73', 'X', 'CHA: 23 CPU: 79', 'CHA: 27 CPU: 83']
+Tile 2 of socket 1:
+['CHA: 28 CPU: 84', 'CHA: 32 CPU: 88', 'CHA: 35 CPU: 91', 'CHA: 39 CPU: 95']
+['CHA: 29 CPU: 85', 'CHA: 33 CPU: 89', 'CHA: 36 CPU: 92', 'X']
+['CHA: 30 CPU: 86', 'CHA: 34 CPU: 90', 'CHA: 37 CPU: 93', 'CHA: 40 CPU: 96']
+['CHA: 31 CPU: 87', 'M', 'CHA: 38 CPU: 94', 'CHA: 41 CPU: 97']
+Tile 3 of socket 1:
+['CHA: 42 CPU: 98', 'CHA: 46 CPU: 102', 'CHA: 50 CPU: 106', 'CHA: 53 CPU: 109']
+['CHA: 43 CPU: 99', 'CHA: 47 CPU: 103', 'CHA: 51 CPU: 107', 'X']
+['CHA: 44 CPU: 100', 'CHA: 48 CPU: 104', 'CHA: 52 CPU: 108', 'CHA: 54 CPU: 110']
+['CHA: 45 CPU: 101', 'CHA: 49 CPU: 105', 'M', 'CHA: 55 CPU: 111']
