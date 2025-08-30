@@ -36,6 +36,7 @@
           mypy
           numpy
           pandas
+          pylint
           scipy
           seaborn
         ]);
