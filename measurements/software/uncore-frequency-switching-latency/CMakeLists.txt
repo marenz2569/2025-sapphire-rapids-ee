@@ -9,7 +9,7 @@ add_executable(
 # Set NB_WAIT_ITERATIONS to 10ms.
 # We can only set the number of additional cycles,
 # so we make sure that we calculate with the highest performing setting for the calcuations from ms to cycles.
-# Values from Jupyter Notebook: Lowest performance in cycles is 129.0, Highest performance in cycles is 26.0
+# Values from Jupyter Notebook: Lowest performance in cycles is 215.0, Highest performance in cycles is 26.0
 # 10ms / (26 cycles / 2GHz) ~= 800000
 
 set_target_properties(uncore-frequency-manual-switching-latency PROPERTIES COMPILE_FLAGS "-DMANUAL_FREQUENCY_LATENCY -DNB_WAIT_RANDOM -DNB_WAIT_ITERATIONS=800000")
