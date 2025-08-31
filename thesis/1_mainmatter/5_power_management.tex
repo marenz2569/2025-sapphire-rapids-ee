@@ -310,16 +310,22 @@ Further work is required to explain the cause of the high latencies for some fre
 
 
 \begin{figure}[]
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.3\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency-median-t-init.pdf}
-        \caption{\label{fig:a}}
+        \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/median-t-init.pdf}
+        \caption{\label{fig:a}Median time until an uncore frequency change is executed.}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.3\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency-95percentile-t-init.pdf}
-        \caption{\label{fig:b}}
+        \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/95percentile-t-init.pdf}
+        \caption{\label{fig:b}95th percentile of the time until an uncore frequency change is executed.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/95percentile-t-gap.pdf}
+        \caption{\label{fig:b}95th percentile time the IO is blocked for the uncore frequency change.}
     \end{subfigure}
     \caption{\label{fig:c}Time until the uncore IO is blocked, after which the frequency is adjusted on the Sapphire Rappids processor.}
 \end{figure}
