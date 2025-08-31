@@ -33,12 +33,14 @@ Execute `nix run .# -- -m jupyter notebook password` and provide a password when
 Create the figures via CTest.
 Set the environment variables as described in the above section.
 
+Before regenerating plots make shure to taint the exsisting figure files as unchanged with git: `find ./thesis/fig -type f | xargs git update-index --assume-unchanged`
+
 # References
 This is the code-support package for the following paper.
 Please cite the paper if you use parts of this repository for scientific work.
 
 Markus Schmidl: An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features (2025),
-DOI: 
+DOI:
 
 # License
 
