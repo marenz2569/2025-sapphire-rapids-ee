@@ -117,7 +117,7 @@ We can clearly validate the findings of~\figref{p0n-frequencies}.
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=0.8\columnwidth]{fig/validate-avx-frequency-license-bands.pdf}
+    \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands-validation/validate-avx-frequency-license-bands.pdf}
     \caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
     The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
     In the first bucket the SSE and AVX2 license bands share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
@@ -186,21 +186,21 @@ I also detected a reduction in energy efficiency for some samples of the SSE fre
 
 \begin{figure}[t!]
     \subfloat[Cumulative distribution of drawn package power.]{%
-        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-package-power-ecdf.pdf}%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/package-power-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-package-power-ecdf}%
     }\hfill
     \subfloat[Cumulative distribution of uncore frequency.]{%
-        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-uncore-freq-ecdf.pdf}%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/uncore-freq-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-uncore-freq-ecdf}%
     }\\
     \subfloat[Cumulative distribution of the performance deviation relative to the mean perfomance.
     The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the nunber of executed instruction per cycle.]{%
-        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-performance-ecdf.pdf}%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/performance-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-mean-perf}%
     }\hfill
     \subfloat[Cumulative distribution of the deviation from the maximal energy efficiency.
     The energy efficiency is modeled as the performance divided by the packager power.]{%
-        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly-energy-efficiency-ecdf.pdf}%
+        \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/energy-efficiency-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-max-ee}%
     }
     \caption{Metrics of the uncore frequency anomaly measurement.
@@ -328,7 +328,7 @@ Further work is required to explain the cause of the high latencies for some fre
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[height=\columnwidth,angle=90]{fig/C_state_latencies.pdf}
+    \includegraphics[height=\columnwidth,angle=90]{fig/cstate-latencies/C_state_latencies.pdf}
     \caption{\label{fig:c6_latencies}C-state latency of C6 measured using methodology developed by Schöne et al.
 The dotted line displays the hardcoded wakeup latency in the \protect\textbf{intel\_idle} kernel module.
 \protect\footnotemark}
