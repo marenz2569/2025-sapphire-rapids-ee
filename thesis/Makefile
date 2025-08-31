@@ -1,4 +1,6 @@
-figures = fig/C_state_latencies.pdf
+.DEFAULT_GOAL := all
+
+figures = fig/cstate-latencies/C_state_latencies.pdf
 
 %.pdf : %.eps
 	gs -dUsePDFX3Profile=1 -dBATCH -dNOPAUSE -sProcessColorModel=DeviceCMYK -dEPSCrop -sDEVICE=pdfwrite -sOutputFile=$@ $<
