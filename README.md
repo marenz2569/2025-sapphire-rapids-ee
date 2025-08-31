@@ -33,7 +33,7 @@ Execute `nix run .# -- -m jupyter notebook password` and provide a password when
 Create the figures via CTest.
 Set the environment variables as described in the above section.
 
-Before regenerating plots make shure to taint the exsisting figure files as unchanged with git: `find ./thesis/fig -type f | xargs git update-index --assume-unchanged`
+Before regenerating plots make shure to taint the exsisting figure files as unchanged with git: `find ./thesis/fig -type f | xargs -I{} git update-index --assume-unchanged {} || true`
 
 # References
 This is the code-support package for the following paper.
