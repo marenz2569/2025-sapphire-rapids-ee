@@ -24,7 +24,3 @@ jobs:
       with:
         name: PDF
         path: thesis/main.pdf
-    - uses: actions/upload-artifact@v4
-      with:
-        name: PDFX
-        path: thesis/main_pdfx.pdf
