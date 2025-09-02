@@ -1,4 +1,4 @@
-# pylint: disable=line-too-long
+# pylint: disable=line-too-long, missing-function-docstring
 
 """
 Reimpementation of the elab programm utilties.
@@ -18,9 +18,9 @@ def frequency(frequency_arg: str):
     try:
         frequency_khz = int(frequency_arg)
         IntelFrequency.set_core_frequency(frequency_khz=frequency_khz)
-    except ValueError:
+    except ValueError as exc:
         if frequency_arg != "performance":
-            raise RuntimeError(f"Our experiments are running with the performance governor per default. We do not support settings the specific governor {frequency_arg}.")
+            raise RuntimeError(f"Our experiments are running with the performance governor per default. We do not support settings the specific governor {frequency_arg}.") from exc
 
 if __name__ == "__main__":
     cli()
