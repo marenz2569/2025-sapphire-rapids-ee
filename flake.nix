@@ -44,9 +44,15 @@
         ]);
       in rec {
         packages.default = pythonEnv;
-        apps.jupyter = {
-          program = "${pythonEnv}/bin/jupyter";
-          type = "app";
+        apps = {
+          elab = {
+            program = "${pythonEnv}/bin/elab";
+            type = "app";
+          };
+          jupyter = {
+            program = "${pythonEnv}/bin/jupyter";
+            type = "app";
+          };
         };
       }
     );
