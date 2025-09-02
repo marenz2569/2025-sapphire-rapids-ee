@@ -94,8 +94,9 @@ void read_msr(const int fd, struct RaplEnergyTimeValue *read_val,
               const uint64_t *const registers, const size_t len) {
   for (size_t i = 0; i < len; i++) {
     read_val[i].timestamp = rdtsc();
-    assert(pread(fd, &read_val[i].value, sizeof(uint64_t), registers[i]) ==
-           sizeof(uint64_t));
+    // We do not assert when reading nothing, as this will not cause a change in
+    // the behaviour of our program.
+    (void)pread(fd, &read_val[i].value, sizeof(uint64_t), registers[i]);
   }
 }
 
