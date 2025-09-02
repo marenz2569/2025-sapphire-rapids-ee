@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "experiment_utils"
 version = "0.0.1"
 dependencies = [
+  "click",
   "matplotlib",
   "numpy",
   "pandas"
@@ -15,3 +16,6 @@ authors = [
     {name = "Markus Schmidl", email = "markus.schmidl@mailbox.tu-dresden.de"}
 ]
 license = "MIT"
+
+[project.scripts]
+elab = "experiment_utils.elab:cli"

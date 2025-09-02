@@ -2,6 +2,7 @@
   lib,
   buildPythonPackage,
   setuptools,
+  click,
   matplotlib,
   numpy,
   pandas
@@ -18,6 +19,7 @@ buildPythonPackage {
 
   pythonImportsCheck = [
     "experiment_utils"
+    "experiment_utils.elab"
     "experiment_utils.roco2_python"
   ];
 
@@ -26,7 +28,14 @@ buildPythonPackage {
     setuptools
   ];
 
+  # https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/python.section.md#buildpythonpackage-function
+  # Click is required for the runtime of the elab utility
+  pythonPath = [
+    click
+  ];
+
   buildInputs = [
+    click
     matplotlib
     numpy
     pandas
