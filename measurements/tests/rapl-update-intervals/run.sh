@@ -55,7 +55,7 @@ function enable_rapl_filter() {
     # [11] = 1
     #
     # 63:1 Reserved.
-    sudo wrmsr -a 0xbc 1
+    sudo wrmsr 0xbc -a 1
 }
 
 # Assert that the RAPL filter is disabled
