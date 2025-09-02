@@ -1,6 +1,7 @@
 # pylint: disable=missing-module-docstring,
 
 from .experiments import Experiment, ExperimentFilter
+from .intel_frequency import IntelFrequency
 from .isst_perf_profile_parser import TurboRatioLevel, Profile, IsstPerfProfile
 from .plotting import Plotting
 from .lscpu_parser import LscpuInformation

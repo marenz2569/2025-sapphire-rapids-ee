@@ -8,10 +8,9 @@ import os
 import sys
 import subprocess
 from typing import List
-import glob
 from pathlib import Path
 import shutil
-from experiment_utils import LscpuInformation, NumaNode, NumaNodes
+from experiment_utils import IntelFrequency, LscpuInformation, NumaNode, NumaNodes
 
 def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
     cpus = []
@@ -24,19 +23,6 @@ def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
 
 def disable_smt():
     subprocess.run(['sudo', 'tee', '/sys/devices/system/cpu/smt/control'], input='off', capture_output=True, text=True, check=True)
-
-def set_core_frequency(freq_in_khz: int):
-    scaling_min_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq')
-    for file in scaling_min_freq_files:
-        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True, check=False)
-
-    scaling_max_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq')
-    for file in scaling_max_freq_files:
-        subprocess.run(['sudo', 'tee', file], input=f'{freq_in_khz}', capture_output=True, text=True, check=False)
-
-def set_uncore_frequency(frequency_in_100mhz: int):
-    uncore_frequency_string = hex(frequency_in_100mhz << 8 | frequency_in_100mhz)
-    subprocess.run(['sudo', 'wrmsr', '-a', '0x620', uncore_frequency_string], capture_output=True, check=True)
 
 def measure(nodes: List[NumaNode], settings: dict, results_folder: Path):
     all_cpus = get_all_cpus(nodes)
@@ -127,7 +113,7 @@ def main():
 
     for core_frequency in core_frequencies:
         # Set the core frequency fixed
-        set_core_frequency(core_frequency)
+        IntelFrequency.set_core_frequency(core_frequency)
         settings['core_frequency'] = core_frequency
 
         # Folder for the measurements
@@ -135,7 +121,7 @@ def main():
 
         for uncore_frequency in uncore_frequencies:
             # Set the uncore frequency fixed
-            set_uncore_frequency(uncore_frequency)
+            IntelFrequency.set_uncore_frequency(uncore_frequency)
             settings['uncore_frequency'] = uncore_frequency
 
             # Create folder for the measurements
