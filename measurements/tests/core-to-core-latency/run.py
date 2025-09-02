@@ -11,8 +11,7 @@ from typing import List
 import glob
 from pathlib import Path
 import shutil
-from utils.numactl_parser import NumaNode, NumaNodes
-from utils.lscpu_parser import LscpuInformation
+from experiment_utils import LscpuInformation, NumaNode, NumaNodes
 
 def get_all_cpus(nodes: List[NumaNode]) -> List[int]:
     cpus = []
