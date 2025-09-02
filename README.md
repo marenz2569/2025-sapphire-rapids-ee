@@ -15,6 +15,9 @@ Create a build folder and compile the code in the `measurements` folder with CMa
 Run the test using CTest.
 Make shure to specify the `TEST_ROOT` environment variable to the root of the folder where results are saved.
 
+Please not that `measurement/rapl-update-intervals` will automatially cause a reboot since we are writing to sticky MSRs.
+This will break CTest when executing multiple tests.
+
 # Visualizing data manually
 
 To execute the juptyer server run: `nix run .# -- -m jupyter notebook --no-browser`.
