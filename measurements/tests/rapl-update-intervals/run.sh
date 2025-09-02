@@ -109,3 +109,8 @@ do
     # shellcheck disable=SC2024
     sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER_POLL.csv
 done
+
+echo "All measurements complete"
+echo "RAPL filter is enabled. Need to reboot the system!"
+# Reboot the system in 1 minute
+sudo shutdown -r +1
