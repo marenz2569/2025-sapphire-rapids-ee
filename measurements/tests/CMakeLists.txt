@@ -6,9 +6,10 @@ set(add_measurement__source_dir ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")
 # Argument NAME: The name of the test
 # Argument COMMAND: The command that should be executed for the test
 function(add_measurement)
-    set(oneValueArgs NAME COMMAND)
+    set(oneValueArgs NAME)
+    set(multiValueArgs COMMAND)
     cmake_parse_arguments(TEST "" "${oneValueArgs}"
-                          "" ${ARGN} )
+                          "${multiValueArgs}" ${ARGN} )
 
     if(NOT DEFINED TEST_NAME)
         message(FATAL_ERROR "Called add_test_with_output without NAME.")
