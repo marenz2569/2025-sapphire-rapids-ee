@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# Traverse to the path of this script
-# https://stackoverflow.com/a/24112741
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit ; pwd -P )
-cd "$parent_path" || exit
-
-# Alias elab to execute the elab tool of experiment_utils with root
-# sudo -E is required to have sudo working inside the nix chroot
-alias elab="sudo -E $(which nix) run .#elab --"
-
 # Test if the processor supports scaling_available_frequencies
 # If it does, we will use the userspace governour and write to scaling_setspeed
 # if not, we use the performance governor and write to scaling_max_speed
