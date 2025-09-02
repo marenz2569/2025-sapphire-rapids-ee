@@ -1,3 +1,3 @@
 # pylint: disable=missing-module-docstring,
 
-from .elab import cli
+from .elab import main

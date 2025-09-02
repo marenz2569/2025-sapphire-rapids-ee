@@ -18,4 +18,4 @@ authors = [
 license = "MIT"
 
 [project.scripts]
-elab = "experiment_utils.elab:cli"
+elab = "experiment_utils.elab:main"
