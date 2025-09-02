@@ -29,6 +29,7 @@
 
         pythonEnv = python.withPackages (ps: with ps; [
           experiment_utils
+          click
           ipykernel
           ipython
           jupyter
