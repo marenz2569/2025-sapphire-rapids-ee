@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+
 """
 Provides utilities to set frequencies on intel processors.
 """

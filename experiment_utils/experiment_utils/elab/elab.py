@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long
+
 """
 Reimpementation of the elab programm utilties.
 The code is completly rewriten has has no overlap with the original implementation.
@@ -11,14 +13,14 @@ def cli():
     pass
 
 @cli.command(help="Set the frequency of all cores to a given value in kHz.")
-@click.argument('frequency')
-def frequency(frequency):
+@click.argument('frequency_arg')
+def frequency(frequency_arg: str):
     try:
-        frequency_khz = int(frequency)
+        frequency_khz = int(frequency_arg)
         IntelFrequency.set_core_frequency(frequency_khz=frequency_khz)
-    except:
-        if frequency != "performance":
-            raise RuntimeError("Our experiments are running with the performance governor per default. We do not support settings the specific governor.")
+    except ValueError:
+        if frequency_arg != "performance":
+            raise RuntimeError(f"Our experiments are running with the performance governor per default. We do not support settings the specific governor {frequency_arg}.")
 
 if __name__ == "__main__":
     cli()
