@@ -13,6 +13,9 @@ ExternalProject_Get_Property(firestarter-metric-metricq-cca7e030f813398b07542610
 set_property(TEST measurement/rapl-accuracy PROPERTY ENVIRONMENT_MODIFICATION "LD_LIBRARY_PATH=path_list_prepend:${INSTALL_DIR}")
 set_property(TEST measurement/rapl-accuracy APPEND PROPERTY ENVIRONMENT FIRESTARTER_METRIC_METRICQ_DUMPER=${INSTALL_DIR}/metric-metricq-dumper)
 
+# Prepend the elab executable to the path
+set_property(TEST measurement/rapl-accuracy PREPEND PROPERTY ENVIRONMENT PATH=${PROJECT_SOURCE_DIR}/software/elab)
+
 add_notebook(
     NAME rapl-accuracy
     FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
