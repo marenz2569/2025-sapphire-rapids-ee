@@ -14,7 +14,7 @@ set_property(TEST measurement/rapl-accuracy PROPERTY ENVIRONMENT_MODIFICATION "L
 set_property(TEST measurement/rapl-accuracy APPEND PROPERTY ENVIRONMENT FIRESTARTER_METRIC_METRICQ_DUMPER=${INSTALL_DIR}/metric-metricq-dumper)
 
 # Prepend the elab executable to the path
-set_property(TEST measurement/rapl-accuracy PROPERTY ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${PROJECT_SOURCE_DIR}/software/elab")
+set_property(TEST measurement/rapl-accuracy APPEND PROPERTY ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:${PROJECT_SOURCE_DIR}/software/elab")
 
 add_notebook(
     NAME rapl-accuracy
