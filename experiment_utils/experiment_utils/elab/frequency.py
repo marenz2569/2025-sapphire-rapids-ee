@@ -12,11 +12,11 @@ from experiment_utils.intel_frequency import IntelFrequency
 def cli():
     pass
 
-@cli.command(help="Set the frequency of all cores to a given value in kHz.")
+@cli.command(help="Set the frequency of all cores to a given value in MHz.")
 @click.argument('frequency_arg')
 def frequency(frequency_arg: str):
     try:
-        frequency_khz = int(frequency_arg)
+        frequency_khz = int(frequency_arg) * 1000
         IntelFrequency.set_core_frequency(frequency_khz=frequency_khz)
     except ValueError as exc:
         if frequency_arg != "performance":
