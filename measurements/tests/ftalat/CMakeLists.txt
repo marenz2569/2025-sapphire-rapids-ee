@@ -27,5 +27,5 @@ set_property(TEST measurement/ftalat APPEND PROPERTY ENVIRONMENT FTALAT_SCALING_
 
 add_notebook(
     NAME ftalat
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/hati_analyze.ipynb
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
 )
