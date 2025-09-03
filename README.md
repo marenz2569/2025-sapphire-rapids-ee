@@ -9,6 +9,8 @@ It is structed into the following folders:
 The folder `.github` contains the github actions CI files.
 `*.nix` files are required to get obtain a python kernel for creating plots.
 
+All measurement data is distributed through OPARA, DOI: [https://doi.org/10.25532/OPARA-935](https://doi.org/10.25532/OPARA-935)
+
 # Running Measurements
 
 Create a build folder and compile the code in the `measurements` folder with CMake.
