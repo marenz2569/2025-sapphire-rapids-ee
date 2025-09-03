@@ -55,6 +55,8 @@ function reset_cpu_controls() {
     fi
 
     # Make the rapl interface accessible for the current group
-    sudo chgrp $(id -g) /sys/class/powercap/*/energy_uj
+    local group
+    group=$(id -g)
+    sudo chgrp $group /sys/class/powercap/*/energy_uj
     sudo chmod 440 /sys/class/powercap/*/energy_uj
 }
