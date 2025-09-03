@@ -39,6 +39,7 @@
           pandas
           pandas-stubs
           pylint
+          scikit-learn
           scipy
           seaborn
         ]);
