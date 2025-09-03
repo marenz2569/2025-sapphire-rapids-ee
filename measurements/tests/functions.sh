@@ -53,4 +53,8 @@ function reset_cpu_controls() {
         sudo $ISST turbo-freq disable
         sudo $ISST core-power disable
     fi
+
+    # Make the rapl interface accessible for the current group
+    sudo chgrp $(id -g) /sys/class/powercap/*/energy_uj
+    sudo chmod 440 /sys/class/powercap/*/energy_uj
 }
