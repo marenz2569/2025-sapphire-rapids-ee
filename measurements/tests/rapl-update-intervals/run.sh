@@ -69,6 +69,8 @@ then
     exit 1
 fi
 
+# Run FIRESTARTER to generate some energy usage
+$FIRESTARTER -b 1 &
 
 for frequency in "${frequencies[@]}"
 do
@@ -109,6 +111,8 @@ do
     # shellcheck disable=SC2024
     sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER_POLL.csv
 done
+
+killall FIRESTARTER
 
 echo "All measurements complete"
 echo "RAPL filter is enabled. Need to reboot the system!"
