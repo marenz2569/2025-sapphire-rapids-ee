@@ -114,7 +114,7 @@ bool any_value_changed(const struct RaplEnergyTimeValue *const previous_values,
 
   for (size_t i = 0; i < len; i++) {
     if (0 != memcmp(&previous_values[i].value, &current_values[i].value,
-                    sizeof(uint64_t))) {
+                    sizeof(struct Value))) {
       any_changed = true;
     }
   }
