@@ -4,12 +4,20 @@ on: [push, pull_request]
 
 
 jobs:
+  checkNixInstall:
+    runs-on: self-hosted
+    outputs:
+      isNotInstalled: ${{ steps.checkNixInstall.outputs.isNotInstalled }}
+    steps:
+      - id: checkNixInstall
+        run: |
+          cat /etc/bash.bashrc | grep nix > /dev/null && isNotInstalled=$? || isNotInstalled=$?
+          echo "isNotInstalled=$isNotInstalled"
+          echo "isNotInstalled=$isNotInstalled" >> $GITHUB_OUTPUT
+
   pylint:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
+    needs: checkNixInstall
 
     steps:
     - name: Checkout repository
@@ -17,6 +25,24 @@ jobs:
       with:
         fetch-depth: '0'
     - uses: cachix/install-nix-action@v31
+      if: "${{ needs.checkNixInstall.outputs.isNotInstalled == '1' }}"
+    # The required code from for the local nix install
+    - name: Set nix paths
+      if: "${{ needs.checkNixInstall.outputs.isNotInstalled == '0' }}"
+      run: |
+        # Set paths
+        echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+        # new path for nix 2.14
+        echo "$HOME/.nix-profile/bin" >> "$GITHUB_PATH"
+
+        if [[ -n "${INPUT_NIX_PATH:-}" ]]; then
+          echo "NIX_PATH=${INPUT_NIX_PATH}" >> "$GITHUB_ENV"
+        fi
+
+        # Set temporary directory (if not already set) to fix https://github.com/cachix/install-nix-action/issues/197
+        if [[ -z "${TMPDIR:-}" ]]; then
+          echo "TMPDIR=${RUNNER_TEMP}" >> "$GITHUB_ENV"
+        fi
     - name: Build python
       run: |
         nix build .#

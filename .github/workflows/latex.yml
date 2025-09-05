@@ -4,11 +4,7 @@ on: [push, pull_request]
 
 jobs:
   latex:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
     container:
       image: ghcr.io/xu-cheng/texlive-debian
     steps:

@@ -5,11 +5,7 @@ on: [push, pull_request]
 
 jobs:
   build-measurements:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ ubuntu-24.04 ]
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
 
     steps:
     - name: Try to clean up some things
@@ -20,7 +16,7 @@ jobs:
         sudo rm -rf /usr/local/.ghcup
     - name: Install dependencies
       run: |
-        sudo apt install libblas-dev liblapack-dev libprotobuf-dev protobuf-compiler libnuma-dev libcpufreq-dev ninja-build
+        sudo apt install --yes libblas-dev liblapack-dev libprotobuf-dev protobuf-compiler libnuma-dev libcpufreq-dev ninja-build cmake
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
