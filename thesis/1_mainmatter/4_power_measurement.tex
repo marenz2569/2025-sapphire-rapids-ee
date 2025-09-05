@@ -2,7 +2,7 @@
 
 \section{Validating RAPL Accuracy}
 Starting with the Haswell microarchitecture Intel integrated current measurement into their processor to support power limiting~\cite{Hackenberg_2015_Haswell}.
-The associated power metrics for different zones can be measured using the RAPL interface via the linux kernel~\footnote{\url{https://www.kernel.org/doc/html/latest/power/powercap/powercap.html}}.
+The associated power metrics for different zones can be measured using the RAPL interface via the linux kernel~\cite{powercap_kernel_doc}.
 Schöne et al.~\cite{Schoene_2024_Alder_Lake} tried to validate that RAPL counters on the Alder Lake architecture rely on current measurements, however they found that they are likely using a model.
 This is relevant to Sapphire Rapids, since they share the same core microarchitecture Golden Cove.
 
@@ -34,5 +34,22 @@ All measurment points are inside the \SI{1}{\percent} tolerance of the PDU.
 
 \section{RAPL Filters}
 
-\todoms{Influence of the data on the RAPL measurements.}
-\todoms{Influence of the measurement time on the RAPL measurements.}
+Energy measurement with high accuracy can be used to measure the energy difference between different executed instructions and their data.
+This has been demonstrated in great detail~\cite{Lucas_2016_AluPower,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
+However it can also be used to perform side channel attacks and retrieve keys from priviledged programs~\cite{Lipp_2021_Platypus}.
+While limiting access to the RAPL counters is possible from an operating system perspective, Intel also provides the option to enable filters \textbf{IA32\_MISC\_PACKAGE\_CTLS} on the energy measurement which cannot be deactived until a reboot is performed~\cite[Vol. 4 Table 2-52]{intel_combined_software_developer_manual}.
+The third generation of Xeon Scalable processors (Ice Lake) introduced the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR which also contains an accurate time point when the register was last updated.
+\todoms{This addresses a problem which has been highlighted by et al.~\cite{} to allow for accurate energy accounting.}
+
+I extend the measurement for RAPL granularity propsed by Schöne et al.~\cite{Schoene_2024_Alder_Lake}.
+All possible RAPL counters are polled repeatidly on CPU 0 via their associated MSR.
+CPU 1 runs FIRESTARTER to generate a constant power consumption on the processor.
+This measurement is repeated for all core frequencies, with and without filters enabled.
+
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
+    \caption{\label{fig:rapl-update-intervals}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during a const power draw scenario.
+    The time value is displayed for both the time from the timestamp instruction and the reported time the RAPL model specific register.}
+\end{figure}
