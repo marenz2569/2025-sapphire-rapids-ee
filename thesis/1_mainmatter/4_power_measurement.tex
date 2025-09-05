@@ -47,8 +47,9 @@ CPU 1 runs FIRESTARTER to generate a constant power consumption on the processor
 This measurement is repeated for all core frequencies, with and without filters enabled.
 
 The counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and \textbf{MSR\_RAM\_ENERGY} contain valid values.
-I plot the package counters in~\figref{rapl-update-intervals-package} and dram counters in%~\figreg{rapl-update-intervals-dram}.
-Interestingly for \SI{800}{\MHz} core frequency no update of the value from the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} metric is observed when the filter and all cstates are actitvated.
+\todoms{For the nominal core frequency of \SI{2}{\GHz}, I plot the package counters in~\figref{rapl-update-intervals-package} and dram counters in TODO.} %~\figreg{rapl-update-intervals-dram}.
+\todoms{I display the plots for all frequencies in appendix TODO. cite the plot for the next sentance.}
+Interestingly for \SI{800}{\MHz} core frequency, I do not observer an update of the value from the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} metric with the filter and all cstates are actitvated.
 
 Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions.
 Software developers require it for fast runtime optimization of energy efficiency.
@@ -60,4 +61,10 @@ For use cases with security critical data and algorithms, I recommend to activat
     \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
     \caption{\label{fig:rapl-update-intervals-package}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during a constant power draw scenario.
     The time value is displayed for both the time from the timestamp instruction and the reported time the RAPL model specific register.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
+    \caption{\label{fig:rapl-update-intervals-dram}Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.}
 \end{figure}
