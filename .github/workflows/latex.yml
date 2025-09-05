@@ -24,3 +24,4 @@ jobs:
       with:
         name: PDF
         path: thesis/main.pdf
+        overwrite: 'true'
