@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# The time in seconds of each measurement
+MEASUREMENT_DURATION=10
+
 # Test if the processor supports scaling_available_frequencies
 # If it does, we will use the userspace governour and write to scaling_setspeed
 # if not, we use the performance governor and write to scaling_max_speed
@@ -37,6 +40,9 @@ function set_frequency() {
     	echo $1 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
     	echo $1 | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
     fi
+
+    # Wait for some time so that frequencies can stabalize
+    sleep 1
 }
 
 function enable_rapl_filter() {
@@ -76,7 +82,7 @@ for frequency in "${frequencies[@]}"
 do
     set_frequency $frequency
     # shellcheck disable=SC2024
-    sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_NOFILTER.csv
+    sudo timeout $MEASUREMENT_DURATION taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_NOFILTER.csv
 done
 
 # Disable cstates
@@ -86,7 +92,7 @@ for frequency in "${frequencies[@]}"
 do
     set_frequency $frequency
     # shellcheck disable=SC2024
-    sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_NOFILTER_POLL.csv
+    sudo timeout $MEASUREMENT_DURATION taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_NOFILTER_POLL.csv
 done
 
 # Enable the RAPL filter
@@ -99,7 +105,7 @@ for frequency in "${frequencies[@]}"
 do
     set_frequency $frequency
     # shellcheck disable=SC2024
-    sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER.csv
+    sudo timeout $MEASUREMENT_DURATION taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER.csv
 done
 
 # Disable cstates
@@ -109,7 +115,7 @@ for frequency in "${frequencies[@]}"
 do
     set_frequency $frequency
     # shellcheck disable=SC2024
-    sudo timeout 5 taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER_POLL.csv
+    sudo timeout $MEASUREMENT_DURATION taskset -c 0 $RAPL_UPDATE_INTERVALS > $RESULTS_FOLDER/results_${frequency}_FILTER_POLL.csv
 done
 
 killall FIRESTARTER
