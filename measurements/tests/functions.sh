@@ -43,10 +43,7 @@ function reset_cpu_controls() {
     fi
 
     # Test if kernel supports the ISST interface
-    test -e /dev/isst_interface
-    isst_found=$?
-
-    if [[ $isst_found -eq 0 ]]
+    if [[ -e /dev/isst_interface ]]
     then
         # Disable ISST
         sudo $ISST base-freq disable
