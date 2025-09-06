@@ -39,7 +39,7 @@ This has been demonstrated in great detail~\cite{Lucas_2016_AluPower,Schoene_202
 However it can also be used to perform side channel attacks and retrieve keys from priviledged programs~\cite{Lipp_2021_Platypus}.
 While limiting access to the RAPL counters is possible from an operating system perspective, Intel also provides the option to enable filters \textbf{IA32\_MISC\_PACKAGE\_CTLS} on the energy measurement which cannot be deactived until a reboot is performed~\cite[Vol. 4 Table 2-52]{intel_combined_software_developer_manual}.
 The third generation of Xeon Scalable processors (Ice Lake) introduced the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR which also contains an accurate time point when the register was last updated.
-\todoms{This addresses a problem which has been highlighted by et al.~\cite{} to allow for accurate energy accounting.}
+This should address the problem of accuratly measuring short code-paths as presented by Hähnel et al.~\cite{Haehnel_2012_RAPL}.
 
 I extend the measurement for RAPL granularity propsed by Schöne et al.~\cite{Schoene_2024_Alder_Lake}.
 All possible RAPL counters are polled repeatidly for \SI{10}{\s} on CPU 0 via their associated MSR.
@@ -70,15 +70,15 @@ For use cases with security critical data and algorithms, I recommend to activat
 
 \begin{figure}[]
     \centering
-    % width could be 1, 0.9 instead
-    \includegraphics[width=0.8\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
     \caption{\label{fig:rapl-update-intervals-package}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during a constant power draw scenario.
     The time value is displayed for both the time from the timestamp instruction and the reported time the RAPL model specific register.}
 \end{figure}
 
 \begin{figure}[]
     \centering
-    % width cloud be 0.54, 0.49 instead
-    \includegraphics[width=0.44\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
     \caption{\label{fig:rapl-update-intervals-dram}Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.}
 \end{figure}
