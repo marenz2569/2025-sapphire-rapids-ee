@@ -53,7 +53,7 @@ The measurement is reapeated across the cross product of following settings:
 \end{itemize}
 Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and\\ \textbf{MSR\_RAM\_ENERGY} contain valid values.
 
-I plot the package counters the package and dram counters for the nominal core frequency of \SI{2}{\GHz}.
+I plot the package and dram counters for the nominal core frequency of \SI{2}{\GHz}.
 \figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the RAPL register and using the rdtsc as the source of the timestamp.
 We see an update of the counter every \SI{1.5}{\ms}.
 It is increased to \SI{3.0}{\ms} with enabled filters.
