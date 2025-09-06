@@ -6,6 +6,13 @@ The associated power metrics for different zones can be measured using the RAPL 
 Schöne et al.~\cite{Schoene_2024_Alder_Lake} tried to validate that RAPL counters on the Alder Lake architecture rely on current measurements, however they found that they are likely using a model.
 This is relevant to Sapphire Rapids, since they share the same core microarchitecture Golden Cove.
 
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/rapl-accuracy/rapl-accuracy.pdf}
+    \caption{\label{fig:validate-rapl}The roco2 microbenchmark is executed on a varying number of cores with different frequencies.
+    The RAPL measurement can be mapped with a quadratic fit to the external reference measurement.}
+\end{figure}
+
 I validate the accuracy of these counters against an external measurement using roco2 synthetic workload generator.
 This software required some patches to run on the current generation of processors.
 They are documented in the forked GitHub repository~\footnote{\url{https://github.com/marenz2569/roco2/tree/marenz.hati-config}}.
@@ -25,13 +32,6 @@ The average power draw of the PDU and the RAPL counters is plotted in~\figref{va
 A strong correlation via quadratic fit can be observed, indication that RAPL metrics are being measured.
 All measurment points are inside the \SI{1}{\percent} tolerance of the PDU.
 
-\begin{figure}[]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{fig/rapl-accuracy/rapl-accuracy.pdf}
-    \caption{\label{fig:validate-rapl}The roco2 microbenchmark is executed on a varying number of cores with different frequencies.
-    The RAPL measurement can be mapped with a quadratic fit to the external reference measurement.}
-\end{figure}
-
 \section{RAPL Filters}
 
 Energy measurement with high accuracy can be used to measure the energy difference between different executed instructions and their data.
@@ -44,12 +44,24 @@ The third generation of Xeon Scalable processors (Ice Lake) introduced the \text
 I extend the measurement for RAPL granularity propsed by Schöne et al.~\cite{Schoene_2024_Alder_Lake}.
 All possible RAPL counters are polled repeatidly for \SI{10}{\s} on CPU 0 via their associated MSR.
 CPU 1 runs FIRESTARTER to generate a constant power consumption on the processor.
-This measurement is repeated for all core frequencies, with and without filters enabled.
+The measurement is reapeated across the cross product of following settings:
+\begin{itemize}
+    \item All available core frequencies.
+    \item With and without RAPL filters enabled.
+    \item Both with all cstates and only POLL enabled.
+    This causes two levels of power draw at the same frequency.
+\end{itemize}
+Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and\\ \textbf{MSR\_RAM\_ENERGY} contain valid values.
 
-The counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and \textbf{MSR\_RAM\_ENERGY} contain valid values.
-\todoms{For the nominal core frequency of \SI{2}{\GHz}, I plot the package counters in~\figref{rapl-update-intervals-package} and dram counters in TODO.} %~\figreg{rapl-update-intervals-dram}.
-\todoms{I display the plots for all frequencies in appendix TODO. cite the plot for the next sentance.}
-Interestingly for \SI{800}{\MHz} core frequency, I do not observer an update of the value from the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} metric with the filter and all cstates are actitvated.
+I plot the package counters the package and dram counters for the nominal core frequency of \SI{2}{\GHz}.
+\figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the RAPL register and using the rdtsc as the source of the timestamp.
+We see an update of the counter every \SI{1.5}{\ms}.
+It is increased to \SI{3.0}{\ms} with enabled filters.
+The higher energy consumption when only enabling POLL is clearly visible.
+Under the constant load the timestamp of the RAPL register and the accumulated energy during this time follow a linear function, as is expect with accuracte timestamps.
+Accurate timestamps seem to be deactived when the RAPL filter is enabled.
+\figref{rapl-update-intervals-dram} does not show a change in resolution with rapl filters.
+Due to the mainboard dependent power measurement it is not as accurate as the package metrics.
 
 Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions.
 Software developers require it for fast runtime optimization of energy efficiency.
@@ -58,13 +70,15 @@ For use cases with security critical data and algorithms, I recommend to activat
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
+    % width could be 1, 0.9 instead
+    \includegraphics[width=0.8\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
     \caption{\label{fig:rapl-update-intervals-package}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during a constant power draw scenario.
     The time value is displayed for both the time from the timestamp instruction and the reported time the RAPL model specific register.}
 \end{figure}
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
+    % width cloud be 0.54, 0.49 instead
+    \includegraphics[width=0.44\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
     \caption{\label{fig:rapl-update-intervals-dram}Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.}
 \end{figure}
