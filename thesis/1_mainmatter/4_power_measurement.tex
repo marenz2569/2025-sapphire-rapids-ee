@@ -54,13 +54,13 @@ The measurement is reapeated across the cross product of following settings:
 Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and\\ \textbf{MSR\_RAM\_ENERGY} contain valid values.
 
 I plot the package and dram counters for the nominal core frequency of \SI{2}{\GHz}.
-\figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the RAPL register and using the rdtsc as the source of the timestamp.
+For package counters \figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the RAPL register and using the rdtsc as the source of the timestamp.
 We see an update of the counter every \SI{1.5}{\ms}.
 It is increased to \SI{3.0}{\ms} with enabled filters.
 The higher energy consumption when only enabling POLL is clearly visible.
 Under the constant load the timestamp of the RAPL register and the accumulated energy during this time follow a linear function, as is expect with accuracte timestamps.
 Accurate timestamps seem to be deactived when the RAPL filter is enabled.
-\figref{rapl-update-intervals-dram} does not show a change in resolution with rapl filters.
+For dram counters \figref{rapl-update-intervals-dram} does not show a change in resolution with rapl filters.
 Due to the mainboard dependent power measurement it is not as accurate as the package metrics.
 
 Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions.
