@@ -2,7 +2,6 @@
 
 \section{Validating RAPL Accuracy}
 Starting with the Haswell microarchitecture Intel integrated current measurement into their processors to support power limiting~\cite{Hackenberg_2015_Haswell}.
-\todoms{actually Sandy bridge, haswell is the first with accuracte measurement}
 The associated power metrics for different zones can be measured using the RAPL interface via the linux kernel~\cite{powercap_kernel_doc}.
 Schöne et al.~\cite{Schoene_2024_Alder_Lake} tried to validate that RAPL counters on the Alder Lake architecture rely on current measurements, however they found that they are likely using a model.
 This is relevant to Sapphire Rapids, since they share the same core microarchitecture Golden Cove.
