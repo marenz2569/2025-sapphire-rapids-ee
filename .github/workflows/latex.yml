@@ -16,8 +16,19 @@ jobs:
       run: |
         cd thesis
         make all
-    # - uses: actions/upload-artifact@v4
-    #   with:
-    #     name: PDF
-    #     path: thesis/main.pdf
-    #     overwrite: 'true'
+
+    - name: Retrieve the secret and save it to the curl config file
+      env:
+        DATASHARE_USERID: ${{ secrets.DATASHARE_USERID }}
+        DATASHARE_SECRET: ${{ secrets.DATASHARE_SECRET }}
+      run: |
+        echo "user = " > curl.config
+        cat $DATASHARE_USERID >> curl.config
+        cat ":" >> curl.config
+        cat $DATASHARE_SECRET >> curl.config
+    - name: Upload to datashare
+      env:
+        DATASHARE_USERID: ${{ secrets.DATASHARE_USERID }}
+      run: |
+        curl --config curl.config -T main.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main.pdf
+        curl --config curl.config -T main_pdfx.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main_pdfx.pdf
