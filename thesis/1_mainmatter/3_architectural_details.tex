@@ -19,6 +19,23 @@ Which accelerators are activated depend on the specific SKU, while Intel allows 
 Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMIB structures to continue the mesh across the die boundaries.~\cite{Intel_2022_ISSCC}}
 \end{figure}
 
+\begin{figure}[]
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/core-layout/socket0_tikz.pdf}
+        \caption{Map of the first socket.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/core-layout/socket1_tikz.pdf}
+        \caption{Map of the second socket.}
+    \end{subfigure}
+    \caption{\label{fig:physical-layout}Physical layout of the processor with the IDs of the cache boxes and cores.
+	Each box contains two numbers to represent the cache box id followed by a slash and the CPU id.
+	Deactivated cache boxes and cores are marked with an X.}
+\end{figure}
+
 \section{Golden Cove Core Microarchitecture}
 
 \begin{figure}[]
@@ -63,6 +80,4 @@ The horizontal occupancy is used to find which cache boxes are in the same row.
 I assume that at least one row contains all cores/caches and that the ids of the cache boxes are numbered sequentially.
 This allows me to align the rows and columns to one another around a complete row.
 As sub numa clustering is activated, the size of the rows and columns are bound to the size of a tile.
-Fig... show the physical map of the processor core and cache slices positions on the test system.
-
-\todoms{add the map of the two sockets aligned in the same way as the spr-overview figure.}
+\figref{physical-layout} show the physical map of the processors core and cache slices positions on the test system.
