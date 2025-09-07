@@ -24,7 +24,7 @@ jobs:
       run: |
         echo "user = " > curl.config
         cat $DATASHARE_USERID >> curl.config
-        cat ":" >> curl.config
+        echo ":" >> curl.config
         cat $DATASHARE_SECRET >> curl.config
     - name: Upload to datashare
       env:
