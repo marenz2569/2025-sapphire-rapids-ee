@@ -2,11 +2,15 @@
 
 figures = fig/cstate-latencies/C_state_latencies.pdf
 
+tikz = fig/core-layout/socket0_tikz.pdf fig/core-layout/socket1_tikz.pdf
+
 %.pdf : %.eps
 	gs -dUsePDFX3Profile=1 -dBATCH -dNOPAUSE -sProcessColorModel=DeviceCMYK -dEPSCrop -sDEVICE=pdfwrite -sOutputFile=$@ $<
 
+%.pdf : %.tikz
+	pdflatex -output-directory=$$(dirname $<) $<
 
-fig: $(figures)
+fig: $(figures) $(tikz)
 
 all: fig
 	pdflatex -halt-on-error main
