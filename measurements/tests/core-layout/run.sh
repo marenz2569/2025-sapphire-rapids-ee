@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Set to nominal frequency
-echo "2200000" | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
-echo "2200000" | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
+echo "2000000" | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq
+echo "2000000" | sudo tee /sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq
 
 # Take hyperthreads offline
 echo off | sudo tee /sys/devices/system/cpu/smt/control
