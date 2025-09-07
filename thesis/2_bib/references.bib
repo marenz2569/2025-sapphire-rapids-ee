@@ -349,5 +349,21 @@ keywords = {RAPL, operating systems, power consumption}
   howpublished = {\url{https://www.thomas-krenn.com/en/wiki/Intel_On_Demand}},
   note = {Accessed: 2025-09-07}}
 
+@inproceedings{Velten_2022_Rome_CLX,
+  author = {Velten, Markus and Sch\"{o}ne, Robert and Ilsche, Thomas and Hackenberg, Daniel},
+  title = {Memory Performance of AMD EPYC Rome and Intel Cascade Lake SP Server Processors},
+  year = {2022},
+  isbn = {9781450391436},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3489525.3511689},
+  doi = {10.1145/3489525.3511689},
+  abstract = {Modern processors, in particular within the server segment, integrate more cores with each generation. This increases their complexity in general, and that of the memory hierarchy in particular. Software executed on such processors can suffer from performance degradation when data is distributed disadvantageously over the available resources. To optimize data placement and access patterns, an in-depth analysis of the processor design and its implications for performance is necessary. This paper describes and experimentally evaluates the memory hierarchy of AMD EPYC Rome and Intel Xeon Cascade Lake SP server processors in detail. Their distinct microarchitectures cause different performance patterns for memory latencies, in particular for remote cache accesses. Our findings illustrate the complex NUMA properties and how data placement and cache coherence states impact access latencies to local and remote locations. This paper also compares theoretical and effective bandwidths for accessing data at the different memory levels and main memory bandwidth saturation at reduced core counts. The presented insight is a foundation for modeling performance of the given microarchitectures, which enables practical performance engineering of complex applications. Moreover, security research on side-channel attacks can also leverage the presented findings.},
+  booktitle = {Proceedings of the 2022 ACM/SPEC on International Conference on Performance Engineering},
+  pages = {165–175},
+  numpages = {11},
+  keywords = {amd epyc rome, amd zen 2, cache coherence, intel xeon cascade lake, intel xeon skylake, memory hierarchy},
+  location = {Beijing, China},
+  series = {ICPE '22}}
 
 @Comment{jabref-meta: databaseType:bibtex;}
