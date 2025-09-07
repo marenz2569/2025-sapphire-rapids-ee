@@ -22,10 +22,7 @@ jobs:
         DATASHARE_USERID: ${{ secrets.DATASHARE_USERID }}
         DATASHARE_SECRET: ${{ secrets.DATASHARE_SECRET }}
       run: |
-        echo "user = " > curl.config
-        cat $DATASHARE_USERID >> curl.config
-        echo ":" >> curl.config
-        cat $DATASHARE_SECRET >> curl.config
+        echo "user = ${DATASHARE_USERID}:${DATASHARE_SECRET}" > curl.config
     - name: Upload to datashare
       env:
         DATASHARE_USERID: ${{ secrets.DATASHARE_USERID }}
