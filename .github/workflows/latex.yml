@@ -27,5 +27,5 @@ jobs:
       env:
         DATASHARE_USERID: ${{ secrets.DATASHARE_USERID }}
       run: |
-        curl --config curl.config -T main.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main.pdf
-        curl --config curl.config -T main_pdfx.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main_pdfx.pdf
+        curl --config curl.config -T thesis/main.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main.pdf
+        curl --config curl.config -T thesis/main_pdfx.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main_pdfx.pdf
