@@ -95,6 +95,22 @@ It is run on CPU 0 with hyperthreading disabled.
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
 
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/robsize/reorder-buffer.pdf}
+    \caption{\label{fig:robsize-reorder}Measurement of the reorder buffer size.}
+\end{figure}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/robsize/load-buffer.pdf}
+    \caption{\label{fig:robsize-load}Measurement of the load buffer size.}
+\end{figure}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/robsize/store-buffer.pdf}
+    \caption{\label{fig:robsize-store}Measurement of the store buffer size.}
+\end{figure}
+
 
 \begin{table}[t]
 	\centering
