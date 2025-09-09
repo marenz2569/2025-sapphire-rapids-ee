@@ -7,8 +7,8 @@ Utilities for plotting experiment data
 import os
 from pathlib import Path
 import subprocess
-import matplotlib.pyplot as plt
 from typing import List
+import matplotlib.pyplot as plt
 from .experiments import Experiment
 
 # The environment folder which is used to find the results folder
@@ -70,19 +70,19 @@ class Plotting:
         num_experiments: int = 1
         list_experiments: List[Experiment] = []
 
-        if type(experiments) is list:
+        if isinstance(experiments, list):
             names = list(set(map(lambda experiment: experiment.experiment_name, experiments)))
             if len(names) > 1:
-                assert "List of experiments contains more that one experiment name"
+                raise RuntimeError("List of experiments contains more that one experiment name")
             experiment_name = names[0]
             num_experiments = len(experiments)
             list_experiments = experiments
-        elif type(experiments) is Experiment:
+        elif isinstance(experiments, Experiment):
             experiment_name = experiments.experiment_name
             # convert to list
             list_experiments = [ experiments ]
         else:
-            assert "Type mismatch on experiments"
+            raise RuntimeError("Type mismatch on experiments")
 
         save_dir = Plotting.create_save_dir(experiment_name=experiment_name)
 
