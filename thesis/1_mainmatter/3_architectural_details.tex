@@ -38,6 +38,13 @@ Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMI
 
 \section{Golden Cove Core Microarchitecture}
 
+Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_IceLake_SP} finding information about the interals of Golden Cove is quite difficult.
+Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
+I was unable to find the original slide deck, requiring to take this information with extra caution.
+
+Since I was unable to find public claims from Intel, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer, register file sizes.
+Henry Wong create a benchmark that can measure the reorder buffer size~\cite{Wong_2013_robsize} of the out-of-order engine, an essential component that falicitates reordering, idioms and move elimination.
+
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/GoldenCoveCore.pdf}
