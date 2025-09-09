@@ -90,6 +90,7 @@ At some number of instructions the latency of the two loads increases since a li
 I implemented the benchmark using C++ and the Asmjit~\cite{Kobalicek_AsmJit} library to generate assember kernels during runtime.~\footnote{\url{https://github.com/marenz2569/robsize}}
 The loop is unrolled \SI{16}{} and repeated for \SI{2048}{} times.
 I plot the minimum latency of \SI{16}{} executions of this benchmark with the number of filler instructions between \SI{16}{} and \SI{600}{}.
+It is run on CPU 0 with hyperthreading disabled.
 
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
