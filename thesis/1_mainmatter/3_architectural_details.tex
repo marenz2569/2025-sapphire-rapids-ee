@@ -111,30 +111,29 @@ As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,
     \caption{\label{fig:robsize-store}Measurement of the store buffer size.}
 \end{figure}
 
-
-\begin{table}[t]
+\begin{sidewaystable}[t]
 	\centering
-	\caption{\label{tab:micro-arch-params}Golden Cove Core Microarchitecture}
-	\begin{tabular}{r|ll}
+	\caption{\label{tab:micro-arch-params}Parameters of the Golden Cove Core Microarchitecture. Entries that are not from a primary source are either denoted with \checkmark if they have been verified, or ? if they need to be verfied.}
+	\begin{tabular}{r|lll}
 		\toprule
-			&	Skylake & Golden Cove \\
-		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		Register Files Integer & 180~\cite{Intel_2020_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2020_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		\rowcolor[HTML]{EFEFEF}L1i Cache & & \\
+			&	Skylake & Golden Cove & Golden Cove Verified \\
+		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
+		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		Register Files Integer & 180~\cite{Intel_2020_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2020_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		\rowcolor[HTML]{EFEFEF}L1i Cache & & & \\
 		L1d Cache & & \\
-		\rowcolor[HTML]{EFEFEF}L1d BW Load & 128~\cite{Intel_2020_Skylake_SP} & \\
-		L1d BW Store & 64~\cite{Intel_2020_Skylake_SP} & \\
-		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2M: 1536 & 2K~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} \\
-		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2020_Skylake_SP} & \\
-		Mid-level Cache & & \\
+		\rowcolor[HTML]{EFEFEF}L1d BW Load & 128~\cite{Intel_2020_Skylake_SP} & & \\
+		L1d BW Store & 64~\cite{Intel_2020_Skylake_SP} & & \\
+		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2M: 1536 & 2K~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2020_Skylake_SP} & & \\
+		Mid-level Cache & & & \\
 		\bottomrule
 		%\vspace{6mm}
 	\end{tabular}
-\end{table}
+\end{sidewaystable}
 
 
 \begin{figure}[]
