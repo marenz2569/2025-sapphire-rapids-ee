@@ -5,3 +5,8 @@ add_measurement(
 
 ExternalProject_Get_Property(robsize-677bcc5fc6cada3f386835a00400c3c0fab7dbc3 INSTALL_DIR)
 set_property(TEST measurement/robsize APPEND PROPERTY ENVIRONMENT ROBSIZE=${INSTALL_DIR}/robsize)
+
+add_notebook(
+    NAME robsize
+    FILE ${CMAKE_CURRENT_SOURCE_DIR}/Plot.ipynb
+)
