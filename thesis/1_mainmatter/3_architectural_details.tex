@@ -126,15 +126,17 @@ This can however not be verified with the current version of the benchmark as it
 	\begin{tabular}{r|lll}
 		\toprule
 			&	Skylake & Golden Cove & Golden Cove Verified \\
-		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
+		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
 		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
 		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
 		Register Files Integer & 180~\cite{Intel_2020_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
 		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2020_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \\
+		μop Cache & & 4K~\cite{Intel_2021_Architecture_Day} & \\
+		Decoder & & 32B decode size, 6 decoder, 8μop/cycle~\cite{Intel_2021_Architecture_Day} \\
 		\rowcolor[HTML]{EFEFEF}L1i Cache & & & \\
 		L1d Cache & & \\
-		\rowcolor[HTML]{EFEFEF}L1d BW Load & 128~\cite{Intel_2020_Skylake_SP} & & \\
+		\rowcolor[HTML]{EFEFEF}L1d BW Load & 128~\cite{Intel_2020_Skylake_SP} & 3x256b or 2x512b~\cite{Intel_2021_Architecture_Day} & \\
 		L1d BW Store & 64~\cite{Intel_2020_Skylake_SP} & & \\
 		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2M: 1536 & 2K~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
 		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2020_Skylake_SP} & & \\
