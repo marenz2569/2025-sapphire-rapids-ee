@@ -76,6 +76,8 @@ This allows me to align the rows and columns to one another around a complete ro
 As sub numa clustering is activated, the size of the rows and columns are bound to the size of a tile.
 \figref{physical-layout} show the physical map of the processors core and cache slices positions on the test system.
 
+\todoms{add test system details for ariel}
+
 \section{Golden Cove Core Microarchitecture}
 
 Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_IceLake_SP} finding information about the interals of Golden Cove is quite difficult.
@@ -91,9 +93,16 @@ I implemented the benchmark using C++ and the Asmjit~\cite{Kobalicek_AsmJit} lib
 The loop is unrolled \SI{16}{} and repeated for \SI{2048}{} times.
 I plot the minimum latency of \SI{16}{} executions of this benchmark with the number of filler instructions between \SI{16}{} and \SI{600}{}.
 It is run on CPU 0 with hyperthreading disabled.
+To verify the functionality against published values from a primary source~\cite{Intel_2020_Skylake_SP}, the measurement is repeated on a Skylake SP processor.
 
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
+To measure the size of the load and store buffers, I insert \textbf{mov} instructions taht load and store from memory to a register.
+\figref{robsize-load} show a discrepancy between the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 240 in-flight loads vs the 192 measured.
+This has also been measured by Chips and Cheese~\cite{Chipsandcheese_2023_GoldenCove_Vector_Register}, they postulate that Intel is using a different mechanism for in-fligt loads.
+Since different parts of the core are partitioned differently between threads, I assume that there could be partial static partitioning in the load queue.
+This can however not be verified with the current version of the benchmark as it would require support for concurrent measurement on multiple threads of the same CPU.
+\figref{robsize-store} shows that same result as the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 112 stores.
 
 \begin{figure}[]
     \centering
@@ -113,13 +122,13 @@ As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,
 
 \begin{sidewaystable}[t]
 	\centering
-	\caption{\label{tab:micro-arch-params}Parameters of the Golden Cove Core Microarchitecture. Entries that are not from a primary source are either denoted with \checkmark if they have been verified, or ? if they need to be verfied.}
+	\caption{\label{tab:micro-arch-params}Parameters of the Golden Cove Core Microarchitecture. Entries that are not from a primary source are either denoted with\\\checkmark if they have been verified, or ? if they need to be verfied.}
 	\begin{tabular}{r|lll}
 		\toprule
 			&	Skylake & Golden Cove & Golden Cove Verified \\
 		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
-		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
+		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
 		Register Files Integer & 180~\cite{Intel_2020_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
 		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2020_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
 		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
