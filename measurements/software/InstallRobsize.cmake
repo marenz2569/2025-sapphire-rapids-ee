@@ -42,4 +42,4 @@ function(build_robsize)
 endfunction()
 
 # Master as of 2025-09-11
-build_robsize(REV 137578e8d25cd38659d08d49c44b646b5cb53247)
+build_robsize(REV 0d88b24ad82d5d703fbda5c4c8d33ef317eef760)
