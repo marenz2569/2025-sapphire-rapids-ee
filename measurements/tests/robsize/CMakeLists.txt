@@ -3,7 +3,7 @@ add_measurement(
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/run.sh
 )
 
-ExternalProject_Get_Property(robsize-ebd2f95c9e516b2a9a9f3ad76cefd2ac538af0ea INSTALL_DIR)
+ExternalProject_Get_Property(robsize-137578e8d25cd38659d08d49c44b646b5cb53247 INSTALL_DIR)
 set_property(TEST measurement/robsize APPEND PROPERTY ENVIRONMENT ROBSIZE=${INSTALL_DIR}/robsize)
 
 add_notebook(
