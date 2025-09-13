@@ -2,6 +2,10 @@
 \label{sec:summary}
 
 \begin{itemize}
+    \item The claim of a specific IPC improvement can currently not be verified for specific small kernels.
+    The data of Kobalicek~\cite{Kobalicek_AsmGrid} can be used to create a model of IPC improvement of specific instructions.
+    More architectures can be added using Cult~\cite{Kobalicek_Cult} and the Asmjit Instruction Database~\cite{Kobalicek_InstructionDB}.
+    This is also possible with the likwid bench toolkit~\cite{RHZE_HPC_likwid} for bigger compute kernels or with the data published by SPEC~\cite{spec} for bigger kernels and applications.
     \item ftalat measures time until frequency change
     \item uncore-frequency-switching-latency measures how long IO is blocked
     \item both measurement should be combined for both core and uncore latency classification

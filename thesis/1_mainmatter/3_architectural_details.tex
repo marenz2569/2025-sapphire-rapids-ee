@@ -84,6 +84,11 @@ Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_I
 Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
 I was unable to find the original slide deck, requiring to take this information with extra caution.
 
+Golden Cove continued to deliver improved instructions througput compared with previous generations~\cite{Intel_2021_Architecture_Day}.
+Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the IPC and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
+The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
+I could not find a publication that displays the improvements based on this data.
+
 Since I was unable to find public claims from Intel, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer, register file sizes.
 Henry Wong created a benchmark that can measure the reorder buffer size~\cite{Wong_2013_robsize} of the out-of-order engine, an essential component that falicitates reordering, idioms and move elimination.
 The execution time of two independent pointer chasing loads is measured.
