@@ -89,7 +89,7 @@ Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the 
 The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
 I could not find a publication that displays the improvements based on this data.
 
-Since I was unable to find public claims from Intel, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer, register file sizes.
+Since I was only able a limited amout of public claims from Intel~\cite{Intel_2021_Architecture_Day} about their core microarchitecture, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer and register file sizes.
 Henry Wong created a benchmark that can measure the reorder buffer size~\cite{Wong_2013_robsize} of the out-of-order engine, an essential component that falicitates reordering, idioms and move elimination.
 The execution time of two independent pointer chasing loads is measured.
 Different filler instructions are inserted between the two loads.
