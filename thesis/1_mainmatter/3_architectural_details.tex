@@ -98,7 +98,7 @@ I implemented the benchmark using C++ and the Asmjit~\cite{Kobalicek_AsmJit} lib
 The loop is unrolled \SI{16}{} and repeated for \SI{2048}{} times.
 I plot the minimum latency of \SI{16}{} executions of this benchmark with the number of filler instructions between \SI{16}{} and \SI{600}{}.
 It is run on CPU 0 with hyperthreading disabled.
-To verify the functionality against published values from a primary source~\cite{Intel_2020_Skylake_SP}, the measurement is repeated on a Skylake SP processor.
+To verify the functionality against published values from a primary source~\cite{Intel_2020_Skylake_SP}, the measurement is repeated on the test system (ariel) used Schöne et al. for their benchmarks of Skylake-SP~\cite{Schoene_2019_SKL}.
 
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
