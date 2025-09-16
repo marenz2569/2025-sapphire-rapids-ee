@@ -66,8 +66,8 @@ If not noted otherwise, all measurements on this processor are performed with hy
 	\end{tabular}
 \end{table}
 
-\todoms{Add citation for the papers that also do this, but somewhat differently.}
-To find out which of the cores and caches are deactived I run the stream benchmark on each CPU, collect the Vertical Egress Events\footnote{\textbf{TxR\_VERT\_OCCUPANCY0} with AD - Agent 0 and AK - Agent 0: event=144,umask=0x03}, measuring the occupancy of the egress buffers in the mesh stop, and the Horizontal Egress Events\footnote{\textbf{TxR\_HORZ\_OCCUPANCY} with AD - Uncredited and AK: event=160,umask=0x03}, measuring the occupancy of the transgress buffers, for all cache boxes.
+McCalpin~\cite{McCalpin_2021_CoreMapping} and Cho~\cite{Cho_2022_KnowYourNeighbor} described methods find the physical location of cores and their associated caches, these measurements have been modified to work with Sapphire Rapids.
+I execute the stream benchmark on each CPU, collect the Vertical Egress Events\footnote{\textbf{TxR\_VERT\_OCCUPANCY0} with AD - Agent 0 and AK - Agent 0: event=144,umask=0x03}, measuring the occupancy of the egress buffers in the mesh stop, and the Horizontal Egress Events\footnote{\textbf{TxR\_HORZ\_OCCUPANCY} with AD - Uncredited and AK: event=160,umask=0x03}, measuring the occupancy of the transgress buffers, for all cache boxes.
 This measurement is performed using the default core frequency without the use of hyperthreading.
 I use the vertical occupancy event to associate the cores to cache boxes.
 The horizontal occupancy is used to find which cache boxes are in the same row.
@@ -75,8 +75,6 @@ I assume that at least one row contains all cores/caches and that the ids of the
 This allows me to align the rows and columns to one another around a complete row.
 As sub numa clustering is activated, the size of the rows and columns are bound to the size of a tile.
 \figref{physical-layout} show the physical map of the processors core and cache slices positions on the test system.
-
-\todoms{add test system details for ariel}
 
 \section{Golden Cove Core Microarchitecture}
 
