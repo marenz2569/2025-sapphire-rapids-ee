@@ -100,12 +100,13 @@ To verify the functionality against published values from a primary source~\cite
 
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
-To measure the size of the load and store buffers, I insert \textbf{mov} instructions taht load and store from memory to a register.
+To measure the size of the load and store buffers, I insert \textbf{mov} instructions that load and store from memory to a register.
 \figref{robsize-load} show a discrepancy between the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 240 in-flight loads vs the 192 measured.
-This has also been measured by Chips and Cheese~\cite{Chipsandcheese_2023_GoldenCove_Vector_Register}, they postulate that Intel is using a different mechanism for in-fligt loads.
+This has also been measured by Chips and Cheese~\cite{Chipsandcheese_2023_GoldenCove_Vector_Register}, they postulate that Intel is using a different mechanism for in-flight loads.
 Since different parts of the core are partitioned differently between threads, I assume that there could be partial static partitioning in the load queue.
 This can however not be verified with the current version of the benchmark as it would require support for concurrent measurement on multiple threads of the same CPU.
 \figref{robsize-store} shows that same result as the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 112 stores.
+\todoms{Add register file size plots}
 
 \begin{figure}[]
     \centering
