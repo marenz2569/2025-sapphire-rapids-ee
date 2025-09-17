@@ -1,8 +1,8 @@
 \chapter{Architectural Details of ``Sapphire Rapids'' Processors}
 The Sapphire Rapids family of server processors is the successor to the ``Ice Lake'' architecture.
-Building up on the design of the Skylake~\cite{Schoene_2019_SKL} and Cascade Lake~\cite{Velten_2022_Rome_CLX} architectures, it is the first in Intels lineup of server processor to introduce a modular design containing four tiles in a 2x2 grid interconnected with EMIB structures.
+Building up on the design of the Skylake~\cite{Schoene_2019_SKL} and Cascade Lake~\cite{Velten_2022_Rome_CLX} architectures, it is the first in Intels lineup of server processor to introduce a modular design containing four silicon tiles in a 2x2 grid interconnected with EMIB structures.
 The two variants of this processor are the 4th Generation Intel Xeon Scalable Processor and Xeon CPU Max Series with four additional HBM blocks~\cite{Intel_2021_Hotchips}.
-Each tile contains up to 15 Golden Cove cores with a shared L3 cache connected by a mesh, an accelerator complex, two DDR5 memory busses, 20 PCIe Gen 5/CXL lanes and one UPI 2.0 link.
+Each tile contains up to 15 Golden Cove cores with a shared L3 cache connected by a mesh, an accelerator complex, two DDR5 memory channels, 20 PCIe Gen 5/CXL lanes and one UPI 2.0 link.
 This structure enables the package to be used in a single memory domain or split into two or four sub-NUMA clusters~\cite{Intel_4th_gen_scalable}.
 The accelerator complex can contain contains up to four different accelerators:
 Data Streaming Accelerator (DSA) allows for memory move, fill and compare offloading.
@@ -11,9 +11,6 @@ Dynamic Load Balancer (DLB), brings hardware acceleratored queues.
 In-Memory Analytics Accelerator (IAA), allows for memory compression, encryption and filtering.~\cite{Yifan_2024_intel_accelerator_ecosystem,Yuan_2023_ISCA_tutorial,Intel_4th_gen_scalable}
 Which accelerators are activated depend on the specific SKU, while Intel allows for the option to install licenses through an PCI express interface\footnote{\url{https://github.com/intel/intel-sdsi}}~\cite{Krenn_2025_Intel_on_demand}.
 \figref{spr-overview} show a high level view of the processor.
-
-\todoms{Add information about the cache sizes from the optimization reference manual.
-Add information about new supported CPU instructions.}
 
 \begin{figure}[]
     \centering
@@ -41,7 +38,7 @@ Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMI
 
 \section{Test System Details}
 I performed all measurements on an Intel Xeon Platinum 8480+ dual socket server.
-\tabref{test-system} shows details of the specific test system.
+\tabref{test-system} shows details of the specific test system, called hati.
 If not noted otherwise, all measurements on this processor are performed with hyperthreading and SNC-4 is activated.
 
 \begin{table}[t]
@@ -61,6 +58,8 @@ If not noted otherwise, all measurements on this processor are performed with hy
 		Disk		&	Samsung MZQL27T6HBLA-00A07 \\
 		\rowcolor[HTML]{EFEFEF}OS           &   Ubuntu 22.04 LTS \\
 		Kernel          &   6.8.0-79-generic \\
+		\rowcolor[HTML]{EFEFEF}Power meter & Raritan PX2-5528\\
+		Accuracy & \SI{1}{\percent}\\
 		\bottomrule
 		%\vspace{6mm}
 	\end{tabular}
@@ -78,7 +77,8 @@ As sub numa clustering is activated, the size of the rows and columns are bound 
 
 \section{Golden Cove Core Microarchitecture}
 
-Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_IceLake_SP} finding information about the interals of Golden Cove is quite difficult.
+Intel published information about the Golden Cove microarchitecture in their optimization reference manual~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}.
+Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_IceLake_SP} finding detailed information about the interals is quite difficult.
 Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
 I was unable to find the original slide deck, requiring to take this information with extra caution.
 
@@ -86,6 +86,14 @@ Golden Cove continued to deliver improved instructions througput compared with p
 Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the IPC and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
 The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
 I could not find a publication that displays the improvements based on this data.
+
+Intel increased the size of key structures to enable better out-of-order execution.
+Major changes in the frontend include improved branch prediction, a wider instruction fetch bandwith of \SI{32}{\byte\per cycle}, a 6-way instruction decoder, a bigger μOP Cache and increased bandwith to this cache~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}.
+Optimizations for energy efficiency include replacing some operations with microcode.
+This causes an increased latency for mixing VEX and SSE instructions if the upper registers are not cleared.~\cite[Chapter 3.11.6]{Intel_Optimization_Reference_Manual_050}
+Major changes in the backend include an increased number of allocations, retirement and execution ports.
+Especially for execution ports, an additional integer ALU, a second fast floating point adder and one port for AMX instructions.
+The number of memory access was increased to two \SI{64}{\byte\per cycle} or three \SI{32}{\byte\per cycle} loads and one \SI{64}{\byte\per cycle} or two \SI{32}{\byte\per cycle} stores.~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}
 
 Since I was only able a limited amout of public claims from Intel~\cite{Intel_2021_Architecture_Day} about their core microarchitecture, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer and register file sizes.
 Henry Wong created a benchmark that can measure the reorder buffer size~\cite{Wong_2013_robsize} of the out-of-order engine, an essential component that falicitates reordering, idioms and move elimination.
@@ -107,6 +115,11 @@ Since different parts of the core are partitioned differently between threads, I
 This can however not be verified with the current version of the benchmark as it would require support for concurrent measurement on multiple threads of the same CPU.
 \figref{robsize-store} shows that same result as the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 112 stores.
 \todoms{Add register file size plots}
+
+WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microarchitecture of Golden Cove's predecessor Sunny Cove.
+\figref{golden-cove} shows the updated diagram, I created it using the resources and measurements highlighted in this chapter.
+
+\todoms{write the executive summary of this chapter}
 
 \begin{figure}[]
     \centering
@@ -154,6 +167,6 @@ This can however not be verified with the current version of the benchmark as it
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/GoldenCoveCore.pdf}
-    \caption{Block diagram of the Golden Cove Core.}
+    \caption{\label{fig:golden-cove}Block diagram of the Golden Cove Core.}
     \todoms{Measurements for the schedulers. How did the frontend change? Details of port 5 closing.}
 \end{figure}
