@@ -10,7 +10,7 @@ QuickAssist Technology (QAT), allows for acceleration of cryptographic operation
 Dynamic Load Balancer (DLB), brings hardware acceleratored queues.
 In-Memory Analytics Accelerator (IAA), allows for memory compression, encryption and filtering.~\cite{Yifan_2024_intel_accelerator_ecosystem,Yuan_2023_ISCA_tutorial,Intel_4th_gen_scalable}
 Which accelerators are activated depend on the specific SKU, while Intel allows for the option to install licenses through an PCI express interface\footnote{\url{https://github.com/intel/intel-sdsi}}~\cite{Krenn_2025_Intel_on_demand}.
-\figref{spr-overview} show a high level view of the processor.
+\figref{spr-overview} shows a high level view of the processor.
 
 \begin{figure}[]
     \centering
@@ -73,12 +73,12 @@ The horizontal occupancy is used to find which cache boxes are in the same row.
 I assume that at least one row contains all cores/caches and that the ids of the cache boxes are numbered sequentially.
 This allows me to align the rows and columns to one another around a complete row.
 As sub numa clustering is activated, the size of the rows and columns are bound to the size of a tile.
-\figref{physical-layout} show the physical map of the processors core and cache slices positions on the test system.
+\figref{physical-layout} shows the physical map of the processors core and cache slices positions on the test system.
 
 \section{Golden Cove Core Microarchitecture}
 
 Intel published information about the Golden Cove microarchitecture in their optimization reference manual~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}.
-Unlike previous core microarchitectures~\cite{Intel_2020_Skylake_SP,Intel_2020_IceLake_SP} finding detailed information about the interals is quite difficult.
+Unlike previous core microarchitectures~\cite{Intel_2017_Skylake_SP,Intel_2020_IceLake_SP} finding detailed information about the interals is quite difficult.
 Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
 I was unable to find the original slide deck, requiring to take this information with extra caution.
 
@@ -104,7 +104,7 @@ I implemented the benchmark using C++ and the Asmjit~\cite{Kobalicek_AsmJit} lib
 The loop is unrolled \SI{16}{} and repeated for \SI{2048}{} times.
 I plot the minimum latency of \SI{16}{} executions of this benchmark with the number of filler instructions between \SI{16}{} and \SI{600}{}.
 It is run on CPU 0 with hyperthreading disabled.
-To verify the functionality against published values from a primary source~\cite{Intel_2020_Skylake_SP}, the measurement is repeated on the test system (ariel) used Schöne et al. for their benchmarks of Skylake-SP~\cite{Schoene_2019_SKL}.
+To verify the functionality against published values from a primary source~\cite{Intel_2017_Skylake_SP}, the measurement is repeated on the test system (ariel) used Schöne et al. for their benchmarks of Skylake-SP~\cite{Schoene_2019_SKL}.
 
 For measuring the reorder buffer \textbf{nop} instructions are inserted between the loads.
 As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of an out-of-order window with the size \SI{512}{} entries can clearly be validated.
@@ -118,8 +118,6 @@ This can however not be verified with the current version of the benchmark as it
 
 WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microarchitecture of Golden Cove's predecessor Sunny Cove.
 \figref{golden-cove} shows the updated diagram, I created it using the resources and measurements highlighted in this chapter.
-
-\todoms{write the executive summary of this chapter}
 
 \begin{figure}[]
     \centering
@@ -142,21 +140,22 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
 	\caption{\label{tab:micro-arch-params}Parameters of the Golden Cove Core Microarchitecture. Entries that are not from a primary source are either denoted with\\\checkmark if they have been verified, or ? if they need to be verfied.}
 	\begin{tabular}{r|lll}
 		\toprule
-			&	Skylake & Golden Cove & Golden Cove Verified \\
-		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2020_Skylake_SP} & 512~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
-		In-flight Loads & 72~\cite{Intel_2020_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
-		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2020_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
-		Register Files Integer & 180~\cite{Intel_2020_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2020_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		Allocation Queue & 64/thread~\cite{Intel_2020_Skylake_SP} & 72/thread, 144 without SMT~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \\
-		μop Cache & & 4K~\cite{Intel_2021_Architecture_Day} & \\
-		Decoder & & 32B decode size, 6 decoder, 8μop/cycle~\cite{Intel_2021_Architecture_Day} \\
+			&	Skylake-SP & Golden Cove & Golden Cove Verified \\
+		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2017_Skylake_SP} & 512~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
+		In-flight Loads & 72~\cite{Intel_2017_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
+		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2017_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
+		Register Files Integer & 180~\cite{Intel_2017_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2017_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		Allocation Queue [\SI{}{\micro OPs\per cycle}]& 64/thread~\cite{Intel_2017_Skylake_SP} & 72/thread, 144 without SMT~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press,Intel_Optimization_Reference_Manual_050} & \\
+		μOP Cache [\SI{}{\micro OPs\per core}] & \SI{1536}{}~\cite{Wikichip_SkylakeSP} & \SI{4096}{}~\cite{Intel_2021_Architecture_Day} & ? \\
+		Decoder fetch bandwidth [\SI{}{\byte\per cycle}] & \SI{16}~\cite{Wikichip_SkylakeSP} & \SI{32}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
+		Number of decoder & \SI{4}{}~\cite{Wikichip_SkylakeSP} & \SI{6}{}~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
 		\rowcolor[HTML]{EFEFEF}L1i Cache & & & \\
 		L1d Cache & & \\
-		\rowcolor[HTML]{EFEFEF}L1d BW Load & 128~\cite{Intel_2020_Skylake_SP} & 3x256b or 2x512b~\cite{Intel_2021_Architecture_Day} & \\
-		L1d BW Store & 64~\cite{Intel_2020_Skylake_SP} & & \\
+		\rowcolor[HTML]{EFEFEF}L1d Load Bandwidth [\SI{}{\byte\per cycle}] & 2x\SI{64}~\cite{Intel_2017_Skylake_SP} & 3x\SI{32}{} or 2x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
+		L1d Store Bandwidth [\SI{}{\byte\per cycle}] & 1x\SI{64}~\cite{Intel_2017_Skylake_SP} & 2x\SI{32}{} or 1x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
 		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2M: 1536 & 2K~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2020_Skylake_SP} & & \\
+		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2017_Skylake_SP} & & \\
 		Mid-level Cache & & & \\
 		\bottomrule
 		%\vspace{6mm}
@@ -168,5 +167,4 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
     \centering
     \includegraphics[width=\columnwidth]{fig/GoldenCoveCore.pdf}
     \caption{\label{fig:golden-cove}Block diagram of the Golden Cove Core.}
-    \todoms{Measurements for the schedulers. How did the frontend change? Details of port 5 closing.}
 \end{figure}
