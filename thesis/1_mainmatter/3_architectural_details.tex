@@ -77,7 +77,7 @@ As sub numa clustering is activated, the size of the rows and columns are bound 
 
 \section{Golden Cove Core Microarchitecture}
 
-Intel published information about the Golden Cove microarchitecture in their optimization reference manual~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}.
+Intel published information about the Golden Cove microarchitecture in their optimization reference manual~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}.
 Unlike previous core microarchitectures~\cite{Intel_2017_Skylake_SP,Intel_2020_IceLake_SP} finding detailed information about the interals is quite difficult.
 Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
 I was unable to find the original slide deck, requiring to take this information with extra caution.
@@ -88,12 +88,13 @@ The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results fo
 I could not find a publication that displays the improvements based on this data.
 
 Intel increased the size of key structures to enable better out-of-order execution.
-Major changes in the frontend include improved branch prediction, a wider instruction fetch bandwith of \SI{32}{\byte\per cycle}, a 6-way instruction decoder, a bigger μOP Cache and increased bandwith to this cache~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}.
+Major changes in the frontend include improved branch prediction, a wider instruction fetch bandwith of \SI{32}{\byte\per cycle}, a 6-way instruction decoder, a bigger μOP Cache and increased bandwith to this cache~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}.
 Optimizations for energy efficiency include replacing some operations with microcode.
-This causes an increased latency for mixing VEX and SSE instructions if the upper registers are not cleared.~\cite[Chapter 3.11.6]{Intel_Optimization_Reference_Manual_050}
+This causes an increased latency for mixing VEX and SSE instructions if the upper registers are not cleared.~\cite[Sec. 3.11.6]{Intel_Optimization_Reference_Manual_050}
 Major changes in the backend include an increased number of allocations, retirement and execution ports.
 Especially for execution ports, an additional integer ALU, a second fast floating point adder and one port for AMX instructions.
-The number of memory access was increased to two \SI{64}{\byte\per cycle} or three \SI{32}{\byte\per cycle} loads and one \SI{64}{\byte\per cycle} or two \SI{32}{\byte\per cycle} stores.~\cite[Chapter 2.4]{Intel_Optimization_Reference_Manual_050}
+The number of memory access was increased to two \SI{64}{\byte\per cycle} or three \SI{32}{\byte\per cycle} loads and one \SI{64}{\byte\per cycle} or two \SI{32}{\byte\per cycle} stores.~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}
+AMX instructions operate on up to eight tiles each with a maximum size of \SI{1}{\kibi\byte}~\cite[Sec. 20.5.2]{Intel_Optimization_Reference_Manual_050}.
 
 Since I was only able a limited amout of public claims from Intel~\cite{Intel_2021_Architecture_Day} about their core microarchitecture, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer and register file sizes.
 Henry Wong created a benchmark that can measure the reorder buffer size~\cite{Wong_2013_robsize} of the out-of-order engine, an essential component that falicitates reordering, idioms and move elimination.
@@ -111,13 +112,16 @@ As~\figref{robsize-reorder} shows, the claim~\cite{ServerTheHome_2023_SPR_Press,
 To measure the size of the load and store buffers, I insert \textbf{mov} instructions that load and store from memory to a register.
 \figref{robsize-load} show a discrepancy between the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 240 in-flight loads vs the 192 measured.
 This has also been measured by Chips and Cheese~\cite{Chipsandcheese_2023_GoldenCove_Vector_Register}, they postulate that Intel is using a different mechanism for in-flight loads.
-Since different parts of the core are partitioned differently between threads, I assume that there could be partial static partitioning in the load queue.
-This can however not be verified with the current version of the benchmark as it would require support for concurrent measurement on multiple threads of the same CPU.
+The difference of 48 entries is equivalent to a size of \SI{3}{\kibi\byte}.
+I assume that these are used to support non-temporal loads of AMX tiles which bypass the L1d cache~\cite[Sec. 20.8]{Intel_Optimization_Reference_Manual_050}.
+This would allow a minimum of three tiles to reside in a seperate load buffer, reducing the negative impact of the large AMX tiles on the out-of-order execution and removing the potential latency of allocating up to 16 entries per tile in the load buffer.
 \figref{robsize-store} shows that same result as the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 112 stores.
 \todoms{Add register file size plots}
 
+The changes between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
 WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microarchitecture of Golden Cove's predecessor Sunny Cove.
 \figref{golden-cove} shows the updated diagram, I created it using the resources and measurements highlighted in this chapter.
+\todoms{Verify TLB sizes with ``x86info'', see \url{https://lwn.net/Articles/379748/}}
 
 \begin{figure}[]
     \centering
@@ -137,7 +141,7 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
 
 \begin{sidewaystable}[t]
 	\centering
-	\caption{\label{tab:micro-arch-params}Parameters of the Golden Cove Core Microarchitecture. Entries that are not from a primary source are either denoted with\\\checkmark if they have been verified, or ? if they need to be verfied.}
+	\caption{\label{tab:micro-arch-params}Comparision of key changes between the Skylake and Golden Cove core microarchitecture. Entries that are not from a primary source are either denoted with \checkmark if they have been verified, or ? if they need to be verfied.}
 	\begin{tabular}{r|lll}
 		\toprule
 			&	Skylake & Golden Cove & Golden Cove Verified \\
