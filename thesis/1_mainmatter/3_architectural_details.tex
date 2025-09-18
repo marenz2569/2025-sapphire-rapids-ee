@@ -82,7 +82,7 @@ Unlike previous core microarchitectures~\cite{Intel_2017_Skylake_SP,Intel_2020_I
 Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Press,HotHardware_2023_SPR_Press,Wccftech_2023_SPR_Press} have published slides presumably from the launch event in an coordinated press release at the 10th January 2023.
 I was unable to find the original slide deck, requiring to take this information with extra caution.
 
-Golden Cove continued to deliver improved instructions througput compared with previous generations~\cite{Intel_2021_Architecture_Day}.
+Golden Cove continued to deliver improved instructions throughput compared to previous generations~\cite{Intel_2021_Architecture_Day}.
 Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the IPC and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
 The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
 I could not find a publication that displays the improvements based on this data.
@@ -116,9 +116,19 @@ The difference of 48 entries is equivalent to a size of \SI{3}{\kibi\byte}.
 I assume that these are used to support non-temporal loads of AMX tiles which bypass the L1d cache~\cite[Sec. 20.8]{Intel_Optimization_Reference_Manual_050}.
 This would allow a minimum of three tiles to reside in a seperate load buffer, reducing the negative impact of the large AMX tiles on the out-of-order execution and removing the potential latency of allocating up to 16 entries per tile in the load buffer.
 \figref{robsize-store} shows that same result as the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 112 stores.
-\todoms{Add register file size plots}
+To measure the size of the available number of speculative registers, I insert \textbf{add}, \textbf{mov}, \textbf{cmp} and \textbf{xor} instructions each operating on either the same registers or on a two different registers per instruction.
+This is repeated for all register types; general purpose (\SI{64}{\bit}), xmm, ymm and zmm register.
+\figref{robsize-registers} shows the measurement of each of the different filler kernels.
+I removed zmm registers with \textbf{mov} and \textbf{cmp} filler instructions from the plot as I could not measure latency differences.
+Mov elimination, zero ideoms and ones ideoms will cause the jump in measurement latency to appear only after a bigger number of filler instructions than actual size of speculative register files.
+Therefore, I take the minimum number of filler instructions that jump as the number of measured speculative registers.
+Adding the 32 architectural registers available in the x86-64 ISA, gives a lower bound on the number of physical registers.
+For Skylake I measured around 168 integer and 136 floating point speculative registers, 32 less than the numbers of physical registers published by Intel~\cite{Intel_2017_Skylake_SP}.
+This validates the measurement methedology.
+For Golden Lake I measured 240 integer, 282 xmm/ymm and 188 zmm speculative registers.
+This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unaccounted for.
 
-The changes between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
+The changes of key structures between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
 WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microarchitecture of Golden Cove's predecessor Sunny Cove.
 \figref{golden-cove} shows the updated diagram, I created it using the resources and measurements highlighted in this chapter.
 \todoms{Verify TLB sizes with ``x86info'', see \url{https://lwn.net/Articles/379748/}}
@@ -138,6 +148,11 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
     \includegraphics[width=0.8\columnwidth]{fig/robsize/store-buffer.pdf}
     \caption{\label{fig:robsize-store}Measurement of the store buffer size.}
 \end{figure}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\columnwidth]{fig/robsize/register-files.pdf}
+    \caption{\label{fig:robsize-registers}Measurement of the speculative register file sizes based on executing different filler instructions that allocate physical registers.}
+\end{figure}
 
 \begin{sidewaystable}[t]
 	\centering
@@ -148,17 +163,17 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
 		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2017_Skylake_SP} & 512~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
 		In-flight Loads & 72~\cite{Intel_2017_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
 		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2017_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
-		Register Files Integer & 180~\cite{Intel_2017_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
-		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2017_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & ? \\
+		Register Files Integer & 180~\cite{Intel_2017_Skylake_SP} & 288~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & $\geq 272$ measured in~\figref{robsize-registers} \\
+		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2017_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & $\geq 220$ (512b), $\geq 314$ (256b) measured in~\figref{robsize-registers} \\
 		Allocation Queue [\SI{}{\micro OPs\per cycle}]& 64/thread~\cite{Intel_2017_Skylake_SP} & 72/thread, 144 without SMT~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press,Intel_Optimization_Reference_Manual_050} & \\
-		μOP Cache [\SI{}{\micro OPs\per core}] & \SI{1536}{}~\cite{Wikichip_SkylakeSP} & \SI{4096}{}~\cite{Intel_2021_Architecture_Day} & ? \\
+		\rowcolor[HTML]{EFEFEF}μOP Cache [\SI{}{\micro OPs\per core}] & \SI{1536}{}~\cite{Wikichip_SkylakeSP} & \SI{4096}{}~\cite{Intel_2021_Architecture_Day} & ? \\
 		Number of decoder & \SI{4}{}~\cite{Wikichip_SkylakeSP} & \SI{6}{}~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
-		L1i Cache Bandwidth [\SI{}{\byte\per cycle}] & \SI{16}{}~\cite{Wikichip_SkylakeSP} & \SI{32}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
-		\rowcolor[HTML]{EFEFEF}L1i TLB & 4K: 128 & 4K: 256 & \\
-		\rowcolor[HTML]{EFEFEF}  & 2M+4M: 8~\cite{Wikichip_SkylakeSP} & 2M+4M: 32~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
+		\rowcolor[HTML]{EFEFEF}L1i Cache Bandwidth [\SI{}{\byte\per cycle}] & \SI{16}{}~\cite{Wikichip_SkylakeSP} & \SI{32}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
+		L1i TLB & 4K: 128 & 4K: 256 & \\
+		  & 2M+4M: 8~\cite{Wikichip_SkylakeSP} & 2M+4M: 32~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
 		\rowcolor[HTML]{EFEFEF}L1d Load Bandwidth [\SI{}{\byte\per cycle}] & 2x\SI{64}{}~\cite{Intel_2017_Skylake_SP} & 3x\SI{32}{} or 2x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
 		L1d Store Bandwidth [\SI{}{\byte\per cycle}] & 1x\SI{64}{}~\cite{Intel_2017_Skylake_SP} & 2x\SI{32}{} or 1x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
-		\rowcolor[HTML]{EFEFEF}L1d TLB & 4K: 64 & 4K: 96~\cite{Intel_2021_Architecture_Day} & \\
+		\rowcolor[HTML]{EFEFEF}L1d TLB & 4K: 64 & 4K: 96~\cite{Intel_2021_Architecture_Day} & ?  \\
 		\rowcolor[HTML]{EFEFEF}  & 2M+4M: 32 &  & \\
 		\rowcolor[HTML]{EFEFEF}  & 1G: 4~\cite{Wikichip_SkylakeSP} & & \\
 		L1d Line Fill Buffer & \SI{10}{entries}~\cite{Wikichip_SkylakeSP} & \SI{16}{entries}~\cite{Intel_2021_Architecture_Day} & ? \\
