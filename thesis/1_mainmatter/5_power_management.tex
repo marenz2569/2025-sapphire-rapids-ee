@@ -96,16 +96,18 @@ They were also only able to show two out of the four license levels.
 
 To associate which events trigger the processor cores to be part of a license level, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
 This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
-However, we can only read the license level based on the maximal turbo frequency.
-To ensure that we do not trigger other power limiting mechanisms, e.g. RAPL, we utilize ``Intel Speed Select Core-Power'' to set one core to priority group zero and all other to priority group 1 with a fixed low maximum frequency.
+However, as license level can only be validated using theri maximal turbo frequency,
+I ensure that the RAPL power limiting mechanisms is not triggered.
+Using ``Intel Speed Select Core-Power'' I can set one core to priority group zero and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
 This will priorize the power draw of the core in group zero over the others.
 The frequency measurement is done on the core in group zero, which should run at the maximum turbo frequency.
 ``Intel Speed Select'' is described in more detail in~\secref{isst}.
-
-To validate the claim that the frequency limiting is independent of the ``Intel Speed Select Core-Power'' mechanisms, we prototype this measurement with four different FIRESTARTER kernels.
+I prototype this measurement with four different FIRESTARTER kernels.
 Each kernel is executed for \SI{60}{\s} discarding the first \SI{30}{\s} and last \SI{5}{\s}.
+Hyperthreading is disabled.
 The resulting opportunistic AVX frequencies are displayed in~\figref{validated-p0n-frequencies}.
-We can clearly validate the findings of~\figref{p0n-frequencies}.
+The findings of~\figref{p0n-frequencies} can clearly be validated.
+This also highlights that frequency class dependent opportunistic core frequencies are independant of the ``Intel Speed Select Core-Power'' mechanism.
 
 \begin{figure}[]
     \centering
@@ -118,7 +120,7 @@ We can clearly validate the findings of~\figref{p0n-frequencies}.
 \section{AVX Frequency Anomalies}
 \label{sec:avx-anomalies}
 
-To further test the effect of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
+To further test the effects of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
 I discovered throttling of the core frequency some AVX licenses when it is set to \SI{800}{\MHz}.
 This effect is described in~\secref{avx-anomalies-low-freq}.
 I further found an anomaly in the uncore frequency selection which is described in~\secref{avx-anomalies-uncore-freqency}.
@@ -130,8 +132,8 @@ Each FIRESTARTER kernel is executed for \SI{60}{\s} discarding the first and las
 I measure the uncore frequency by polling the associated MSR every \SI{10}{\ms} on CPU 0\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
 The measurement is repeated on the cross product of following settings:
 \begin{itemize}
-    \item Core frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2000}{\MHz} and the default frequency range \SI{800}{\MHz}--\SI{3800}{\MHz}.
-    \item Uncore frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2500}{\MHz} and the default frequency range \SI{800}{\MHz}--\SI{2500}{\MHz}.
+    \item Core frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2000}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{3800}{\MHz}.
+    \item Uncore frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2500}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{2500}{\MHz}.
 \end{itemize}
 \todoms{reference the appendix for all plots}
 
@@ -155,9 +157,10 @@ The severity of the effect depends on the selected uncore frequency and is worse
 \subsection{Uncore Frequency Selection}
 \label{sec:avx-anomalies-uncore-freqency}
 
-During testing I found that the selection of the uncore frequency is not deterministic for the AMX frequency level.
-I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on CPU 0--7 with hyperthreading disabled.
-CPU 8 run the uncore frequency measurement.
+I observed that the selection of the uncore frequency is not deterministic for the AMX frequency level.
+I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on CPU 0--7.
+CPU 8 runs the uncore frequency measurement.
+Hyperthreading is disabled and the CPUs used for the measurement are isolated from OS noise with a kernel parameter\footnote{isolcpus=0-8 nohz\_full=0-8}.
 Each kernel is executed for \SI{20}{\s} discarding the first \SI{10}{\s} and last \SI{2}{\s}.
 I expect the same performance and power draw across all runs.
 However, two different levels of power draw with the kernels runnign at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
