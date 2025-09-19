@@ -124,10 +124,10 @@ I removed zmm registers with \textbf{mov} and \textbf{cmp} filler instructions f
 Mov elimination, zero ideoms and ones ideoms will cause the jump in measurement latency to appear only after a bigger number of filler instructions than actual size of speculative register files.
 Therefore, I take the minimum number of filler instructions that jump as the number of measured speculative registers.
 Adding the 32 architectural registers available in the x86-64 ISA, gives a lower bound on the number of physical registers.
-For Skylake I measured around 168 integer and 136 floating point speculative registers, 32 less than the numbers of physical registers published by Intel~\cite{Intel_2017_Skylake_SP}.
-This validates the measurement methedology.
+For Skylake I measured around 148 integer and 132 floating point speculative registers, with 32 register from the ISA this leaves no integer and 4 floating point register unaccounted.~\cite{Intel_2017_Skylake_SP}.
+This validates that the measurement can get a rather close estimate of the number of physical registers.
 For Golden Lake I measured 240 integer, 282 xmm/ymm and 188 zmm speculative registers.
-This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unaccounted for.
+This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unaccounted.~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press}
 
 The changes of key structures between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
 \figref{golden-cove} shows a diagram of the Golden Cove core.
