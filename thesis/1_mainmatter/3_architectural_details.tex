@@ -129,8 +129,8 @@ For Golden Lake I measured 240 integer, 282 xmm/ymm and 188 zmm speculative regi
 This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unaccounted for.
 
 The changes of key structures between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
-WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microarchitecture of Golden Cove's predecessor Sunny Cove.
-\figref{golden-cove} shows the updated diagram, I created it using the resources and measurements highlighted in this chapter.
+\figref{golden-cove} shows a diagram of the Golden Cove core.
+
 \todoms{Verify TLB sizes with ``x86info'', see \url{https://lwn.net/Articles/379748/}}
 
 \begin{figure}[]
@@ -189,5 +189,64 @@ WikiChip~\cite{Wikichip_SunnyCoveDiagram} published a diagram of the core microa
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/GoldenCoveCore.pdf}
-    \caption{\label{fig:golden-cove}Block diagram of the Golden Cove Core.}
+    \caption{\label{fig:golden-cove}Block diagram of the Golden Cove Core, based on the Figure published by WikiChip~\cite{Wikichip_SunnyCoveDiagram} for the predecessor Sunny Cove.}
 \end{figure}
+
+\clearpage
+
+\section{L3 Cache Slicing}
+
+The 2d-mesh design of Intels L3 caches poses a unique opportunity for optimizing communication latency between two cores.
+McCalpin demonstrated that each cache lines is associated to a L3 cache slices based on a hash algorithm, different for each SKU.
+\todoms{add citation}
+Therefore communication latency of two cores using a specific cache lines depends on the physical locations of the cores and the cache slice associated to this cache line.
+
+I run a benchmark that sends \SI{100}{} ping/pong signals on a cache line shared by two cores using the atomic \textbf{lock cmpxchg} instruction.
+The latency of the ping/pongs is measured using the timestamp counter.
+To account the cache slicing I repeat the measurement \SI{100}{} times on \SI{1000}{} different cache lines.
+Memory is allocated in the sub-NUMA cluster of the ping core.
+The latency of one cache line is modeled using a normal distribution over all repetitions.
+Kmeans clustering is used to create \SI{14}{} clusters (equivalent to the number of cache boxes in on sub-NUMA cluster) using the mean latency of the modeled cache lines.
+Hyperthreading is disabled, and the measurement is repeated on the cross product of following settings:
+\begin{itemize}
+    \item Each 2-tuple of different cores on the first socket.
+    \item Core frequency set to \SI{800}{\MHz}, \SI{2000}{\MHz} and \SI{3800}{\MHz} (turbo).
+    \item Uncore frequency set to \SI{800}{\MHz} and \SI{2500}{\MHz}.
+\end{itemize}
+
+\figref{cbo-latencies} shows the distinct communication latencies between two cores in the same sub-NUMA cluster using the \SI{14}{} cache boxes.
+A slight mismatch between the distribution of cache lines across different cache slices is visible.
+This effect is discribed by McCalpin~\cite{TODO} as an artifact of using specific hash algorithms.
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/core0to1latency.pdf}
+    \caption{\label{fig:cbo-latencies}Cumulative distribution of the communication latencies between cores 0 and 1 running with \SI{3800}{\MHz} core and \SI{2500}{\MHz} uncore frequency.
+    Vertical lines show the centroids of the kmeans clustering.
+    Horizontal lines are equially spaced.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/all-to-all-heatmap-min.pdf}
+    \caption{\label{fig:cbo-latencies-socket-min}Minimal core to core communication latency over all cores of hati's socket 0.}
+\end{figure}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/all-to-all-heatmap-max.pdf}
+    \caption{\label{fig:cbo-latencies-socket-max}Maximal core to core communication latency over all cores of hati's socket 0.}
+\end{figure}
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/all-to-all-heatmap-diff.pdf}
+    \caption{\label{fig:cbo-latencies-socket-diff}Difference in core to core communication latency over all cores of hati's socket 0.}
+\end{figure}
+
+This measurement enables building a model on how the different core and uncore frequencies influce communication latencies.
+\figref{cbo-latencies-socket-min}, \figref{cbo-latencies-socket-max} and \figref{cbo-latencies-socket-diff} show the minimum, maximum and difference in communication latencies over all pairs of cores on the first socket.
+\todoms{reference complete plots in the appendix}
+
+Performance engineers optimizing the last percent require intricate knowledge about the core and uncore microarchitecture.
+This should ideally be facilitated by continues tracking and automated benchmarking across generations.
+Latency critial application can optimize communication using specific core and memory pinning.
+Selecting the cache lines used for communication can reduce latency in the order of \SI{17}{\percent}.
