@@ -12,10 +12,11 @@
 Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which uses the same core micro-architecture as Sapphire Rappids~\cite{Schoene_2024_Alder_Lake}.
 To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
 
-For the measurement I disabled C-states, changed the cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
+For the measurement I disabled hyperthreading, changed all cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
 The frequency of this core is measured while another core is running with turbo frequencies, either idling or also running a while true loop.
 I repeated it for all combinations of cores on one socket.
-No shared core frequency domains are detected, this is consitent with the previous Intel generation Skylake-SP.
+No shared core frequency domains is detected.
+This is consitent with the previous Intel generation Skylake-SP.
 \todoms{Check if I can cite the Skylake-SP here. There should be a reference in the software optimization guide.}
 
 \section{AVX Frequencies}
@@ -171,7 +172,7 @@ The SSE frequency license also shows a reduction in energy efficiency for some s
         \label{fig:avx-frequency-uncore-anomaly-uncore-freq-ecdf}%
     }\\
     \subfloat[Cumulative distribution of the performance deviation relative to the mean perfomance.
-    The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the nunber of executed instruction per cycle.]{%
+    The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the number of executed instruction per cycle.]{%
         \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/performance-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-mean-perf}%
     }\hfill
