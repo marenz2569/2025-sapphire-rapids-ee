@@ -121,9 +121,8 @@ This also highlights that frequency class dependent opportunistic core frequenci
 \label{sec:avx-anomalies}
 
 To further test the effects of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
-I discovered throttling of the core frequency some AVX licenses when it is set to \SI{800}{\MHz}.
-This effect is described in~\secref{avx-anomalies-low-freq}.
-I further found an anomaly in the uncore frequency selection which is described in~\secref{avx-anomalies-uncore-freqency}.
+In~\secref{avx-anomalies-low-freq} I discovered throttling of the core frequency at its lowest frequency (\SI{800}{\MHz}) when running with the AMX or AVX512 frequency level.
+In~\secref{avx-anomalies-uncore-freqency} I describe an anomaly in the uncore frequency selection causing suboptimal energy efficiency for the AMX frequency level.
 
 \subsection{Throttling at Low Frequencies}
 \label{sec:avx-anomalies-low-freq}
@@ -157,7 +156,6 @@ The severity of the effect depends on the selected uncore frequency and is worse
 \subsection{Uncore Frequency Selection}
 \label{sec:avx-anomalies-uncore-freqency}
 
-I observed that the selection of the uncore frequency is not deterministic for the AMX frequency level.
 I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on CPU 0--7.
 CPU 8 runs the uncore frequency measurement.
 Hyperthreading is disabled and the CPUs used for the measurement are isolated from OS noise with a kernel parameter\footnote{isolcpus=0-8 nohz\_full=0-8}.
@@ -167,7 +165,7 @@ However, two different levels of power draw with the kernels runnign at the AMX 
 This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{65}{\percent} and \SI{2.5}{\GHz} for \SI{35}{\percent} of the samples.
 No major deviation of performance across the samples is observable, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
 \figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples which caused a selection of the higher uncore frequency.
-I also detected a reduction in energy efficiency for some samples of the SSE frequency license, however I could not associate this to a specific change with the metrics I measured.
+The SSE frequency license also shows a reduction in energy efficiency for some samples, I could however not find a specific effect causing this change with the metrics I measured.
 
 \begin{figure}[t!]
     \subfloat[Cumulative distribution of drawn package power.]{%
