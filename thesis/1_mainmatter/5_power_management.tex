@@ -210,43 +210,42 @@ The SSE frequency license also shows a reduction in energy efficiency for some s
 \section{P-State Latencies}
 \label{sec:pstate_latencies}
 
-\todoms{Describe DVFS, latencies occur between switches, cite ftalat paper, schoene skylake and alderlake for comparison.}
+Core frequency changes can be used to optimize the energy consumption of a running process.
+This requires the core voltage to be adjusted to maintain a save operating point.
+To measure the latencies of changing the voltage and frequency of a core, I adapt ftalat, a benchmark developed by Mazouz et al.~\cite{Mazouz_2014_ftalat}, with modifications by Hackenberg et al.~\cite{Hackenberg_2015_Haswell}.
 
-To measure the latencies that occur during DVFS switches, I adapt ftalat, a benchmark developed by CITE PAPER, with modification by CITE PAPER.
-ftalat measures the execution time of a compute loop with a fixed processor frequency.
-The measurement methodology is as follows:
-First, a frequency change is requested.
-Second, the time until the execution time of the compute loop matches the expected for the requested frequency is measured.
-The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for \SI{4000}{} times.
+The ftalat bechmark measures the execution time of a compute loop with different processor frequencies.
+It works as follows:
+First, a frequency change is requested using the sysfs interface.
+Second, the execution speed of a compute loop is measured repeatidly until it matches the speed that is expected for the requested frequency.
+The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for a total \SI{4000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
 I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
 \todoms{Check}
-Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher latency of \SI{600}{\us} instead of \SI{500}{\us}.
-Above this interval we see a different behaviour when switching to a higher frequency of \SI{1.9}{\GHz} and above.
-Latencies are generally higher in this area, with some samples showing a even higher transition latency.
-In \figref{pstate_latencies_95percentQuantile} I display the 95th percentile plot for the transition latency.
-This was chossen behause of many outliers probably caused by measurement noise and allow us to estimate the worst case transtion latency to between \SI{1100}{\us} and \SI{2000}{\us}.
+Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher median latency of \SI{600}{\us} instead of \SI{500}{\us}.
+Above this interval we see a different behaviour when switching to a frequency above \SI{1.8}{\GHz}.
+Median latencies are higher in this area and they are not constant across different frequency changes.
+To remove the measurement outliers I chosse to display the 95th percentile of transition latencies for all frequency changes in~\figref{pstate_latencies_95percentQuantile}.
+Worst case transtion latency are in the range of \SI{1100}{\us} and \SI{2000}{\us} depending on the specific frequency change.
 
-The higher latencies depends on the time between the last frequency change, as shown in~\figref{pstate_latencies_time_dependance}.
-The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display any depdency between the latency and wait time between the transtion as expected from previous processor generations.
+To investigate the specifics of the different transition latencies, I plot all the measured transition latency against the time between detection of last frequency change from source to target frequency.
+\figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, ..., \SI{2.9}{\GHz}.
+\appref{pstate_latencies_scatter_complete} shows the plots for all measured frequency transitions.
+The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
 This is consitent with testing performed on a Skylake-SP system.
-For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above, we see two regions.
-The first in the range of \SI{1000}{\us} and around \SI{1500}{\us}, emits the same behavour as explain above.
-At around \SI{2000}{\us} we see a repeating pattern with a period of \SI{1625}{\us}, which intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
-Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} decrease with an increase in frequency change.
-Similar results have been reported by Schöne et al. for transition latencies of Alder Lake processors~\cite{Schoene_2024_Alder_Lake}.
+For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above two regions are visible.
+The first region with a time between detection of last frequency change from source to target frequency up to \SI{1500}{\us} does not show a time dependecy on the transition latency.
+At around \SI{2000}{\us} a repeating pattern with a period of \SI{1625}{\us} is visible.
+It intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
+Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decrease with an increase in frequency change.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
-I conclude that for the region with the higher transtion latency the mechanisms as described by Schöne et al. is not applicable~\cite{skylake_paper}.
-The power management seems to have an additional mechanisms that requies a frequency change to be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
+
+The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{skylake_paper} for the regions that emit this time dependent behaviour.
+The power management seems to have an additional mechanisms that requies a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
 This could be linked to external power managment that has to increase the voltage for the specific core which could be bound to such period.
-Further work is required to explain the cause of the high latencies for some frequency changes.
-
-\begin{itemize}
-    \item cite Irma Esmer Papazian New 3rd Gen Intel® Xeon® Scalable Processor (Codename: Ice Lake-SP)
-    \item slide 15, Core Frequency Transition block time not measured using ftalat, but removed predecessor Ice Lake-SP
-\end{itemize}
-
+ftalat does not measure the time of how long the core is stopping its execution for the frequency change.
+Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
 
 \begin{figure}[]
     \begin{subfigure}[t]{0.45\linewidth}
@@ -265,48 +264,57 @@ Further work is required to explain the cause of the high latencies for some fre
 
 \begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth]{fig/ftalat/ftalat_scatter_wait_transition_latency_hati.pdf}
-    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between the detection events of transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, ..., \SI{2.9}{\GHz}. For better lines for bins of size \SI{1625}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively. These plots are included for frequency transitions in~\appref{pstate_latencies_scatter_complete}}
-\end{figure}
-
-\begin{figure}[]
-    \centering
     \includegraphics[width=0.45\columnwidth]{fig/ftalat/ftalat_95percentQuantile_hati.pdf}
     \caption{\label{fig:pstate_latencies_95percentQuantile}95th percentile of P-state switching latencies.}
 \end{figure}
 
+\begin{figure}[]
+    \centering
+    \includegraphics[width=\columnwidth]{fig/ftalat/ftalat_scatter_wait_transition_latency_hati.pdf}
+    \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between the detection events of transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, ..., \SI{2.9}{\GHz}. For better lines for bins of size \SI{1625}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively. These plots are included for frequency transitions in~\appref{pstate_latencies_scatter_complete}}
+\end{figure}
 
 \section{Uncore Frequency Scaling}
-\todoms{timing of uncore frequency change. l1 ptr, swithing to l3 ptr chasing. scripts in skylake paper.}
+\label{sec:uncore_frequency_scaling}
+Schöne et al.~\cite{Schoene_2019_SKL} extended the methodology of ftalat to measure the time until a uncore frequency change is executed.
+A pointer chasing benchmark is executed on a array that does not fit in the L1 or L2 cache and therefore resides in the L3 cache.
+It is allocated using transparent hugepages.
+First the uncore frequency is set to the source frequency.
+The pointer chaser executed for \SI{50000}{} plus a random number of up to \SI{800000}{} iterations.
+Then the frequency is switched to the target frequency.
+The pointer chaser is executed for another \SI{50000}{} times.
+If in this time any of the loads from the pointer chasing array blocks for more than \SI{0.5}{\us} the time until this event is saved.
+The measurement is repeated \SI{1000}{} times for all frequency pairs.
+The time until the frequency change is complete is not measured.
+This is a limitation of this benchmark compared to ftalat for core frequency transitions.
 
-\begin{itemize}
-    \item UFS benchmark as in Skylake paper
-    \item Worst case gap latency is reduced to below \SI{8}{us}.
-    \item cite Irma Esmer Papazian New 3rd Gen Intel® Xeon® Scalable Processor (Codename: Ice Lake-SP)
-    \item slide 15, Mesh Frequency Transition – IO Block time reduced to 7us (validated). compared to Skylake Paper 15us.
-    \item change time until the frequency is stabalized is not measured as in ftalat.
-\end{itemize}
-
+The random time before executing the frequency change did not have an influence on the frequency change latency.
+\figref{ufs_init_median} show a median change latency of \SI{}{\us} for all frequency transitions.
+The worst case latency until this frequency change is \SI{}{\us} as shown in~\figref{ufs_init_95}.
+\todoms{insert the correct us times here}
+The uncore is blocked up to \SI{8}{us} as shown in~\figref{ufs_gap_95}.
+Intel~\cite{Intel_2020_IceLake_SP} claims a block time of \SI{7}{\us} for Sapphire Rapids' predecessor Ice Lake-SP.
+It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\us}.
 
 \begin{figure}[]
     \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/median-t-init.pdf}
-        \caption{\label{fig:a}Median time until an uncore frequency change is executed.}
+        \caption{\label{fig:ufs_init_median}Median time until an uncore frequency change is executed.}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/95percentile-t-init.pdf}
-        \caption{\label{fig:b}95th percentile of the time until an uncore frequency change is executed.}
+        \caption{\label{fig:ufs_init_95}95th percentile of the time until an uncore frequency change is executed.}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/95percentile-t-gap.pdf}
-        \caption{\label{fig:b}95th percentile time the IO is blocked for the uncore frequency change.}
+        \caption{\label{fig:ufs_gap_95}95th percentile time the IO is blocked for the uncore frequency change.}
     \end{subfigure}
-    \caption{\label{fig:c}Time until the uncore IO is blocked, after which the frequency is adjusted on the Sapphire Rappids processor.}
+    \caption{Time until the uncore IO is blocked, after which the frequency is adjusted on the Sapphire Rapids processor.}
 \end{figure}
 
 \section{Idle State Latencies}
