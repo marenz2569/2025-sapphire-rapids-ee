@@ -19,9 +19,11 @@ class TurboRatioLevel(NamedTuple):
 
         turbo_ratio_levels = []
 
-        current_max_cores = 0
-        last_max_cores = 0
+        current_max_cores = 1
+        last_max_cores = 1
+        max_freq = 0
 
+        # Up until the last bucket the number of cores is non inclusive
         for line in lines:
             num_indets = number_of_indents(line)
 
@@ -33,8 +35,11 @@ class TurboRatioLevel(NamedTuple):
                     current_max_cores = int(line.split(':')[-1])
                 else:
                     max_freq = int(line.split(':')[-1])
-                    for core_count in range(last_max_cores + 1, current_max_cores + 1):
+                    for core_count in range(last_max_cores, current_max_cores):
                         turbo_ratio_levels.append(TurboRatioLevel(level_parsed, core_count, max_freq))
+
+        # The last bucket number of cores is inclusives
+        turbo_ratio_levels.append(TurboRatioLevel(level_parsed, current_max_cores, max_freq))
 
         return turbo_ratio_levels
 
