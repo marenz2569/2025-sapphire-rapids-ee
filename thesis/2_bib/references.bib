@@ -461,6 +461,11 @@ keywords = {RAPL, operating systems, power consumption}
   title={Likwid - Performance monitoring and benchmarking suite},
   url={https://github.com/RRZE-HPC/likwid}}
 
+@Manual{Downs_avx_turbo,
+  author={Travis Downs},
+  title={avx-turbo -- Test the non-AVX, AVX2 and AVX-512 speeds across various active core counts},
+  url={https://github.com/travisdowns/avx-turbo}}
+
 @Manual{spec,
   author={Standard Performance Evaluation Corporation},
   title={Standard Performance Evaluation Corporation},
@@ -535,5 +540,28 @@ keywords = {RAPL, operating systems, power consumption}
   pages={712-715},
   keywords={Monitoring;Kernel;Tools;Program processors;Power demand;Power measurement;performance analysis;system monitoring;energy efficiency},
   doi={10.1109/IPDPSW.2018.00114}}
+
+@misc{Intel_PowerManagementTechnologyReviewIceLake,
+  title = {Power Management - Technology Overview},
+  howpublished = {\url{https://cdrdv2-public.intel.com/637748/Power%20Management%20-%20Technology%20Overview%20TechGuide_637748v2.pdf}},
+  note = {Accessed: 2025-09-22}}
+
+@inproceedings{Kuns_2025_UserSpaceIdle,
+  author = {Kuns, Malte-Christian and Tr\"{o}pgen, Hannes and Sch\"{o}ne, Robert},
+  title = {An Analysis of User-space Idle State Instructions on x86 Processors},
+  year = {2025},
+  isbn = {9798400710735},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3676151.3719370},
+  doi = {10.1145/3676151.3719370},
+  abstract = {Power consumption has become a limiting factor in all areas of computing. Hence, making the most of the available power budget is paramount. To use the available budget most efficiently, techniques like dynamic voltage and frequency scaling and idle states can be used. This work analyzes the instructions UMWAIT, TPAUSE, and MWAITX on three different systems. We analyze their instruction latencies, power consumptions, and dependencies on core frequencies. To do so, we introduce benchmarks to gather performance and power parameters, which can be used for future software optimizations. Key findings include: The expected sleep duration passed to UMWAIT and TPAUSE can influence the depth of the user idle state. The actual sleep duration of TPAUSE increases stepwise with an increasing expected sleep duration. Requesting a deeper idle state leads to an additional sleep duration, which increases with a lower core frequency. The core frequency influences the instruction latency of TPAUSE, where a low frequency can lead to an irregular performance pattern. The latency of TPAUSE, UMWAIT, and MWAITX is most often higher than requested on the evaluated systems. Core power consumption can be reduced by ~20\% ~70\% compared to the usage of PAUSE. The latency for waking a core in user idle reflects the underlying hardware architecture with tens (desktop architecture with shallow idle states) to hundreds (server architecture with deep idle states) of nanoseconds at nominal frequencies.},
+  booktitle = {Proceedings of the 16th ACM/SPEC International Conference on Performance Engineering},
+  pages = {232–239},
+  numpages = {8},
+  keywords = {energy efficiency, mwaitx, tpause, umwait, user-space idle states},
+  location = {Toronto ON, Canada},
+  series = {ICPE '25}
+  }
 
 @Comment{jabref-meta: databaseType:bibtex;}

@@ -1,13 +1,16 @@
 \chapter{Power Management}
 
-\begin{itemize}
-    \item highlight why throttling mechanisms exist.\\
-    Iccmax. first droop. maybe cite patent and/or look in the source code of edk2.
-    \item cite user space idle state paper
-    \item question: what uses power on the processor? (execution and memory movement)
-\end{itemize}
+Like its predecessors the Sapphire Rapids processor supports a variaty of different power management mechanisms.
+Each core has its own on-die voltage regulator and therefore its own frequency domain as shown in~\secref{shared_freq_domains}.
+\secref{avx-frequencies} describes the improved turbo frequency model that classifies instructions based on the power consumption.
+The relation to the power allocation mechanism ``Intel Speed Select Core-Power'' is shown.
+``Intel Speed Select'' is described in more detail in \secref{isst}.
+\secref{avx-anomalies} shows two anomalies of core and uncore frequencies selection.
+I describe the changes of frequency scaling for the core and uncore in~\secref{pstate_latencies} and \secref{uncore_frequency_scaling} respectively.
+The wakeup latencies from idle states are presented in~\secref{idle_state_latencies} while I refer to Kuns et al.~\cite{Kuns_2025_UserSpaceIdle} for user space idle states.
 
 \section{Shared Frequency Domains}
+\label{sec:shared_freq_domains}
 % measurements/shared-frequency-domains
 Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which uses the same core micro-architecture as Sapphire Rappids~\cite{Schoene_2024_Alder_Lake}.
 To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
@@ -78,11 +81,10 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 \addtocounter{footnote}{1}
 \footnotetext[\thefootnote]{\texttt{FIRESTARTER -\phantom{}-run-instruction-groups=L3\_L:100}}
 
-Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the license level based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark.
+Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the license level based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
 However he was only able to trigger two out of the three license level, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy'' classes.
-Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench'' with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
+Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench''~\cite{RHZE_HPC_likwid} with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
 They were also only able to show two out of the four license levels.
-\todoms{cite avx-turbo and likwid-bench}
 
 \begin{figure}[]
     \centering
@@ -129,18 +131,19 @@ In~\secref{avx-anomalies-uncore-freqency} I describe an anomaly in the uncore fr
 \label{sec:avx-anomalies-low-freq}
 
 Each FIRESTARTER kernel is executed for \SI{60}{\s} discarding the first and last \SI{5}{\s}.
-I measure the uncore frequency by polling the associated MSR every \SI{10}{\ms} on CPU 0\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
+I measure the uncore frequency by polling the associated model specific register\footnote{UNCORE\_RATIO\_LIMIT} every \SI{10}{\ms} on CPU 0\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
 The measurement is repeated on the cross product of following settings:
 \begin{itemize}
     \item Core frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2000}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{3800}{\MHz}.
     \item Uncore frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2500}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{2500}{\MHz}.
 \end{itemize}
-\todoms{reference the appendix for all plots}
 
-Since the FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency not throttled below the nominal frequency of \SI{2}{\GHz}.
+Since the selected FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency not throttled below the nominal frequency of \SI{2}{\GHz}.
 This is the case, expect for the AVX512 and AMX frequency levels at \SI{800}{\MHz} core frequency, which are throttled to just above \SI{550}{\MHz}.
 This effect is shown in~\figref{avx-anomalies-low-freq}.
 The severity of the effect depends on the selected uncore frequency and is worsend with a higher frequency.
+There is no obvious explaination of this behaviour.
+\appref{avx-frequencies} contains the plots for the complete measurement matrix.
 
 \begin{figure}[]
     \centering
@@ -229,7 +232,7 @@ To remove the measurement outliers I chosse to display the 95th percentile of tr
 Worst case transtion latency are in the range of \SI{1100}{\us} and \SI{2000}{\us} depending on the specific frequency change.
 
 To investigate the specifics of the different transition latencies, I plot all the measured transition latency against the time between detection of last frequency change from source to target frequency.
-\figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, ..., \SI{2.9}{\GHz}.
+\figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, \SI{1.9}{\GHz}, ..., \SI{2.9}{\GHz}.
 \appref{pstate_latencies_scatter_complete} contains the plots for all measured frequency transitions.
 The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} do not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
 This is consitent with testing performed on a Skylake-SP system.
@@ -240,8 +243,9 @@ It intern contains samples which are not spread across the x-axis as previous, b
 Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decreases with an increased frequency change.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
 
-The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{skylake_paper} for the regions that emit this time dependent behaviour.
-The power management seems to have an additional mechanisms that requies a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
+The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{Schoene_2019_SKL} for the regions that emit this time dependent behaviour.
+The power management seems to have an additional mechanisms that requies a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}.
+If this is not possible that would result in another penaly of \SI{200}{\us}.
 This could be linked to a power management mechanism that has to increase the voltage for the specific core which could be bound to such period.
 ftalat does not measure the time of how long the core is stopping its execution for the frequency change.
 Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
@@ -278,7 +282,7 @@ Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction
 Schöne et al.~\cite{Schoene_2019_SKL} extended the methodology of ftalat to measure the time until a uncore frequency change is executed.
 A pointer chasing benchmark is executed on a array that does not fit in the L1 or L2 cache and therefore resides in the L3 cache.
 It is allocated using transparent hugepages.
-First the uncore frequency is set to the source frequency.
+First the uncore frequency is set to the source frequency using the \textbf{UNCORE\_RATIO\_LIMIT} model specific register.
 The pointer chaser executed for \SI{50000}{} plus a random number of up to \SI{800000}{} iterations.
 Then the frequency is switched to the target frequency.
 The pointer chaser is executed for another \SI{50000}{} times.
@@ -317,16 +321,18 @@ It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\
 \end{figure}
 
 \section{Idle State Latencies}
+\label{sec:idle_state_latencies}
 
-Idle state allow a processor to lower its power consumption by switching of different components and flushing caches.
-Sapphire Rapids cores support the C1, C1E and C6 idle states.
+Idle state allow a processor to lower its power consumption by switching off different components and flushing caches on a per core or package basis.
+Sapphire Rapids cores support the C0 (POLL), C1, C1E and C6 idle states.
 They each have a lower power consumption but also a higher exit latency.
-If all cores on a package are in C6 therefore their L1/L2 cache is flushed, the complete package can go into a package idle states.
-Sapphire Rapids support PC2 and PC6, though the later is not used.
+If all cores on a package are in C6 and therefore their L1/L2 cache is flushed, the complete package can go into a package idle states.
+Sapphire Rapids support PC2 and PC6, though the later is disabled.
+\todoms{check by reading MSR\_PKG\_CST\_CONFIG\_CONTROL}
 
-Ilsche et al.~\cite{Ilsche_2018_cstate} presented a methodology to measure the exit latency of core returning from idle state.
+Ilsche et al.~\cite{Ilsche_2018_cstate} presented a methodology to measure the exit latency of core returning from idle states.
 A caller sends a pthread\_cond\_signal to a callee waiting for the signal using pthread\_cond\_wait.
-The difference between the linux kernel events sched:sched\_waking and power:cpu\_idle is measured to determine the exit latency.
+The difference between the linux kernel events sched:sched\_waking on the caller and power:cpu\_idle on the callee is measured to determine the exit latency.
 This is repeated for \SI{1000}{} times.
 The caller is placed on CPU1 on the first socket.
 CPU3 runs a while true loop to prevent the first socket from going into a package c-state.
