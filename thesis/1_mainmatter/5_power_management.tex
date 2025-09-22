@@ -194,21 +194,19 @@ The SSE frequency license also shows a reduction in energy efficiency for some s
 
 \section{Intel speed select}
 \label{sec:isst}
+With Ice Lake-SP~\cite{Intel_2020_IceLake_SP} Intel introducted Speed Select Technology (ISST) which offers four new power management mechanisms allowing to reconfigure the processor for different workloads.
+ISST Performance Profile allows to reconfigure a single SKU with different core count and frequency configurations, increasing the processors flexibility for different applications.
+ISST Base Frequency allows splitting the cores into a high and low priority group.
+The base frequency of these groups is adjusted to be above and below the nominal frequency, respectively.
+ISST Turbo Frequency allows splitting the the cores into a high and low priority group.
+The high priority cores can maintain a high turbo frequency while the low priority cores are clipped to a lower turbo frequency.
+ISST Core Power allows to assign cores to four different priority classes (CLOS).
+Under a power constrained scenario cores can be either throttled based on their priority or each core can get a minimum frequency assigned while the remaining power is split up based on the priority and a weight.
+The control mechanism of Core Power is described by a patent~\cite[pages~87-111]{Intel_2021_HPM}.
+For the specifics of configuring Intel Speed Select I refer to the linux kernel documentation~\cite{Kernel_IntelSpeedSelect}.
 
-\begin{itemize}
-    \item intel speed select technology and avx frequencies are independent of one another.\\
-    one plot to support this claim. potential for optimization on intels side.
-    sort of: turbo-mode (turbo ratio limit) is one of many algorithm.
-    turbo-freq buckets are another. (garanteed turbo freqs in high prio buckets, vs low prio)
-    perf-profile is yet another. (different TRLs (?) and base frequencies with different number of cores)
-    core-power with CLOS groups are another. (different frequency limits based on different priorities)
-    base-freq
-    \item open question: how do they work together?
-    \item Information about Core power\cite[pages~87-111]{Intel_2021_HPM}
-\end{itemize}
-
-\todoms{what does this do. what are the CLOS groups. cite the patent. how fast are the frequency transitions of the control loop?}
-
+As described in~\secref{avx-frequencies} the available turbo frequency limits are not influced by the Core Power CLOS.
+To achieve high turbo frequencies for priority cores ISST Turbo Frequency has to be configured, otherwise low priority cores can negatively influence the maximal turbo frequencies even if the power budget is not exhausted.
 
 \section{P-State Latencies}
 \label{sec:pstate_latencies}
