@@ -211,18 +211,17 @@ The SSE frequency license also shows a reduction in energy efficiency for some s
 \label{sec:pstate_latencies}
 
 Core frequency changes can be used to optimize the energy consumption of a running process.
-This requires the core voltage to be adjusted to maintain a save operating point.
-To measure the latencies of changing the voltage and frequency of a core, I adapt ftalat, a benchmark developed by Mazouz et al.~\cite{Mazouz_2014_ftalat}, with modifications by Hackenberg et al.~\cite{Hackenberg_2015_Haswell}.
+This requires the core voltage to be adjusted maintaining a save operating point.
+To measure the latencies of such changes of a core, I adapt ftalat, a benchmark developed by Mazouz et al.~\cite{Mazouz_2014_ftalat} with modifications by Hackenberg et al.~\cite{Hackenberg_2015_Haswell}.
 
 The ftalat bechmark measures the execution time of a compute loop with different processor frequencies.
 It works as follows:
-First, a frequency change is requested using the sysfs interface.
+First, a frequency change from the source to the target frequency is requested using the sysfs interface.
 Second, the execution speed of a compute loop is measured repeatidly until it matches the speed that is expected for the requested frequency.
 The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for a total \SI{4000}{} times.
 
-In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies for Alder Lake processors depend on the time since the last frequency transition.
+In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies of Alder Lake processors depend on the time since the last frequency transition, the transition from the target to the source frequency.
 I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
-\todoms{Check}
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher median latency of \SI{600}{\us} instead of \SI{500}{\us}.
 Above this interval we see a different behaviour when switching to a frequency above \SI{1.8}{\GHz}.
 Median latencies are higher in this area and they are not constant across different frequency changes.
@@ -231,19 +230,19 @@ Worst case transtion latency are in the range of \SI{1100}{\us} and \SI{2000}{\u
 
 To investigate the specifics of the different transition latencies, I plot all the measured transition latency against the time between detection of last frequency change from source to target frequency.
 \figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, ..., \SI{2.9}{\GHz}.
-\appref{pstate_latencies_scatter_complete} shows the plots for all measured frequency transitions.
-The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
+\appref{pstate_latencies_scatter_complete} contains the plots for all measured frequency transitions.
+The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} do not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
 This is consitent with testing performed on a Skylake-SP system.
 For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above two regions are visible.
-The first region with a time between detection of last frequency change from source to target frequency up to \SI{1500}{\us} does not show a time dependecy on the transition latency.
-At around \SI{2000}{\us} a repeating pattern with a period of \SI{1625}{\us} is visible.
+The first region with a time between detection of last frequency change from source to target frequency up to around \SI{2000}{\us} does not show a time dependency on the transition latency.
+After this time a repeating pattern with a period of \SI{1625}{\us} is visible.
 It intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
-Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decrease with an increase in frequency change.
+Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decreases with an increased frequency change.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
 
 The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{skylake_paper} for the regions that emit this time dependent behaviour.
 The power management seems to have an additional mechanisms that requies a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}, if this is not possible that would result in another penaly of \SI{200}{\us}.
-This could be linked to external power managment that has to increase the voltage for the specific core which could be bound to such period.
+This could be linked to a power management mechanism that has to increase the voltage for the specific core which could be bound to such period.
 ftalat does not measure the time of how long the core is stopping its execution for the frequency change.
 Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
 
@@ -319,20 +318,37 @@ It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\
 
 \section{Idle State Latencies}
 
+Idle state allow a processor to lower its power consumption by switching of different components and flushing caches.
+Sapphire Rapids cores support the C1, C1E and C6 idle states.
+They each have a lower power consumption but also a higher exit latency.
+If all cores on a package are in C6 therefore their L1/L2 cache is flushed, the complete package can go into a package idle states.
+Sapphire Rapids support PC2 and PC6, though the later is not used.
+
+Ilsche et al.~\cite{Ilsche_2018_cstate} presented a methodology to measure the exit latency of core returning from idle state.
+A caller sends a pthread\_cond\_signal to a callee waiting for the signal using pthread\_cond\_wait.
+The difference between the linux kernel events sched:sched\_waking and power:cpu\_idle is measured to determine the exit latency.
+This is repeated for \SI{1000}{} times.
+The caller is placed on CPU1 on the first socket.
+CPU3 runs a while true loop to prevent the first socket from going into a package c-state.
+I perform three different measurements.
+First the callee placed on the first socket on CPU2.
+Second the callee placed on the second socket on CPU57 and a while true loop to prevent package cstate on CPU58.
+Third the callee placed on the second socket on CPU57 without an additional while true loop.
+To remove OS noise from the measurement the used CPUs and the second package are isolated with a kernel parameter\footnote{isolcpus=1,2,3,56-111,168-223 nohz\_full=1,2,3,56-111,168-223}.
+
+\figref{c6_latencies} show a box plot of the exit latency from the C6 idle state.
+Outliers are marked in the plot.
+The exit latency shows little difference with different core frequencies.
+They are more than double of what Schöne et al.~\cite{Schoene_2019_SKL} measured for Skylake.
+All latencies on the local socket and the active remote socket are below the limit of \SI{190}{\us} as advertised by Intel for Sapphire Rapids.
+When the remote socket is idle the wakeup latency is increased by a constant of around \SI{25}{\us}
+It is far below the limit of \SI{290}{\us} of PC6, as PC2 is used instead.
+
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\columnwidth]{fig/cstate-latencies/C_state_latencies.pdf}
-    \caption{\label{fig:c6_latencies}C-state latency of C6 measured using methodology developed by Schöne et al.
+    \caption{\label{fig:c6_latencies}C-state wakeup latency of C6 measured using methodology developed by Schöne et al.
 The dotted line displays the hardcoded wakeup latency in the \protect\textbf{intel\_idle} kernel module.
 \protect\footnotemark}
 \end{figure}
 \footnotetext{data structure \protect\textbf{spr\_cstates} in \protect\url{https://github.com/torvalds/linux/blob/72840238e2bcb8fb24cb35d8d1d5a822c04e62a4/drivers/idle/intel\_idle.c}}
-
-\begin{itemize}
-    \item Anomaly with perfomance governor at \SI{2.0}{\GHz}, C6 not used?
-    \item more samples requied that in previous papers
-    \item worse c-state latencies compared to Skylake
-    \item explain error bars
-    \item add reported c-state latencies of OS.
-    \item With powersave governor c-states are set correcty (/sys/devices/system/cpu/cpu0/cpuidle/state*/time validated manually) but transition latencies are equivalent to C6.
-\end{itemize}
