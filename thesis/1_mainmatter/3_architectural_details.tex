@@ -1,4 +1,5 @@
 \chapter{Architectural Details of ``Sapphire Rapids'' Processors}
+\label{sec:arch}
 The Sapphire Rapids family of server processors is the successor to the ``Ice Lake'' architecture.
 Building up on the design of the Skylake~\cite{Schoene_2019_SKL} and Cascade Lake~\cite{Velten_2022_Rome_CLX} architectures, it is the first in Intels lineup of server processor to introduce a modular design containing four silicon tiles in a 2x2 grid interconnected with EMIB structures.
 The two variants of this processor are the 4th Generation Intel Xeon Scalable Processor and Xeon CPU Max Series with four additional HBM blocks~\cite{Intel_2021_Hotchips}.
@@ -66,8 +67,15 @@ If not noted otherwise, all measurements on this processor are performed with hy
 	\end{tabular}
 \end{table}
 
-McCalpin~\cite{McCalpin_2021_CoreMapping} and Cho~\cite{Cho_2022_KnowYourNeighbor} described methods find the physical location of cores and their associated caches, these measurements have been modified to work with Sapphire Rapids.
-I execute the stream benchmark on each CPU, collect the Vertical Egress Events\footnote{\textbf{TxR\_VERT\_OCCUPANCY0} with AD - Agent 0 and AK - Agent 0: event=144,umask=0x03}, measuring the occupancy of the egress buffers in the mesh stop, and the Horizontal Egress Events\footnote{\textbf{TxR\_HORZ\_OCCUPANCY} with AD - Uncredited and AK: event=160,umask=0x03}, measuring the occupancy of the transgress buffers, for all cache boxes.
+McCalpin~\cite{McCalpin_2021_CoreMapping} and Cho~\cite{Cho_2022_KnowYourNeighbor} described methods to find the physical location of cores and their associated caches.
+Schöne created a created a proof of concept for this measurement on Sapphire Rapids.
+I execute the stream benchmark on each CPU, one after another.
+This causes traffic over the mesh to the DRAM.
+I collect the following performance counters of the mesh traffic from all cache boxes:
+\begin{itemize}
+	\item Vertical Egress Events\footnote{\textbf{TxR\_VERT\_OCCUPANCY0} with AD - Agent 0 and AK - Agent 0: event=144,umask=0x03} to measure the occupancy of the egress buffers in the mesh stop.
+	\item Horizontal Egress Events\footnote{\textbf{TxR\_HORZ\_OCCUPANCY} with AD - Uncredited and AK: event=160,umask=0x03} to measure the occupancy of the transgress buffers.
+\end{itemize}
 This measurement is performed using the default core frequency without the use of hyperthreading.
 I use the vertical occupancy event to associate the cores to cache boxes.
 The horizontal occupancy is used to find which cache boxes are in the same row.
