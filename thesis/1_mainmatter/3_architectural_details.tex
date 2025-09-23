@@ -209,8 +209,7 @@ The changes of key structures between the Skylake and Golden Cove core architect
 \section{L3 Cache Slicing}
 
 The 2d-mesh design of Intels L3 caches poses a unique opportunity for optimizing communication latency between two cores.
-McCalpin demonstrated that each cache lines is associated to a L3 cache slices based on a hash algorithm, different for each SKU.
-\todoms{add citation}
+McCalpin demonstrated that each cache lines is associated to a L3 cache slices based on a hash algorithm, different for each SKU~\cite{McCalpin_2018_IntelAddressHashing}.
 Therefore communication latency of two cores using a specific cache lines depends on the physical locations of the cores and the cache slice associated to this cache line.
 
 I run a benchmark that sends \SI{100}{} ping/pong signals on a cache line shared by two cores using the atomic \textbf{lock cmpxchg} instruction.
@@ -228,7 +227,7 @@ Hyperthreading is disabled, and the measurement is repeated on the cross product
 
 \figref{cbo-latencies} shows the distinct communication latencies between two cores in the same sub-NUMA cluster using the \SI{14}{} cache boxes.
 A slight mismatch between the distribution of cache lines across different cache slices is visible.
-This effect is described by McCalpin~\cite{TODO} as an artifact of using specific hash algorithms.
+This effect is described by McCalpin~\cite{McCalpin_2018_IntelAddressHashing} as an artifact of using specific hash algorithms.
 
 \begin{figure}[]
     \centering
