@@ -16,10 +16,10 @@ The wakeup latencies from idle states are presented in~\secref{idle_state_latenc
 Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which uses the same core micro-architecture as Sapphire Rapids~\cite{Schoene_2024_Alder_Lake}.
 To validate that core frequencies are independent of each other, I updated the measurement scripts from Sch\"one et al.~\cite{Schoene_2024_Alder_Lake} used for their evaluation of the Alder Lake architecture.
 
-For the measurement, I disabled hyperthreading, changed all cores to the lowest frequency (\SI{800}{\MHz}), and run a while-true loop on one core.
+For the measurement, I disable hyperthreading, change all cores to the lowest frequency (\SI{800}{\MHz}), and run a while-true loop on one core.
 The frequency of this core is measured while another core is running with turbo frequencies, either idling or also running a while-true loop.
-I repeated it for all combinations of cores on one socket.
-No shared core frequency domains is detected.
+I repeat this for all combinations of cores on one socket.
+No shared core frequency domain is detected.
 This is consistent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 
 \section{AVX Frequencies}
@@ -30,9 +30,9 @@ This allows power hungy instructions using vector registers to use a lower base 
 The concept is extended with a new class for AVX512 instructions for the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
 With the addition of the AMX instruction set, Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
-Instructions are mapped mapped to four classes based on their instruction set and power draw.
+Instructions are mapped to four classes based on their instruction set and power draw.
 Opportunistic AVX turbo frequencies are determined based on the classes and number of active cores.
-The mapping from instruction set and power usage are displayed in~\tabref{avx-classes} based on a slide from Intel published by ServerTheHome~\cite{ServeTheHome_Emerald_Rapids_2023}.
+The mapping from instruction set and power usage to frequency classes are displayed in~\tabref{avx-classes} based on a slide from Intel published by ServerTheHome~\cite{ServeTheHome_Emerald_Rapids_2023}.
 Using a modified version of ``intel-speed-select'', I extract the opportunistic turbo frequencies for each class.
 \figref{p0n-frequencies} displays these frequencies for each class and the number of active cores in the class.
 
@@ -56,7 +56,7 @@ Using a modified version of ``intel-speed-select'', I extract the opportunistic 
 \begin{table}[bp!]
 	\centering
 	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.
-    The $C_{dyn}$ classes 0 through 3 map to the frequency levels SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
+    The $C_{dyn}$ classes 0 through 3 map to the frequency classes SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
     The classes that I could measure are marked in red.}
     \begin{tabular}{|l|p{0.14\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|}
         \hline
@@ -85,26 +85,26 @@ Using a modified version of ``intel-speed-select'', I extract the opportunistic 
 Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the frequency class based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
 However he was only able to trigger two out of the three classes, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy''.
 Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench''~\cite{RHZE_HPC_likwid} with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
-They were also only able to show two out of the four frequency levels.
+They were also only able to show two out of the four frequency classes.
 
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands/avx-frequency-license-bands.pdf}
     \caption{\label{fig:p0n-frequencies}Opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
     The number of active cores are split into eight buckets. The frequency class and the bucket decides the resulting turbo frequency.
-    In the first bucket the SSE and AVX2 frequency class share the same frequency.}
+    In the first bucket the SSE and AVX2 frequency classes share the same frequency.}
 \end{figure}
 
 %Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
 %Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
 To associate which events triggers the processor cores to be part of a frequency class, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
-This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
-However, as frequency class can only be validated using the maximal turbo frequency,
+This methodology is fundamentally the same as demostrated by Downs and Laukemann et al.
+However, as frequency classes can only be validated using the maximal turbo frequency,
 I ensure that the RAPL power limiting mechanism is not triggered.
-Using ``Intel Speed Select Core-Power'' I set one core to priority group zero and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
-This will priorize the power draw of the core in group zero over the others.
-The frequency measurement is done on the core in group zero, which should run at the maximum turbo frequency.
+Using ``Intel Speed Select Core-Power'' I set one core to priority group 0 and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
+This will priorize the power draw of the core in group 0 over the others.
+The frequency measurement is done on the core in group 0, which should run at the maximum turbo frequency.
 ``Intel Speed Select'' is described in more detail in~\secref{isst}.
 I prototype this measurement with four different FIRESTARTER kernels.
 Each kernel is executed for \SI{60}{\s} discarding the first \SI{30}{\s} and last \SI{5}{\s}.
@@ -125,8 +125,8 @@ This also highlights that frequency class dependent opportunistic core frequenci
 \label{sec:avx-anomalies}
 
 To further test the effects of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
-In~\secref{avx-anomalies-low-freq} I discovered throttling of the core frequency at its lowest frequency (\SI{800}{\MHz}) when running with the AMX or AVX512 frequency level.
-In~\secref{avx-anomalies-uncore-freqency} I describe an anomaly in the uncore frequency selection causing suboptimal energy efficiency for the AMX frequency level.
+In~\secref{avx-anomalies-low-freq}, I discovered throttling of the core frequency at its lowest frequency (\SI{800}{\MHz}) when running with the AMX or AVX512 frequency class.
+In~\secref{avx-anomalies-uncore-freqency}, I describe an anomaly in the uncore frequency selection causing suboptimal energy efficiency for the AMX frequency class.
 
 \subsection{Throttling at Low Frequencies}
 \label{sec:avx-anomalies-low-freq}
@@ -139,8 +139,8 @@ The measurement is repeated on the cross product of following settings:
     \item Uncore frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2500}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{2500}{\MHz}.
 \end{itemize}
 
-Since the selected FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency not throttled below the nominal frequency of \SI{2}{\GHz}.
-This is the case, expect for the AVX512 and AMX frequency levels at \SI{800}{\MHz} core frequency, which are throttled to just above \SI{550}{\MHz}.
+Since the selected FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency is not throttled below the nominal frequency of \SI{2}{\GHz}.
+This is the case, expect for the AVX512 and AMX frequency classes at \SI{800}{\MHz} core frequency, which are throttled to just above \SI{550}{\MHz}.
 This effect is shown in~\figref{avx-anomalies-low-freq}.
 The severity of the effect depends on the selected uncore frequency and is worsend with a higher frequencies.
 There is no obvious explaination of this behaviour.
@@ -149,7 +149,7 @@ There is no obvious explaination of this behaviour.
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands-without-isst-core-frequency-800.pdf}
-    \caption{\label{fig:avx-anomalies-low-freq}Average core frequency across the cores running the workload with the core frequency set to \SI{800}{\MHz}. For the AMX and AVX512 frequency levels core frequency throttling below \SI{800}{\MHz} occurs.}
+    \caption{\label{fig:avx-anomalies-low-freq}Average core frequency across the cores running the workload with the core frequency set to \SI{800}{\MHz}. For the AMX and AVX512 frequency classes core frequency throttling below \SI{800}{\MHz} occurs.}
 \end{figure}
 
 \subsection{Uncore Frequency Selection}
@@ -160,7 +160,7 @@ CPU 8 runs the uncore frequency measurement.
 Hyperthreading is disabled and the CPUs used for the measurement are isolated from OS noise with a kernel parameter\footnote{isolcpus=0-8 nohz\_full=0-8}.
 Each kernel is executed for \SI{20}{\s} discarding the first \SI{10}{\s} and last \SI{2}{\s}.
 I expect the same performance and power draw across all runs.
-However, two different levels of power draw with the kernels runnign at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
+However, two different levels of power draw with the kernels running at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
 This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{65}{\percent} and \SI{2.5}{\GHz} for \SI{35}{\percent} of the samples.
 No major deviation of performance across the samples is observable, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
 \figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples with the higher uncore frequency.
