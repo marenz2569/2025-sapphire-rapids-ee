@@ -13,27 +13,28 @@ The wakeup latencies from idle states are presented in~\secref{idle_state_latenc
 \section{Shared Frequency Domains}
 \label{sec:shared_freq_domains}
 % measurements/shared-frequency-domains
-Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which uses the same core micro-architecture as Sapphire Rappids~\cite{Schoene_2024_Alder_Lake}.
-To validate that core frequencies are independent of each other, I adopt the measurement scripts from Sch\"one et al~\cite{Schoene_2024_Alder_Lake}.
+Core frequencies can have an impact on other cores as shown by Schöne et al. for cores on the Alder Lake Platform which uses the same core micro-architecture as Sapphire Rapids~\cite{Schoene_2024_Alder_Lake}.
+To validate that core frequencies are independent of each other, I updated the measurement scripts from Sch\"one et al.~\cite{Schoene_2024_Alder_Lake} used for their evaluation of the Alder Lake architecture.
 
-For the measurement I disabled hyperthreading, changed all cores to the lowest frequency (\SI{800}{\MHz}) and run a while true loop on one core.
-The frequency of this core is measured while another core is running with turbo frequencies, either idling or also running a while true loop.
+For the measurement, I disabled hyperthreading, changed all cores to the lowest frequency (\SI{800}{\MHz}), and run a while-true loop on one core.
+The frequency of this core is measured while another core is running with turbo frequencies, either idling or also running a while-true loop.
 I repeated it for all combinations of cores on one socket.
 No shared core frequency domains is detected.
-This is consitent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
+This is consistent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 
 \section{AVX Frequencies}
 \label{sec:avx-frequencies}
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
-This allows AVX2 instructions to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
+This allows power hungy instructions using vector registers to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
 The concept is extended with a new class for AVX512 instructions for the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
-With the addition of the AMX instruction set Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
-Instructions are mapped mapped to four license levels based on their instruction set and power draw.
+With the addition of the AMX instruction set, Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
+Instructions are mapped mapped to four classes based on their instruction set and power draw.
 Opportunistic AVX turbo frequencies are determined based on the classes and number of active cores.
-The mapping from instruction set and power usage are displayed in~\tabref{avx-classes}~\cite{ServeTheHome_Emerald_Rapids_2023}.
-In \figref{p0n-frequencies} we are able to extracte the per core opportunistic turbo frequencies per license on our testsystem using a modified version of ``intel-speed-select''.
+The mapping from instruction set and power usage are displayed in~\tabref{avx-classes} based on a slide from Intel published by ServerTheHome~\cite{ServeTheHome_Emerald_Rapids_2023}.
+Using a modified version of ``intel-speed-select'', I extract the opportunistic turbo frequencies for each class.
+\figref{p0n-frequencies} displays these frequencies for each class and the number of active cores in the class.
 
 % \begin{table}[t]
 % 	\centering
@@ -55,8 +56,8 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 \begin{table}[bp!]
 	\centering
 	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.
-    The $C_{dyn}$ classes 0 through 3 map to the license levels SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
-    The license levels that we could measure are marked in red.}
+    The $C_{dyn}$ classes 0 through 3 map to the frequency levels SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
+    The classes that I could measure are marked in red.}
     \begin{tabular}{|l|p{0.14\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|p{0.17\textwidth}|}
         \hline
         \diagbox[width=0.24\textwidth]{$C_{dyn}$\\Class}{Instruction\\Class} & SSE & AVX2 & AVX512 & AMX \\
@@ -81,27 +82,27 @@ In \figref{p0n-frequencies} we are able to extracte the per core opportunistic t
 \addtocounter{footnote}{1}
 \footnotetext[\thefootnote]{\texttt{FIRESTARTER -\phantom{}-run-instruction-groups=L3\_L:100}}
 
-Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the license level based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
-However he was only able to trigger two out of the three license level, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy'' classes.
+Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the frequency class based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
+However he was only able to trigger two out of the three classes, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy''.
 Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench''~\cite{RHZE_HPC_likwid} with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
-They were also only able to show two out of the four license levels.
+They were also only able to show two out of the four frequency levels.
 
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands/avx-frequency-license-bands.pdf}
     \caption{\label{fig:p0n-frequencies}Opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
-    The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
-    In the first bucket the SSE and AVX2 license bands share the same frequency.}
+    The number of active cores are split into eight buckets. The frequency class and the bucket decides the resulting turbo frequency.
+    In the first bucket the SSE and AVX2 frequency class share the same frequency.}
 \end{figure}
 
 %Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
 %Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
 
-To associate which events trigger the processor cores to be part of a license level, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
+To associate which events triggers the processor cores to be part of a frequency class, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
 This methodology is fundamentaly the same as demostrated by Downs and Laukemann et al.
-However, as license level can only be validated using theri maximal turbo frequency,
-I ensure that the RAPL power limiting mechanisms is not triggered.
-Using ``Intel Speed Select Core-Power'' I can set one core to priority group zero and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
+However, as frequency class can only be validated using the maximal turbo frequency,
+I ensure that the RAPL power limiting mechanism is not triggered.
+Using ``Intel Speed Select Core-Power'' I set one core to priority group zero and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
 This will priorize the power draw of the core in group zero over the others.
 The frequency measurement is done on the core in group zero, which should run at the maximum turbo frequency.
 ``Intel Speed Select'' is described in more detail in~\secref{isst}.
@@ -116,8 +117,8 @@ This also highlights that frequency class dependent opportunistic core frequenci
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands-validation/validate-avx-frequency-license-bands.pdf}
     \caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
-    The number of active cores are split into eight buckets. The license and the bucket decides the resulting turbo frequency.
-    In the first bucket the SSE and AVX2 license bands share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
+    The number of active cores are split into eight buckets. The frequency class and the bucket decides the resulting turbo frequency.
+    In the first bucket the SSE and AVX2 frequency class share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
 \end{figure}
 
 \section{AVX Frequency Anomalies}
@@ -141,7 +142,7 @@ The measurement is repeated on the cross product of following settings:
 Since the selected FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency not throttled below the nominal frequency of \SI{2}{\GHz}.
 This is the case, expect for the AVX512 and AMX frequency levels at \SI{800}{\MHz} core frequency, which are throttled to just above \SI{550}{\MHz}.
 This effect is shown in~\figref{avx-anomalies-low-freq}.
-The severity of the effect depends on the selected uncore frequency and is worsend with a higher frequency.
+The severity of the effect depends on the selected uncore frequency and is worsend with a higher frequencies.
 There is no obvious explaination of this behaviour.
 \appref{avx-frequencies} contains the plots for the complete measurement matrix.
 
@@ -162,8 +163,9 @@ I expect the same performance and power draw across all runs.
 However, two different levels of power draw with the kernels runnign at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
 This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{65}{\percent} and \SI{2.5}{\GHz} for \SI{35}{\percent} of the samples.
 No major deviation of performance across the samples is observable, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
-\figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples which caused a selection of the higher uncore frequency.
-The SSE frequency license also shows a reduction in energy efficiency for some samples, I could however not find a specific effect causing this change with the metrics I measured.
+\figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples with the higher uncore frequency.
+The SSE frequency class also shows a reduction in energy efficiency for some samples.
+I could however, not find a specific effect causing this change using the measured metrics.
 
 \begin{figure}[t!]
     \subfloat[Cumulative distribution of drawn package power.]{%
@@ -185,7 +187,7 @@ The SSE frequency license also shows a reduction in energy efficiency for some s
         \label{fig:avx-frequency-uncore-anomaly-max-ee}%
     }
     \caption{Metrics of the uncore frequency anomaly measurement.
-    We show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different license levels, as cumulative distributions.
+    I show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different frequency class, as a cumulative distributions.
     \figref{avx-frequency-uncore-anomaly-package-power-ecdf} shows the increase in package power for \SI{35}{\percent} of the samples.
     This increase is caused by the increase in uncore frequency shown in~\figref{avx-frequency-uncore-anomaly-uncore-freq-ecdf}.}
     \label{fig:avx-frequency-uncore-anomaly}
@@ -224,28 +226,29 @@ The frequency is switched back and a random time between \SI{0}{\us} and \SI{200
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies of Alder Lake processors depend on the time since the last frequency transition, the transition from the target to the source frequency.
 I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher median latency of \SI{600}{\us} instead of \SI{500}{\us}.
-Above this interval we see a different behaviour when switching to a frequency above \SI{1.8}{\GHz}.
-Median latencies are higher in this area and they are not constant across different frequency changes.
-To remove the measurement outliers I chosse to display the 95th percentile of transition latencies for all frequency changes in~\figref{pstate_latencies_95percentQuantile}.
+Above this interval a different behaviour when switching to a frequency above \SI{1.8}{\GHz} is visible.
+Median latencies are higher in this area and they are not equal across different frequency changes.
+To remove the measurement outliers, I chose to display the 95th percentile of transition latencies for all frequency changes in~\figref{pstate_latencies_95percentQuantile}.
 Worst case transtion latency are in the range of \SI{1100}{\us} and \SI{2000}{\us} depending on the specific frequency change.
 
 To investigate the specifics of the different transition latencies, I plot all the measured transition latency against the time between detection of last frequency change from source to target frequency.
 \figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, \SI{1.9}{\GHz}, ..., \SI{2.9}{\GHz}.
 \appref{pstate_latencies_scatter_complete} contains the plots for all measured frequency transitions.
 The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} do not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
-This is consitent with testing performed on a Skylake-SP system.
+This is consistent with testing performed on a Skylake-SP system.
 For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above two regions are visible.
 The first region with a time between detection of last frequency change from source to target frequency up to around \SI{2000}{\us} does not show a time dependency on the transition latency.
 After this time a repeating pattern with a period of \SI{1625}{\us} is visible.
 It intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
-Interestingly the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decreases with an increased frequency change.
+Interestingly, the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decreases with an increased frequency change.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
 
 The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{Schoene_2019_SKL} for the regions that emit this time dependent behaviour.
-The power management seems to have an additional mechanisms that requies a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}.
-If this is not possible that would result in another penaly of \SI{200}{\us}.
+The power management seems to have an additional mechanisms that requires a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}.
+If this is not possible that would result in another penalty of \SI{200}{\us}.
 This could be linked to a power management mechanism that has to increase the voltage for the specific core which could be bound to such period.
-ftalat does not measure the time of how long the core is stopping its execution for the frequency change.
+Further work to explain the high latencies for some frequency changes is out of scop for this thesis.
+The ftalat benchmark does not measure the time how long the cores throttles or stops its execution for the frequency change.
 Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
 
 \begin{figure}[]
@@ -333,11 +336,11 @@ A caller sends a pthread\_cond\_signal to a callee waiting for the signal using 
 The difference between the linux kernel events sched:sched\_waking on the caller and power:cpu\_idle on the callee is measured to determine the exit latency.
 This is repeated for \SI{1000}{} times.
 The caller is placed on CPU1 on the first socket.
-CPU3 runs a while true loop to prevent the first socket from going into a package c-state.
+CPU3 runs a while-true loop to prevent the first socket from going into a package c-state.
 I perform three different measurements.
 First the callee placed on the first socket on CPU2.
-Second the callee placed on the second socket on CPU57 and a while true loop to prevent package cstate on CPU58.
-Third the callee placed on the second socket on CPU57 without an additional while true loop.
+Second the callee placed on the second socket on CPU57 and a while-true loop to prevent package cstate on CPU58.
+Third the callee placed on the second socket on CPU57 without an additional while-true loop.
 To remove OS noise from the measurement the used CPUs and the second package are isolated with a kernel parameter\footnote{isolcpus=1,2,3,56-111,168-223 nohz\_full=1,2,3,56-111,168-223}.
 
 \figref{c6_latencies} show a box plot of the exit latency from the C6 idle state.

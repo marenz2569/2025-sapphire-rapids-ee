@@ -2,7 +2,8 @@
 \label{sec:power_measurement}
 
 \section{Validating RAPL Accuracy}
-Starting with the Haswell microarchitecture Intel integrated current measurement into their processors to support power limiting~\cite{Hackenberg_2015_Haswell}.
+Starting with the Sandy Bridge microarchitecture, Intel integrated current modelling into their processors to support power limiting~\cite{Hackenberg_2013_RAPL_APM}.
+Haswell improved this by using current measurement~\cite{Hackenberg_2015_Haswell}.
 The associated power metrics for different zones can be measured using the RAPL interface via the linux kernel~\cite{powercap_kernel_doc}.
 Schöne et al.~\cite{Schoene_2024_Alder_Lake} tried to validate that RAPL counters on the Alder Lake architecture rely on current measurements, however they found that they are likely using a model.
 This is relevant to Sapphire Rapids, since they share the same core microarchitecture Golden Cove.
@@ -37,12 +38,12 @@ All measurment points are inside the \SI{1}{\percent} tolerance of the PDU~\cite
 
 Energy measurement with high accuracy can be used to measure the energy difference between different executed instructions and their data.
 This has been demonstrated in great detail~\cite{Lucas_2016_AluPower,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
-However it can also be used to perform side channel attacks and retrieve keys from priviledged programs~\cite{Lipp_2021_Platypus}.
-While limiting access to the RAPL counters is possible from an operating system perspective, Intel also provides the option to enable filters \textbf{IA32\_MISC\_PACKAGE\_CTLS} on the energy measurement which cannot be deactived until a reboot is performed~\cite[Vol. 4 Table 2-52]{intel_combined_software_developer_manual}.
+However, it can also be used to perform side channel attacks and retrieve keys from priviledged programs~\cite{Lipp_2021_Platypus}.
+While limiting access to the RAPL counters is possible from an operating system perspective, Intel also provides the option to enable filters \textbf{IA32\_MISC\_PACKAGE\_CTLS} on the energy measurement, which cannot be deactived until a reboot is performed~\cite[Vol. 4 Table 2-52]{intel_combined_software_developer_manual}.
 The third generation of Xeon Scalable processors (Ice Lake) introduced the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR which also contains an accurate time point when the register was last updated.
 This should address the problem of accuratly measuring short code-paths as presented by Hähnel et al.~\cite{Haehnel_2012_RAPL}.
 
-I extend the measurement for RAPL granularity propsed by Schöne et al.~\cite{Schoene_2024_Alder_Lake}.
+I extended the measurement for RAPL granularity proposed by Schöne et al.~\cite{Schoene_2024_Alder_Lake}.
 All possible RAPL counters are polled repeatidly for \SI{10}{\s} on CPU 0 via their associated MSR.
 CPU 1 runs FIRESTARTER to generate a constant power consumption on the processor.
 The measurement is reapeated across the cross product of following settings:
@@ -56,16 +57,16 @@ Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME
 
 I plot the package and dram counters for the nominal core frequency of \SI{2}{\GHz}.
 \figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the model specific register\\ \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and rdtsc as the source of the timestamp.
-The counter is updated every \SI{1.5}{\ms}.
+The package counter is updated every \SI{1.5}{\ms}.
 It is increased to \SI{3.0}{\ms} with filters enabled.
+\todoms{check that it is not 1.6}
 The higher energy consumption when only enabling POLL is clearly visible.
 Under the constant load the timestamp of the RAPL register and the accumulated energy during this time follow a linear function, as is expect with accuracte timestamps.
 Accurate timestamps seem to be deactived when the RAPL filter is enabled.
-Dram counters displayed in \figref{rapl-update-intervals-dram} show an update interval of around \SI{1.6}{\ms}, this does not change with RAPL filters enabled.
-They are not as accurate as the package counters, but also not not show such a big spead when using rdtsc as the timestamp source.
+DRAM counters, displayed in \figref{rapl-update-intervals-dram} show an update interval of around \SI{1.6}{\ms}, this does not change with RAPL filters enabled.
+DRAM counters are not as accurate as the package counters, but also do not show such a big spread when using rdtsc as the timestamp source.
 
-Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions.
-Software developers require it for fast runtime optimization of energy efficiency.
+Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions, software developers require it for fast runtime optimization of energy efficiency.
 An increased accuracy of this measurement is possible with the use of the internal timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} register.
 For use cases with security critical data and algorithms, I recommend to activate the filter increasing the barrier against leaks even if parts of the system are compromised.
 
@@ -73,8 +74,8 @@ For use cases with security critical data and algorithms, I recommend to activat
     \centering
     % width could be 1, 0.9, 0.8 instead
     \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
-    \caption{\label{fig:rapl-update-intervals-package}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during a constant power draw scenario.
-    The time value is displayed for both the time from the timestamp instruction and the reported time the RAPL model specific register.}
+    \caption{\label{fig:rapl-update-intervals-package}Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR_PACKAGE_ENERGY_TIME_STATUS} MSR.}
 \end{figure}
 
 \begin{figure}[]
