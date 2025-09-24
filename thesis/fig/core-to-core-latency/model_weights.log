@@ -1,0 +1,9 @@
+Model for Minimal core to core communication latency [ns]
+Score: 0.9951308621461163
+Coefficients: [52020.30476702 61732.83781473] Intercept: -1.2283117081191506
+Model for Maximal core to core communication latency [ns]
+Score: 0.9989345943979828
+Coefficients: [ 53374.66379634 125374.30302008] Intercept: 0.9258637728757435
+Model for Difference in core to core communication latency [ns]
+Score: 0.9943782018284227
+Coefficients: [ 7294.88075747 25821.70896832] Intercept: -0.1620055737606272
