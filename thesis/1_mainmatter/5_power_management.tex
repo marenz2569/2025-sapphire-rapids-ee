@@ -287,16 +287,17 @@ First the uncore frequency is set to the source frequency using the \textbf{UNCO
 The pointer chaser executed for \SI{50000}{} plus a random number of up to \SI{800000}{} iterations.
 Then the frequency is switched to the target frequency.
 The pointer chaser is executed for another \SI{50000}{} times.
-If in this time any of the loads from the pointer chasing array blocks for more than \SI{0.5}{\us} the time until this event is saved.
-The measurement is repeated \SI{1000}{} times for all frequency pairs.
+If in this time any of the loads from the pointer chasing array blocks for more than \SI{1000}{} cycles (\SI{0.5}{\us} @ \SI{2}{\GHz}), the time until this event is saved.
+I set the core frequency to nominal speed.
+The measurement is repeated \SI{1000}{} times for all uncore frequency pairs.
 The time until the frequency change is complete is not measured.
 This is a limitation of this benchmark compared to ftalat for core frequency transitions.
 
 The random time before executing the frequency change did not have an influence on the frequency change latency.
-\figref{ufs_init_median} show a median change latency of \SI{}{\us} for all frequency transitions.
-The worst case latency until this frequency change is \SI{}{\us} as shown in~\figref{ufs_init_95}.
-\todoms{insert the correct us times here}
-The uncore is blocked up to \SI{8}{us} as shown in~\figref{ufs_gap_95}.
+\figref{ufs_init_median} show a median change latency of around \SI{500}{\us} for all frequency transitions.
+The worst case latency until this frequency change is under \SI{1000}{\us} as shown in~\figref{ufs_init_95}.
+The uncore is blocked up to \SI{5}{\us} as shown in~\figref{ufs_gap_95}.
+When using the lowest core frequency of \SI{800}{\MHz} the block time increases up to \SI{8}{\us}.
 Intel~\cite{Intel_2020_IceLake_SP} claims a block time of \SI{7}{\us} for Sapphire Rapids' predecessor Ice Lake-SP.
 It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\us}.
 
