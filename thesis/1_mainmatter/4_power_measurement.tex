@@ -2,6 +2,7 @@
 \label{sec:power_measurement}
 
 \section{Validating RAPL Accuracy}
+\label{sec:validating_rapl_accuracy}
 Starting with the Sandy Bridge microarchitecture, Intel integrated current modelling into their processors to support power limiting~\cite{Hackenberg_2013_RAPL_APM}.
 Haswell improved this by using current measurement~\cite{Hackenberg_2015_Haswell}.
 The associated power metrics for different zones can be measured using the RAPL interface via the linux kernel~\cite{powercap_kernel_doc}.
@@ -33,6 +34,7 @@ This polls the RAPL metrics every \SI{10}{\ms} and discovered the first and last
 The external reference measurent of the PDU is exposed via the metricq~\cite{Ilsche_2019_MetricQ} interface of FIRESTARTER~\footnote{\url{https://github.com/marenz2569/firestarter-metric-metricq}} and reports \SI{1}{Sa\per\second}.
 The average power draw of the PDU and the RAPL counters are plotted in~\figref{validate-rapl}.
 A strong correlation via quadratic fit can be observed, indicating that RAPL metrics use a measurement instead of a model.
+The plots for the correlation of individual RAPL metrics are included in~\appref{validating_rapl_accuracy}.
 All measurment points are inside the \SI{1}{\percent} tolerance of the PDU~\cite{Raritan_PX2_5528}.
 
 \section{RAPL Filters}

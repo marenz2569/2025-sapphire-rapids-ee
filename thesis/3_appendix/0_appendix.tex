@@ -6,6 +6,23 @@
 % \label{sec:appendix2}
 % \blindtext[3]
 
+\chapter{Appendix Validating RAPL Accuracy}
+\label{app:validating_rapl_accuracy}
+This section includes the plots for the correlation of the external reference measurent against individual RAPL metrics as described in ~\secref{validating_rapl_accuracy}.
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/rapl-accuracy/rapl-accuracy-package.pdf}
+    \caption{The roco2 microbenchmark is executed on a varying number of cores with different frequencies.
+    The RAPL package measurement is mapped with a quadratic fit to the external reference measurement for compute kernels which do no access the DRAM.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{fig/rapl-accuracy/rapl-accuracy-dram.pdf}
+    \caption{The roco2 microbenchmark is executed on a varying number of cores with different frequencies.}
+\end{figure}
+
 \chapter{Appendix AVX Frequency Anomalies}
 \label{app:avx-frequencies}
 This section includes the metrics collected for the measurement matrix in~\secref{avx-frequencies}.
