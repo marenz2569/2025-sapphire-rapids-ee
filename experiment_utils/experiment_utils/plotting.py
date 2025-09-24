@@ -92,13 +92,15 @@ class Plotting:
                         f'Data created on {experiment.host} with git revision {experiment.get_gitrev().strip()} at {experiment.time}',
                         fontsize=6,
                         va="top",
-                        ha="left")
+                        ha="left",
+                        color='gray')
 
         plt.figtext(annotations_x_offset,
                     annotations_y_offset - num_experiments * annotations_y_spacing,
                     f'Plot created with git revision {Plotting.get_gitrev()}',
                     fontsize=6,
                     va="top",
-                    ha="left")
+                    ha="left",
+                    color='gray')
 
         plt.savefig(save_dir / file_name, bbox_inches='tight')
