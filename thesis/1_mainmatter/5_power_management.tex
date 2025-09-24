@@ -161,9 +161,9 @@ Hyperthreading is disabled and the CPUs used for the measurement are isolated fr
 Each kernel is executed for \SI{20}{\s} discarding the first \SI{10}{\s} and last \SI{2}{\s}.
 I expect the same performance and power draw across all runs.
 However, two different levels of power draw with the kernels running at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
-This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{65}{\percent} and \SI{2.5}{\GHz} for \SI{35}{\percent} of the samples.
+This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{62}{} and \SI{2.5}{\GHz} for \SI{38}{} out of the \SI{100}{} samples.
 No major deviation of performance across the samples is observable, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
-\figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of more than \SI{25}{\percent} for the samples with the higher uncore frequency.
+\figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of around \SI{25}{\percent} for the samples with the higher uncore frequency.
 The SSE frequency class also shows a reduction in energy efficiency for some samples.
 I could however, not find a specific effect causing this change using the measured metrics.
 
