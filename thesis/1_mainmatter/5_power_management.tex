@@ -6,7 +6,7 @@ Each core has its own on-die voltage regulator and therefore its own frequency d
 \secref{avx-frequencies} describes the improved turbo frequency model that classifies instructions based on the power consumption.
 The relation to the power allocation mechanism ``Intel Speed Select Core-Power'' is shown.
 ``Intel Speed Select'' is described in more detail in \secref{isst}.
-\secref{avx-anomalies} shows two anomalies of core and uncore frequencies selection.
+In~\secref{avx-anomalies-uncore-freqency}, I describe an anomaly in the uncore frequency selection causing suboptimal energy efficiency.
 I describe the changes of frequency scaling for the core and uncore in~\secref{pstate_latencies} and \secref{uncore_frequency_scaling} respectively.
 The wakeup latencies from idle states are presented in~\secref{idle_state_latencies} while I refer to Kuns et al.~\cite{Kuns_2025_UserSpaceIdle} for user space idle states.
 
@@ -121,42 +121,11 @@ This also highlights that frequency class dependent opportunistic core frequenci
     In the first bucket the SSE and AVX2 frequency class share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
 \end{figure}
 
-\section{AVX Frequency Anomalies}
-\label{sec:avx-anomalies}
-
-To further test the effects of AVX frequency thottling mechanisms on the processor, I ran the same four FIRESTARTER workloads as described in~\secref{avx-frequencies} without the use of ``Intel Speed Select Core-Power''.
-In~\secref{avx-anomalies-low-freq}, I discovered throttling of the core frequency at its lowest frequency (\SI{800}{\MHz}) when running with the AMX or AVX512 frequency class.
-In~\secref{avx-anomalies-uncore-freqency}, I describe an anomaly in the uncore frequency selection causing suboptimal energy efficiency for the AMX frequency class.
-
-\subsection{Throttling at Low Frequencies}
-\label{sec:avx-anomalies-low-freq}
-
-Each FIRESTARTER kernel is executed for \SI{60}{\s} discarding the first and last \SI{5}{\s}.
-I measure the uncore frequency by polling the associated model specific register\footnote{UNCORE\_RATIO\_LIMIT} every \SI{10}{\ms} on CPU 0\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
-The measurement is repeated on the cross product of following settings:
-\begin{itemize}
-    \item Core frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2000}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{3800}{\MHz}.
-    \item Uncore frequency set to \SI{800}{\MHz}, \SI{1600}{\MHz}, \SI{2500}{\MHz} and the default frequency range of \SI{800}{\MHz}--\SI{2500}{\MHz}.
-\end{itemize}
-
-Since the selected FIRESTARTER kernels do not produce peak power draw, I expect that the core frequency is not throttled below the nominal frequency of \SI{2}{\GHz}.
-This is the case, expect for the AVX512 and AMX frequency classes at \SI{800}{\MHz} core frequency, which are throttled to just above \SI{550}{\MHz}.
-This effect is shown in~\figref{avx-anomalies-low-freq}.
-The severity of the effect depends on the selected uncore frequency and is worsend with a higher frequencies.
-There is no obvious explaination of this behaviour.
-\appref{avx-frequencies} contains the plots for the complete measurement matrix.
-
-\begin{figure}[]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands-without-isst-core-frequency-800.pdf}
-    \caption{\label{fig:avx-anomalies-low-freq}Average core frequency across the cores running the workload with the core frequency set to \SI{800}{\MHz}. For the AMX and AVX512 frequency classes core frequency throttling below \SI{800}{\MHz} occurs.}
-\end{figure}
-
-\subsection{Uncore Frequency Selection}
+\section{Uncore Frequency Selection}
 \label{sec:avx-anomalies-uncore-freqency}
 
 I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on CPU 0--7.
-CPU 8 runs the uncore frequency measurement.
+CPU 8 runs the uncore frequency measurement by polling the associated model specific register\footnote{UNCORE\_RATIO\_LIMIT} every \SI{10}{\ms}\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
 Hyperthreading is disabled and the CPUs used for the measurement are isolated from OS noise with a kernel parameter\footnote{isolcpus=0-8 nohz\_full=0-8}.
 Each kernel is executed for \SI{20}{\s} discarding the first \SI{10}{\s} and last \SI{2}{\s}.
 I expect the same performance and power draw across all runs.
