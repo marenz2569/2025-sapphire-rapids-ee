@@ -44,7 +44,10 @@
           seaborn
         ]);
       in rec {
-        packages.default = pythonEnv;
+        packages = {
+          default = pythonEnv;
+          cpuid = pkgs.cpuid;
+        };
         apps = {
           elab = {
             program = "${pythonEnv}/bin/elab";
