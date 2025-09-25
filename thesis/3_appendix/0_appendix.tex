@@ -6,7 +6,7 @@
 % \label{sec:appendix2}
 % \blindtext[3]
 
-\chapter{Appendix Core to Core Communication Latencies Measurement}
+\chapter{Appendix Core to Core Communication Latencies Measurements}
 \label{app:core_to_core_latencies_complete}
 This section includes all scatter plots for all measurements conducted with the core to core communication latency benchmark as described in~\secref{l3_cache_slicing}.
 
@@ -136,7 +136,7 @@ This section includes all scatter plots for all measurements conducted with the 
     \caption{Difference in core to core communication latency for hati's socket 0 with \SI{3.8}{\GHz} core and \SI{2.5}{\GHz} uncore frequency.}
 \end{figure}
 
-\chapter{Appendix Core to Core Communication Latencies Model}
+\chapter{Appendix Core to Core Communication Latencies Models}
 \label{app:core_to_core_latencies_model}
 This section includes the plots for model of the core to core communication latencies as described in~\secref{l3_cache_slicing}.
 
@@ -161,7 +161,7 @@ This section includes the plots for model of the core to core communication late
 
 \chapter{Appendix Validating RAPL Accuracy}
 \label{app:validating_rapl_accuracy}
-This section includes the plots for the correlation of the external reference measurent against individual RAPL metrics as described in ~\secref{validating_rapl_accuracy}.
+This section includes the plots for the correlation of the external reference measurent against individual RAPL metrics as described in~\secref{validating_rapl_accuracy}.
 
 \begin{figure}[]
     \centering
@@ -175,6 +175,570 @@ This section includes the plots for the correlation of the external reference me
     \includegraphics[width=0.8\columnwidth]{fig/rapl-accuracy/rapl-accuracy-dram.pdf}
     \caption{The roco2 microbenchmark is executed on a varying number of cores with different frequencies.}
 \end{figure}
+
+\chapter{Appendix RAPL Filters}
+\label{app:rapl_filters}
+This section includes the plots of the RAPL filter measurement for all core frequencies as described in~\secref{rapl_filters}.
+
+\clearpage
+
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_800000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{0.8}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_800000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{0.8}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_900000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{0.9}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_900000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{0.9}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1000000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.0}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1000000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.0}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1100000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.1}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1100000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.1}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1200000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.2}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1200000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.2}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1300000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.3}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1300000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.3}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1400000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.4}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1400000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.4}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1500000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.5}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1500000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.5}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1600000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.6}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1600000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.6}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1700000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.7}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1700000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.7}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1800000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.8}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1800000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.8}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_1900000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{1.9}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_1900000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{1.9}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2000000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.0}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2000000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.0}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2100000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.1}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2100000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.1}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2200000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.2}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2200000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.2}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2300000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.3}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2300000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.3}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2400000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.4}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2400000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.4}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2500000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.5}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2500000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.5}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2600000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.6}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2600000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.6}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2700000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.7}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2700000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.7}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2800000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.8}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2800000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.8}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_2900000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{2.9}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_2900000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{2.9}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3000000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.0}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3000000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.0}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3100000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.1}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3100000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.1}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3200000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.2}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3200000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.2}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3300000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.3}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3300000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.3}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3400000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.4}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3400000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.4}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3500000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.5}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3500000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.5}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3600000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.6}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3600000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.6}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3700000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.7}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3700000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.7}{\GHz}.}
+\end{figure}
+
+\clearpage
+\begin{figure}[]
+    \centering
+    % width could be 1, 0.9, 0.8 instead
+    \includegraphics[width=\columnwidth]{fig/rapl-update-intervals/MSR_PACKAGE_ENERGY_TIME_STATUS_3800000.pdf}
+    \caption{Kernel density estimation of the time of measurement vs read energy value of the RAPL package counter of the first socket during for two constant power draw scenarios with and without filters enabled.
+    The left plot uses the \textbf{rdtsc} function to get a timestamp for the RAPL measurement, the right uses the newly integrated timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} MSR.
+    The core frequency is set to \SI{3.8}{\GHz}.}
+\end{figure}
+
+\begin{figure}[]
+    \centering
+    % width cloud be 0.54, 0.49, 0.44 instead
+    \includegraphics[width=0.54\columnwidth]{fig/rapl-update-intervals/MSR_RAM_ENERGY_3800000.pdf}
+    \caption{Kernel density estimation of the time of measurement via timestamp counter and the read energy value of the RAPL dram counter of the first socket during a constant power draw scenario.
+    The core frequency is set to \SI{3.8}{\GHz}.}
+\end{figure}
+
 
 \chapter{Appendix P-State Latencies}
 \label{app:pstate_latencies_scatter_complete}

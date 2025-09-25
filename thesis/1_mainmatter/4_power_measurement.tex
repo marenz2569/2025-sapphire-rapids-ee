@@ -23,9 +23,9 @@ They are documented in the forked GitHub repository~\footnote{\url{https://githu
 
 Each of the displayed workload in~\figref{validate-rapl} were run for \SI{60}{\second} on the cross product of following settings:
 \begin{itemize}
-    \item Core frequency set to \SI{800}{\MHz}, \SI{1400}{\MHz}, \SI{2000}{\MHz} and \SI{3800}{\MHz} (turbo).
+    \item Core frequency set to \SI{800}{\MHz}, \SI{1400}{\MHz}, \SI{2000}{\MHz} and \SI{3800}{\MHz} (turbo)
     \item Four settings which represent the execution of the workload on an increasing number of quadrants on the first socket.
-    The number of cores used are: \SI{14}{}, \SI{28}{}, \SI{42}{} and \SI{56}{}.
+    The number of cores used are: \SI{14}{}, \SI{28}{}, \SI{42}{} and \SI{56}{}
 \end{itemize}
 The test matrix further included a full idle for each C-state setting (POLL, C1, C1E, C6).
 Hyperthreading is disabled and the governor set to \texttt{performance}.
@@ -34,10 +34,11 @@ This polls the RAPL metrics every \SI{10}{\ms} and discovered the first and last
 The external reference measurent of the PDU is exposed via the metricq~\cite{Ilsche_2019_MetricQ} interface of FIRESTARTER~\footnote{\url{https://github.com/marenz2569/firestarter-metric-metricq}} and reports \SI{1}{Sa\per\second}.
 The average power draw of the PDU and the RAPL counters are plotted in~\figref{validate-rapl}.
 A strong correlation via quadratic fit can be observed, indicating that RAPL metrics use a measurement instead of a model.
-The plots for the correlation of individual RAPL metrics are included in~\appref{validating_rapl_accuracy}.
 All measurment points are inside the \SI{1}{\percent} tolerance of the PDU~\cite{Raritan_PX2_5528}.
+The plots for the correlation of individual RAPL metrics are included in~\appref{validating_rapl_accuracy}.
 
 \section{RAPL Filters}
+\label{sec:rapl_filters}
 
 Energy measurement with high accuracy can be used to measure the energy difference between different executed instructions and their data.
 This has been demonstrated in great detail~\cite{Lucas_2016_AluPower,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
@@ -51,12 +52,12 @@ All possible RAPL counters are polled repeatidly for \SI{10}{\s} on CPU 0 via th
 CPU 1 runs FIRESTARTER to generate a constant power consumption on the processor.
 The measurement is reapeated across the cross product of following settings:
 \begin{itemize}
-    \item All available core frequencies.
-    \item With and without RAPL filters enabled.
+    \item All available core frequencies
+    \item With and without RAPL filters enabled
     \item Both with all cstates and only POLL enabled.
-    This causes two levels of power draw at the same frequency.
+    This causes two levels of power draw at the same frequency
 \end{itemize}
-Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and\\ \textbf{MSR\_RAM\_ENERGY} contain valid values.
+Only the counters \textbf{MSR\_PCKG\_ENERGY}, \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and\\ \textbf{MSR\_RAM\_ENERGY} contain valid values\footnote{\textbf{MSR\_PP0\_ENERGY}, \textbf{MSR\_PP1\_ENERGY} and \textbf{MSR\_PLATFORM\_ENERGY\_STATUS} do not contain values.}.
 
 I plot the package and DRAM counters for the nominal core frequency of \SI{2}{\GHz}.
 \figref{rapl-update-intervals-package} shows the difference between the newly added timestamp in the model specific register\\ \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} and rdtsc as the source of the timestamp.
@@ -68,6 +69,7 @@ Under the constant load scenario the timestamp of the RAPL register and the accu
 Accurate timestamps seem to be deactived when the RAPL filter is enabled.
 DRAM counters, displayed in \figref{rapl-update-intervals-dram} show an update interval of around \SI{1.6}{\ms}, this does not change with RAPL filters enabled.
 DRAM counters are not as accurate as the package counters, but also do not show such a big spread when using rdtsc as the timestamp source.
+\appref{rapl_filters} contains the plots for all different core frequencies.
 
 Data center and HPC administrators require accuracte energy accounting of larger code paths or accross multiple executions, software developers require it for fast runtime optimization of energy efficiency.
 An increased accuracy of this measurement is possible with the use of the internal timestamp in the \textbf{MSR\_PACKAGE\_ENERGY\_TIME\_STATUS} register.
