@@ -125,7 +125,7 @@ This also highlights that frequency class dependent opportunistic core frequenci
 \label{sec:avx-anomalies-uncore-freqency}
 
 I ran the four described FIRESTARTER kernels \SI{100}{} times with ``Intel Speed Select'' disabled on CPU 0--7.
-CPU 8 runs the uncore frequency measurement by polling the associated model specific register\footnote{UNCORE\_RATIO\_LIMIT} every \SI{10}{\ms}\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
+CPU 8 runs the uncore frequency measurement by polling the associated sysfs entries\footnote{/sys/devices/system/cpu/intel\_uncore\_frequency} every \SI{10}{\ms}\footnote{\url{https://github.com/marenz2569/intel-uncore-freq-dumper}}.
 Hyperthreading is disabled and the CPUs used for the measurement are isolated from OS noise with a kernel parameter\footnote{isolcpus=0-8 nohz\_full=0-8}.
 Each kernel is executed for \SI{20}{\s} discarding the first \SI{10}{\s} and last \SI{2}{\s}.
 I expect the same performance and power draw across all runs.
