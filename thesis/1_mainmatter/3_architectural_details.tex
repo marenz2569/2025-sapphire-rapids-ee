@@ -134,7 +134,9 @@ This is repeated for all register types; general purpose (\SI{64}{\bit}), xmm, y
 \figref{robsize-registers} shows the measurement of each of the different filler kernels.
 I removed zmm registers with \textbf{mov} and \textbf{cmp} filler instructions from the plot as I could not measure latency differences.
 Mov elimination, zero ideoms and ones ideoms will cause the jump in measurement latency to appear only after a bigger number of filler instructions than the actual size of speculative register files.
-Therefore, I use the minimum number of filler instructions that jump as the number of measured speculative registers.
+Since I cannot measure the register files isolated from the rest of the backend, multiple jumps in latency can be observed for some measurements due to resource limits from different components, i.e. the scheduler.
+AVX frequency changes may also influence the measured latencies, as I am running the measurement without setting the core and uncore to a fixed frequency.
+Therefore, I use the minimum number of filler instructions that cause a jump as the number of measured speculative registers.
 Adding the 32 architectural registers available in the x86-64 ISA, gives a lower bound on the number of physical registers.
 For Skylake I measured around 148 integer and 132 floating point speculative registers, with 32 registers from the ISA, this leaves no integer and 4 floating point register unaccounted for~\cite{Intel_2017_Skylake_SP}.
 This validates that the measurement can get a close estimate of the number of physical registers.
