@@ -1,15 +1,18 @@
 \chapter{Introduction}
 \label{sec:introduction}
 
-\begin{itemize}
-    \item Highlight the importance of energy efficiency
-    \item Show the two aspect of EE performance divided by power.
-    \item performance is compared in memory hierarchy and core microarchitecture section
-    \item energy efficiency is shown in power management section.
-\end{itemize}
+While computational throughput is an important metric in the evaluation of processors, many applications do not reach peak throughput and are limited by power, memory througput or latency.
+With the increased growth of compute intensive workloads, even small energy efficiency improvements can significantly reduce operational costs of HPC clusters.
+These improvements can however increase the total runtime of workloads and latencies that occur in critical regions.
 
-EE vs latency
-EE vs power
+Many mechanism that influence energy efficiency are highly configurable, but also significantly influce power usage, throughput and latency.
+P-states allow setting specific frequency ranges that are used by internal control loops to set a frequency that is optimal for a executed workload.
+C-states aid to increase energy effiency during idle periods and can be invoked by the kernel and user-space applications.
+Turbo frequencies improve the performance of the processors execution while it is not power limited.
+Power limiting ensure that the processor stays inside specified thermal and electrical limits.
+Power, frequency and memory allocation mechanism allow to efficiently run inbalanced or multiple workloads on the same processor.
+This thesis looks at the continued improvements of the Intel Sapphire Rapids processor generation.
+Rather then looking at application specific energy efficiency improvements, I provide insight in the complex interactions between hardware control mechanisms and the operation system that help to optimize energy efficiency.
 
 In~\secref{background}, I discuss exsisting mechanisms to optimize energy efficiency and the evaluation thereof.
 \secref{arch} describes the architecture of the Sapphire Rapids processor, introduces the test system and shows benchmarks of the core and uncore microarchitecture.
