@@ -317,8 +317,8 @@ Outliers are marked in the plot.
 The exit latency shows little difference with different core frequencies.
 They are more than double of what Schöne et al.~\cite{Schoene_2019_SKL} measured for Skylake.
 All latencies on the local socket and the active remote socket are below the limit of \SI{190}{\us} as advertised by Intel for Sapphire Rapids.
-When the remote socket is idle the wakeup latency is increased by a constant of around \SI{25}{\us}
-It is far below the limit of \SI{290}{\us} for PC6, as PC2 is used to allow memory accesses to cross the UPI link~\cite{Intel_PowerManagementTechnologyReviewIceLake}~\cite[p.~48]{EnergyEfficientServers_2015}.
+When the remote socket is idle the wakeup latency is increased by a constant of around \SI{25}{\us}.
+This is far below the limit of \SI{290}{\us} for PC6, as PC2 is used to allow memory accesses to cross the UPI link~\cite{Intel_PowerManagementTechnologyReviewIceLake}~\cite[p.~48]{EnergyEfficientServers_2015}.
 Measuring the PC6 wakeup latency would require an external interrupt source, e.g. a network card with its own accurate timestamps, as proposed by Govtva~\cite{Govtva_2019}.
 
 \begin{figure}[!ht]
