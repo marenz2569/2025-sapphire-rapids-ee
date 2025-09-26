@@ -180,18 +180,19 @@ The changes of key structures between the Skylake and Golden Cove core architect
 		\rowcolor[HTML]{EFEFEF}Register Files Floating Point & 168~\cite{Intel_2017_Skylake_SP} & 220 (512b), 320 (256b)~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & $\geq 220$ (512b), $\geq 314$ (256b) \\
 		\rowcolor[HTML]{EFEFEF} & & & measured in~\figref{robsize-registers} \\
 		Allocation Queue [\SI{}{\micro OPs\per cycle}]& 64/thread~\cite{Intel_2017_Skylake_SP} & 72/thread, 144 without SMT~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press,Intel_Optimization_Reference_Manual_050} & \\
-		\rowcolor[HTML]{EFEFEF}μOP Cache [\SI{}{\micro OPs\per core}] & \SI{1536}{}~\cite{Wikichip_SkylakeSP} & \SI{4096}{}~\cite{Intel_2021_Architecture_Day} & ? \\
+		\rowcolor[HTML]{EFEFEF}μOP Cache [\SI{}{\micro OPs\per core}] & \SI{1536}{}~\cite{Wikichip_SkylakeSP} & \SI{4096}{}~\cite{Intel_2021_Architecture_Day} & ? measurement proposed in~\cite{Schoene_2021_FIRESTARTER2} \\
 		Number of decoder & \SI{4}{}~\cite{Wikichip_SkylakeSP} & \SI{6}{}~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
 		\rowcolor[HTML]{EFEFEF}L1i Cache Bandwidth [\SI{}{\byte\per cycle}] & \SI{16}{}~\cite{Wikichip_SkylakeSP} & \SI{32}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
-		L1i TLB & 4K: 128 & 4K: 256 & \\
+		L1i TLB & 4K: 64 & 4K: 256 & \checkmark verified via \textbf{cpuid} \\
 		  & 2M+4M: 8~\cite{Wikichip_SkylakeSP} & 2M+4M: 32~\cite{Intel_2021_Architecture_Day,Intel_Optimization_Reference_Manual_050} & \\
 		\rowcolor[HTML]{EFEFEF}L1d Load Bandwidth [\SI{}{\byte\per cycle}] & 2x\SI{64}{}~\cite{Intel_2017_Skylake_SP} & 3x\SI{32}{} or 2x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
 		L1d Store Bandwidth [\SI{}{\byte\per cycle}] & 1x\SI{64}{}~\cite{Intel_2017_Skylake_SP} & 2x\SI{32}{} or 1x\SI{64}{}~\cite{Intel_Optimization_Reference_Manual_050} & \\
-		\rowcolor[HTML]{EFEFEF}L1d TLB & 4K: 64 & 4K: 96~\cite{Intel_2021_Architecture_Day} & ?  \\
-		\rowcolor[HTML]{EFEFEF}  & 2M+4M: 32 &  & \\
-		\rowcolor[HTML]{EFEFEF}  & 1G: 4~\cite{Wikichip_SkylakeSP} & & \\
+		\rowcolor[HTML]{EFEFEF}L1d TLB & 4K: 64                          & all page sizes: 8 (store only) & \checkmark verified via \textbf{cpuid} \\
+		\rowcolor[HTML]{EFEFEF}        & 2M+4M: 32                       & 4K: 64 (load only)  & \\
+		\rowcolor[HTML]{EFEFEF}        & 1G: 4~\cite{Wikichip_SkylakeSP} & 2M+4M: 32 (load only)  & \\
+		\rowcolor[HTML]{EFEFEF}        &                                 & 1G: 8 (load only) & \\
 		L1d Line Fill Buffer & \SI{10}{entries}~\cite{Wikichip_SkylakeSP} & \SI{16}{entries}~\cite{Intel_2021_Architecture_Day} & ? \\
-		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2/4M: 1536 & 4K: 2048 & ? \\
+		\rowcolor[HTML]{EFEFEF}L2 Unified TLB & 4K+2/4M: 1536 & 4K: 2048 & \checkmark verified via \textbf{cpuid} \\
 		\rowcolor[HTML]{EFEFEF}  & 1G: 16~\cite{Intel_2017_Skylake_SP} & 2+4M and 1G: 1024 each shared with 4K~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \\
 		\bottomrule
 		%\vspace{6mm}
