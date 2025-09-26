@@ -294,12 +294,11 @@ It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\
 \section{Idle State Latencies}
 \label{sec:idle_state_latencies}
 
-Idle state allow a processor to lower its power consumption by switching off different components and flushing caches on a per core or package basis.
+Idle state, commonly refered to as C-states, allow a processor to lower its power consumption by switching off different components and flushing caches on a per core or package basis.
 Sapphire Rapids cores support the C0 (POLL), C1, C1E and C6 idle states.
 They each have a lower power consumption but also a higher exit latency.
-If all cores on a package are in C6 and therefore their L1/L2 cache is flushed, the complete package can go into a package idle states.
-Sapphire Rapids support PC2 and PC6, though the later is disabled.
-\todoms{check by reading MSR\_PKG\_CST\_CONFIG\_CONTROL}
+If all cores on a package are in C6 and therefore their L1/L2 cache is flushed, the complete package can go into a package idle states (PC).
+Sapphire Rapids supports PC2 and PC6.
 
 Ilsche et al.~\cite{Ilsche_2018_cstate} presented a methodology to measure the exit latency of core returning from idle states.
 A caller sends a pthread\_cond\_signal to a callee waiting for the signal using pthread\_cond\_wait.
