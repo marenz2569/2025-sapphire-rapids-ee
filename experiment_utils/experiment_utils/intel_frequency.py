@@ -14,18 +14,33 @@ class IntelFrequency:
     """
 
     @staticmethod
-    def set_core_frequency(frequency_khz: int):
+    def set_min_core_frequency(frequency_khz: int):
         """
-        Set a specific core frequency for all cores on intel processors.
-        @arg frequency_khz The frequency of the processor in kHz.
+        Set a specific minimal core frequency for all cores on intel processors.
+        @arg frequency_khz The minimal frequency of the processor in kHz.
         """
         scaling_min_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_min_freq')
         for file in scaling_min_freq_files:
             subprocess.run(['sudo', 'tee', file], input=f'{frequency_khz}', capture_output=True, text=True, check=False)
 
-        scaling_max_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq')
-        for file in scaling_max_freq_files:
+    @staticmethod
+    def set_max_core_frequency(frequency_khz: int):
+        """
+        Set a specific maximal core frequency for all cores on intel processors.
+        @arg frequency_khz The maximal frequency of the processor in kHz.
+        """
+        scaling_min_freq_files = glob.glob('/sys/bus/cpu/devices/cpu*/cpufreq/scaling_max_freq')
+        for file in scaling_min_freq_files:
             subprocess.run(['sudo', 'tee', file], input=f'{frequency_khz}', capture_output=True, text=True, check=False)
+
+    @staticmethod
+    def set_core_frequency(frequency_khz: int):
+        """
+        Set a specific core frequency for all cores on intel processors.
+        @arg frequency_khz The frequency of the processor in kHz.
+        """
+        IntelFrequency.set_min_core_frequency(frequency_khz=frequency_khz)
+        IntelFrequency.set_max_core_frequency(frequency_khz=frequency_khz)
 
     @staticmethod
     def set_uncore_frequency(frequency_in_100mhz: int):

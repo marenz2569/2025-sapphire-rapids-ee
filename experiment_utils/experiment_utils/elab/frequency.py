@@ -19,5 +19,8 @@ def frequency(frequency_arg: str):
         frequency_khz = int(frequency_arg) * 1000
         IntelFrequency.set_core_frequency(frequency_khz=frequency_khz)
     except ValueError as exc:
-        if frequency_arg != "performance":
+        if frequency_arg == "performance":
+            IntelFrequency.set_min_core_frequency(frequency_khz=800000)
+            IntelFrequency.set_max_core_frequency(frequency_khz=3800000)
+        else:
             raise RuntimeError(f"Our experiments are running with the performance governor per default. We do not support settings the specific governor {frequency_arg}.") from exc
