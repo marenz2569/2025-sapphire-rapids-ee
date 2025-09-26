@@ -1,4 +1,4 @@
-# Code support package for "An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features"
+# Code support package for "An Analysis of Energy Efficiency Features in Intel Sapphire Rapids Processors"
 
 This repository contains all files that are required to build the paper.
 It is structed into the following folders:
