@@ -1,19 +1,26 @@
 \chapter{Conclusion and Future Work}
 \label{sec:summary}
 
-\begin{itemize}
-    \item The claim of a specific IPC improvement can currently not be verified for specific small kernels.
-    The data of Kobalicek~\cite{Kobalicek_AsmGrid} can be used to create a model of IPC improvement of specific instructions.
-    More architectures can be added using Cult~\cite{Kobalicek_Cult} and the Asmjit Instruction Database~\cite{Kobalicek_InstructionDB}.
-    This is also possible with the likwid bench toolkit~\cite{RHZE_HPC_likwid} for bigger compute kernels or with the data published by SPEC~\cite{spec} for bigger kernels and applications.
-    \item Verify the use of the load buffer for the AMX tile register (especially using non-temporal loads)
-    \item ftalat measures time until frequency change
-    \item uncore-frequency-switching-latency measures how long IO is blocked
-    \item both measurement should be combined for both core and uncore latency classification
-\end{itemize}
+To improve the energy efficiency of different applications, the Intel Sapphire Rapids processor supports a variety of different control mechanism.
+The key differences to Skylake include an increased accuracy of package wide power measurements.
+Higher turbo frequencies for more workloads by splitting then up into four levels.
+Suboptimal energy efficiency by non deterministic uncore frequency selections for some workloads.
+The option to allocate power and frequency budgets with Intel Speed Select, enabling running multiple or inbalanced applications under power and frequency constrained environments.
+A new core frequency transitioning mechanism that shows increased latencies when switching to high core frequencies.
+A significantly improved IO blocking time for changing uncore frequencies.
+And higher idle state wakeup latencies.
+
+Key structures associated with out-of-order execution increased significantly.
+They were measured using multiple microbenchmarks.
+I provide a model to optimize core to core communication latencies by not only specifying core and memory pinnings, but also looking at the distribution of shared cache lines in the processor.
+
+Future work includes the impact of non-temporal loads on the core load buffer and a detailed analysis of the frequency switching mechanism.
+Current bechmarks on frequency changes only look at the block time or the time until a changes is finished.
+A detailed look at the frequency during transition has yet to be performed.
 
 % Acknowledgments always without numbering
-\chapter*{Acknowledgments and Reproducibility}
+\chapter*{Reproducibility}
 Measurement configurations, software and Jupyter notebooks for plotting are available at \url{https://github.com/marenz2569/2025-sappire-rapids-ee}.
-
+To facilitate interpretiblity and reproducibility figures in this thesis contain the git-tags which were used to create the measurement data and the plots.
+It is a first step toward tracking measurement data across different processor generations.
 All measurement data is distributed through OPARA, DOI: \url{https://doi.org/10.25532/OPARA-935}.
