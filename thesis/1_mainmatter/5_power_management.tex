@@ -1,7 +1,7 @@
 \chapter{Power Management}
 \label{sec:power_management}
 
-Like its predecessors the Sapphire Rapids processor supports a variaty of different power management mechanisms.
+Like its predecessors, the Sapphire Rapids processor supports a variety of different power management mechanisms.
 Each core has its own on-die voltage regulator and therefore its own frequency domain as shown in~\secref{shared_freq_domains}.
 \secref{avx-frequencies} describes the improved turbo frequency model that classifies instructions based on the power consumption.
 The relation to the power allocation mechanism ``Intel Speed Select Core-Power'' is shown.
@@ -28,8 +28,8 @@ This is consistent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
 This allows power hungy instructions using vector registers to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
 The concept is extended with a new class for AVX512 instructions for the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
-With the introduction of Ice Lake these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
-With the addition of the AMX instruction set, Intel split up these classes further ranging from ``Ultra-Light'' to ``Heavy''.
+With the introduction of Ice Lake, these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
+With the addition of the AMX instruction set, Intel split up these classes further, ranging from ``Ultra-Light'' to ``Heavy''.
 Instructions are mapped to four classes based on their instruction set and power draw.
 Opportunistic AVX turbo frequencies are determined based on the classes and number of active cores.
 The mapping from instruction set and power usage to frequency classes are displayed in~\tabref{avx-classes} based on a slide from Intel published by ServerTheHome~\cite{ServeTheHome_Emerald_Rapids_2023}.
@@ -132,7 +132,7 @@ I expect the same performance and power draw across all runs.
 However, two different levels of power draw with the kernels running at the AMX frequency level are visible in~\figref{avx-frequency-uncore-anomaly-package-power-ecdf}.
 This is caused by the uncore frequency selecting either \SI{1.4}{\GHz} for \SI{62}{} and \SI{2.5}{\GHz} for \SI{38}{} out of the \SI{100}{} samples.
 No major deviation of performance across the samples is observable, compare with~\figref{avx-frequency-uncore-anomaly-mean-perf}.
-\figref{avx-frequency-uncore-anomaly-max-ee} show the resulting suboptimal energy efficiency reduction of around \SI{25}{\percent} for the samples with the higher uncore frequency.
+\figref{avx-frequency-uncore-anomaly-max-ee} shows the resulting suboptimal energy efficiency reduction of around \SI{25}{\percent} for the samples with the higher uncore frequency.
 The SSE frequency class also shows a reduction in energy efficiency for some samples.
 I could however, not find a specific effect causing this change using the measured metrics.
 
@@ -146,7 +146,7 @@ I could however, not find a specific effect causing this change using the measur
         \label{fig:avx-frequency-uncore-anomaly-uncore-freq-ecdf}%
     }\\
     \subfloat[Cumulative distribution of the performance deviation relative to the mean perfomance.
-    The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the number of executed instruction per cycle.]{%
+    The perfomance is modeled as the number of executed instructions per second by multiplying the freqency times the number of executed instructions per cycle.]{%
         \includegraphics[width=.48\linewidth]{fig/avx-frequency-uncore-anomaly/performance-ecdf.pdf}%
         \label{fig:avx-frequency-uncore-anomaly-mean-perf}%
     }\hfill
@@ -156,14 +156,14 @@ I could however, not find a specific effect causing this change using the measur
         \label{fig:avx-frequency-uncore-anomaly-max-ee}%
     }
     \caption{Metrics of the uncore frequency anomaly measurement.
-    I show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different frequency class, as a cumulative distributions.
-    \figref{avx-frequency-uncore-anomaly-package-power-ecdf} shows the increase in package power for \SI{35}{\percent} of the samples.
-    This increase is caused by the increase in uncore frequency shown in~\figref{avx-frequency-uncore-anomaly-uncore-freq-ecdf}.}
+    I show metrics of \SI{100}{} runs of four FIRESTARTER kernels, each triggering a different frequency class, as cumulative distributions.
+    \figref{avx-frequency-uncore-anomaly-package-power-ecdf} shows the increase in package power for \SI{38}{\percent} of the samples.
+    This increase is caused by the increase in the uncore frequency shown in~\figref{avx-frequency-uncore-anomaly-uncore-freq-ecdf}.}
     \label{fig:avx-frequency-uncore-anomaly}
 \end{figure}
 
 
-\section{Intel speed select}
+\section{Intel Speed Select Technology}
 \label{sec:isst}
 With Ice Lake-SP~\cite{Intel_2020_IceLake_SP} Intel introducted Speed Select Technology (ISST) which offers four new power management mechanisms allowing to reconfigure the processor for different workloads.
 ISST Performance Profile allows to reconfigure a single SKU with different core count and frequency configurations, increasing the processors flexibility for different applications.
@@ -176,8 +176,8 @@ Under a power constrained scenario cores can be either throttled based on their 
 The control mechanism of Core Power is described by a patent~\cite[pages~87-111]{Intel_2021_HPM}.
 For the specifics of configuring Intel Speed Select I refer to the linux kernel documentation~\cite{Kernel_IntelSpeedSelect}.
 
-As described in~\secref{avx-frequencies} the available turbo frequency limits are not influced by the Core Power CLOS.
-To achieve high turbo frequencies for priority cores ISST Turbo Frequency has to be configured, otherwise low priority cores can negatively influence the maximal turbo frequencies even if the power budget is not exhausted.
+As described in~\secref{avx-frequencies}, the available turbo frequency limits are not influced by the Core Power CLOS.
+To achieve high turbo frequencies for priority cores ISST Turbo Frequency has to be configured, otherwise low priority cores can negatively influence the maximal turbo frequencies, even if the power budget is not exhausted.
 
 \section{P-State Latencies}
 \label{sec:pstate_latencies}
@@ -186,38 +186,38 @@ Core frequency changes can be used to optimize the energy consumption of a runni
 This requires the core voltage to be adjusted maintaining a save operating point.
 To measure the latencies of such changes of a core, I adapt ftalat, a benchmark developed by Mazouz et al.~\cite{Mazouz_2014_ftalat} with modifications by Hackenberg et al.~\cite{Hackenberg_2015_Haswell}.
 
-The ftalat bechmark measures the execution time of a compute loop with different processor frequencies.
+The ftalat bechmark\footnote{\url{https://github.com/marenz2569/ftalat}} measures the execution time of a compute loop with different processor frequencies.
 It works as follows:
 First, a frequency change from the source to the target frequency is requested using the sysfs interface.
-Second, the execution speed of a compute loop is measured repeatidly until it matches the speed that is expected for the requested frequency.
+Second, the execution speed of a compute loop is measured repeatedly until it matches the speed that is expected for the requested frequency.
 The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for a total \SI{4000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies of Alder Lake processors depend on the time since the last frequency transition, the transition from the target to the source frequency.
 I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher median latency of \SI{600}{\us} instead of \SI{500}{\us}.
-Above this interval a different behaviour when switching to a frequency above \SI{1.8}{\GHz} is visible.
+Above this interval a different behaviour is visible when switching to a frequency greater than \SI{1.8}{\GHz}.
 Median latencies are higher in this area and they are not equal across different frequency changes.
 To remove the measurement outliers, I chose to display the 95th percentile of transition latencies for all frequency changes in~\figref{pstate_latencies_95percentQuantile}.
-Worst case transtion latency are in the range of \SI{1100}{\us} and \SI{2000}{\us} depending on the specific frequency change.
+Worst case transtion latencies are in the range of \SI{1100}{\us} and \SI{2000}{\us}, depending on the specific frequency change.
 
-To investigate the specifics of the different transition latencies, I plot all the measured transition latency against the time between detection of last frequency change from source to target frequency.
+To investigate the specifics of the different transition latencies, I plot all the measured transition latencies against the time between detection of last frequency change from source to target frequency.
 \figref{pstate_latencies_time_dependance} show this for the frequency transitions from \SI{1.2}{\GHz} to \SI{1.8}{\GHz}, \SI{1.9}{\GHz}, ..., \SI{2.9}{\GHz}.
 \appref{pstate_latencies_scatter_complete} contains the plots for all measured frequency transitions.
-The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} do not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
+The frequency transition from \SI{1.2}{\GHz} to \SI{1.8}{\GHz} does not display any dependency between the latency and wait time between the transtion as expected from previous server processor generations.
 This is consistent with testing performed on a Skylake-SP system.
-For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above two regions are visible.
-The first region with a time between detection of last frequency change from source to target frequency up to around \SI{2000}{\us} does not show a time dependency on the transition latency.
+For frequency transitions from \SI{1.2}{\GHz} to \SI{1.9}{\GHz} and above, two regions are visible.
+The first region with a time between detection of the last frequency change from source to target frequency up to around \SI{2000}{\us} does not show a time dependency on the transition latency.
 After this time a repeating pattern with a period of \SI{1625}{\us} is visible.
-It intern contains samples which are not spread across the x-axis as previous, but are aligned with a period of \SI{200}{\us}.
+This pattern contains samples which are not spread across the x-axis, but are aligned with a period of \SI{200}{\us}.
 Interestingly, the number of samples which are above a transition latency of around \SI{900}{\us} transition latency decreases with an increased frequency change.
 Furthermore, most samples do not align on a specific transition latency but are spread across a region of \SI{200}{\us}.
 
 The mechanisms of changing core frequencies as described by Schöne et al. is not applicable~\cite{Schoene_2019_SKL} for the regions that emit this time dependent behaviour.
-The power management seems to have an additional mechanisms that requires a frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}.
+The power management seems to have an additional mechanism that requires frequency changes to above \SI{1.8}{\GHz} be finished at or before \SI{200}{\us}.
 If this is not possible that would result in another penalty of \SI{200}{\us}.
-This could be linked to a power management mechanism that has to increase the voltage for the specific core which could be bound to such period.
-Further work to explain the high latencies for some frequency changes is out of scop for this thesis.
-The ftalat benchmark does not measure the time how long the cores throttles or stops its execution for the frequency change.
+This could be linked to a power management mechanism that has to increase the voltage for the specific core which could be bound to such a period.
+Additional work to explain the high latencies for some frequency changes is out of scope for this thesis.
+The ftalat benchmark does not measure the time on how long the core throttles or stops its execution for the frequency change.
 Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
 
 \begin{figure}[]
@@ -250,16 +250,16 @@ Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction
 \section{Uncore Frequency Scaling}
 \label{sec:uncore_frequency_scaling}
 Schöne et al.~\cite{Schoene_2019_SKL} extended the methodology of ftalat to measure the time until a uncore frequency change is executed.
-A pointer chasing benchmark is executed on a array that does not fit in the L1 or L2 cache and therefore resides in the L3 cache.
+A pointer chasing benchmark is executed on an array that does not fit in the L1 or L2 cache and therefore resides in the L3 cache.
 It is allocated using transparent hugepages.
 First the uncore frequency is set to the source frequency using the \textbf{UNCORE\_RATIO\_LIMIT} model specific register.
 The pointer chaser executed for \SI{50000}{} plus a random number of up to \SI{800000}{} iterations.
 Then the frequency is switched to the target frequency.
 The pointer chaser is executed for another \SI{50000}{} times.
-If in this time any of the loads from the pointer chasing array blocks for more than \SI{1000}{} cycles (\SI{0.5}{\us} @ \SI{2}{\GHz}), the time until this event is saved.
+If in this time any of the loads from the pointer chasing array blocks for more than \SI{1000}{} cycles (\SI{0.5}{\us} @ \SI{2}{\GHz}), the time until this event occured is saved.
 I set the core frequency to nominal speed.
 The measurement is repeated \SI{1000}{} times for all uncore frequency pairs.
-The time until the frequency change is complete is not measured.
+The time until the frequency change is completed is not measured.
 This is a limitation of this benchmark compared to ftalat for core frequency transitions.
 
 The random time before executing the frequency change did not have an influence on the frequency change latency.
@@ -297,7 +297,7 @@ It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\
 Idle state, commonly refered to as C-states, allow a processor to lower its power consumption by switching off different components and flushing caches on a per core or package basis.
 Sapphire Rapids cores support the C0 (POLL), C1, C1E and C6 idle states.
 They each have a lower power consumption but also a higher exit latency.
-If all cores on a package are in C6 and therefore their L1/L2 cache is flushed, the complete package can go into a package idle states (PC).
+If all cores on a package are in C6 and therefore their L1/L2 cache is flushed, the complete package can go into package idle states (PC).
 Sapphire Rapids supports PC2 and PC6.
 
 Ilsche et al.~\cite{Ilsche_2018_cstate} presented a methodology to measure the exit latency of core returning from idle states.
@@ -305,19 +305,19 @@ A caller sends a pthread\_cond\_signal to a callee waiting for the signal using 
 The difference between the linux kernel events sched:sched\_waking on the caller and power:cpu\_idle on the callee is measured to determine the exit latency.
 This is repeated for \SI{1000}{} times.
 The caller is placed on CPU1 on the first socket.
-CPU3 runs a while-true loop to prevent the first socket from going into a package c-state.
+CPU3 runs a while-true loop to prevent the first socket from going into package C-state.
 I perform three different measurements.
 First the callee placed on the first socket on CPU2.
 Second the callee placed on the second socket on CPU57 and a while-true loop to prevent package cstate on CPU58.
 Third the callee placed on the second socket on CPU57 without an additional while-true loop.
-To remove OS noise from the measurement the used CPUs and the second package are isolated with a kernel parameter\footnote{isolcpus=1,2,3,56-111,168-223 nohz\_full=1,2,3,56-111,168-223}.
+To remove OS noise from the measurement, the used CPUs and the second package are isolated with a kernel parameter\footnote{isolcpus=1,2,3,56-111,168-223 nohz\_full=1,2,3,56-111,168-223}.
 
-\figref{c6_latencies} show a box plot of the exit latency from the C6 idle state.
+\figref{c6_latencies} shows a box plot of the exit latency from the C6 idle state.
 Outliers are marked in the plot.
-The exit latency shows little difference with different core frequencies.
+The exit latency shows little difference using different core frequencies.
 They are more than double of what Schöne et al.~\cite{Schoene_2019_SKL} measured for Skylake.
 All latencies on the local socket and the active remote socket are below the limit of \SI{190}{\us} as advertised by Intel for Sapphire Rapids.
-When the remote socket is idle the wakeup latency is increased by a constant of around \SI{25}{\us}.
+When the remote socket is idle, the wakeup latency is increased by a constant of around \SI{25}{\us}.
 This is far below the limit of \SI{290}{\us} for PC6, as PC2 is used to allow memory accesses to cross the UPI link~\cite{Intel_PowerManagementTechnologyReviewIceLake}~\cite[p.~48]{EnergyEfficientServers_2015}.
 Measuring the PC6 wakeup latency would require an external interrupt source, e.g. a network card with its own accurate timestamps, as proposed by Govtva~\cite{Govtva_2019}.
 
