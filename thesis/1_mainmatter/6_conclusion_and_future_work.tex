@@ -15,14 +15,15 @@ Furthermore, key structures associated with out-of-order execution increased sig
 They were measured using multiple microbenchmarks.
 I provide a model to optimize core to core communication latencies by not only specifying core and memory pinnings, but also looking at the distribution of shared cache lines within the processor.
 
-Future work should include the impact of non-temporal loads on the core load buffer and a detailed analysis of the frequency switching mechanism.
+Future work should include the impact of non-temporal AMX tile loads on the core load buffer and a detailed analysis of the frequency switching mechanism.
 Current benchmarks on frequency transitions only look at the block time or the time until a change is finished.
 A detailed look at the frequency during transition has yet to be performed.
 
 % Acknowledgments always without numbering
 \chapter*{Reproducibility}
 Measurement configurations, code and Jupyter notebooks for plotting are available at \url{https://github.com/marenz2569/2025-sappire-rapids-ee}.
+All measurement data is distributed through OPARA, DOI: \url{https://doi.org/10.25532/OPARA-935}.
+
 To facilitate interpretability and reproducibility figures in this thesis contain the git-tags which were used to create the measurement data and the plots.
 Each of the measurements folder further include the time of measurement, the parameters of the booted kernel and its loaded modules, the \textbf{hwloc} topology\footnote{\url{https://www.open-mpi.org/projects/hwloc/}} and \textbf{lshw}\footnote{\url{https://ezix.org/project/wiki/HardwareLiSter}} output.
 It is a first step towards tracking measurement data across different processor generations.
-All measurement data is distributed through OPARA, DOI: \url{https://doi.org/10.25532/OPARA-935}.
