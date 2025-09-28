@@ -1,26 +1,28 @@
 \chapter{Conclusion and Future Work}
 \label{sec:summary}
 
-To improve the energy efficiency of different applications, the Intel Sapphire Rapids processor supports a variety of different control mechanism.
-The key differences to Skylake include an increased accuracy of package wide power measurements.
+To improve the energy efficiency of different applications, the Intel Sapphire Rapids processor supports a variety of different control mechanisms.
+The key differences to Skylake include:
+An increased accuracy of package-wide power measurement.
 Higher turbo frequencies for more workloads by splitting then up into four levels.
 Suboptimal energy efficiency by non deterministic uncore frequency selections for some workloads.
 The option to allocate power and frequency budgets with Intel Speed Select, enabling running multiple or inbalanced applications under power and frequency constrained environments.
 A new core frequency transitioning mechanism that shows increased latencies when switching to high core frequencies.
 A significantly improved IO blocking time for changing uncore frequencies.
-And higher idle state wakeup latencies.
+Increased idle state wakeup latencies.
 
-Key structures associated with out-of-order execution increased significantly.
+Furthermore, key structures associated with out-of-order execution increased significantly.
 They were measured using multiple microbenchmarks.
-I provide a model to optimize core to core communication latencies by not only specifying core and memory pinnings, but also looking at the distribution of shared cache lines in the processor.
+I provide a model to optimize core to core communication latencies by not only specifying core and memory pinnings, but also looking at the distribution of shared cache lines within the processor.
 
-Future work includes the impact of non-temporal loads on the core load buffer and a detailed analysis of the frequency switching mechanism.
-Current bechmarks on frequency transitions only look at the block time or the time until a changes is finished.
+Future work should include the impact of non-temporal loads on the core load buffer and a detailed analysis of the frequency switching mechanism.
+Current benchmarks on frequency transitions only look at the block time or the time until a change is finished.
 A detailed look at the frequency during transition has yet to be performed.
 
 % Acknowledgments always without numbering
 \chapter*{Reproducibility}
-Measurement configurations, software and Jupyter notebooks for plotting are available at \url{https://github.com/marenz2569/2025-sappire-rapids-ee}.
-To facilitate interpretiblity and reproducibility figures in this thesis contain the git-tags which were used to create the measurement data and the plots.
-It is a first step toward tracking measurement data across different processor generations.
+Measurement configurations, code and Jupyter notebooks for plotting are available at \url{https://github.com/marenz2569/2025-sappire-rapids-ee}.
+To facilitate interpretability and reproducibility figures in this thesis contain the git-tags which were used to create the measurement data and the plots.
+Each of the measurements folder further include the time of measurement, the parameters of the booted kernel and its loaded modules, the \textbf{hwloc} topology\footnote{\url{https://www.open-mpi.org/projects/hwloc/}} and \textbf{lshw}\footnote{\url{https://ezix.org/project/wiki/HardwareLiSter}} output.
+It is a first step towards tracking measurement data across different processor generations.
 All measurement data is distributed through OPARA, DOI: \url{https://doi.org/10.25532/OPARA-935}.
