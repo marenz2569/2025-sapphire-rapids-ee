@@ -2,11 +2,11 @@
 
 \begin{abstract}[pagestyle=empty.tudheadings]
 In High Performance Computing, computational throughput is used as a key system metric.
-Energy efficiency is, however, an important metric for scaling out workloads.
+Energy efficiency is, however, an equally important metric for scaling out workloads.
 The 4th Generation Intel Xeon Scalable Processor, codenamed Sapphire Rapids, features numerous improvements and new hardware control loops designed to optimize energy efficiency.
-Little information is publicly disclosed, leading to a lack of knowledge about these improvements.
-Information about the internals of these mechanisms is, however, a prerequisite to tuning systems for improved energy efficiency.
-This thesis highlights changes in internal control mechanisms.
+Little information is publicly disclosed sofar, leading to a lack of knowledge about these improvements.
+Information about the internals of these mechanisms is, however, a prerequisite to tune systems for improved energy efficiency.
+This thesis highlights found changes in internal control mechanisms.
 Key findings include qualitative and quantitative descriptions of the core and uncore frequency transitions, improvements in turbo frequencies and their allocation to cores, an evaluation of the internal power measurements, changed sleep wakeup latencies, and a description of the core microarchitecture.
 Moreover, I present a model to improve core to core communication latencies that result from the 2d-mesh design of the L3 cache.
 \end{abstract}
