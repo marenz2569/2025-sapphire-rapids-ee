@@ -98,6 +98,8 @@ Golden Cove continued to deliver improved instructions throughput compared to pr
 Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the \ac{IPC} and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
 The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
 I was not able to find a publication that describes the \ac{IPC} improvements based on the data of asmgrid and likwid bench.
+Write allocation evasion and non-temporal write provide an increased available memory bandwidth~\cite{Intel_2020_IceLake_SP}.
+Laukemann et al.~\cite{Laukemann_2024_WriteAllocationEvasion} descibe it in great detail.
 
 Intel increased the size of key structures to enable better out-of-order execution~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}.
 Major changes in the frontend include improved branch prediction, a wider instruction fetch bandwith of \SI{32}{\byte\per cycle}, a 6-way instruction decoder, a bigger μOP Cache and increased bandwith to this cache.
