@@ -22,6 +22,8 @@ I repeat this for all combinations of cores on one socket.
 No shared core frequency domain is detected.
 This is consistent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 
+\clearpage
+
 \section{AVX Frequencies}
 \label{sec:avx-frequencies}
 
@@ -53,7 +55,30 @@ Using a modified version of ``intel-speed-select'', I extract the opportunistic 
 % 	\end{tabular}
 % \end{table}
 
-\begin{table}[bp!]
+Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the frequency class based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
+However he was only able to trigger two out of the three classes, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy''.
+Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench''~\cite{RHZE_HPC_likwid} with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
+They were also only able to show two out of the four frequency classes.
+
+%Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
+%Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
+
+To associate which events triggers the processor cores to be part of a frequency class, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
+This methodology is fundamentally the same as demostrated by Downs and Laukemann et al.
+However, as frequency classes can only be validated using the maximal turbo frequency,
+I ensure that the RAPL power limiting mechanism is not triggered.
+Using ``Intel Speed Select Core-Power'' I set one core to priority group 0 and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
+This will priorize the power draw of the core in group 0 over the others.
+The frequency measurement is done on the core in group 0, which should run at the maximum turbo frequency.
+``Intel Speed Select'' is described in more detail in~\secref{isst}.
+I prototype this measurement with four different FIRESTARTER kernels.
+Each kernel is executed for \SI{60}{\s} discarding the first \SI{30}{\s} and last \SI{5}{\s}.
+Hyperthreading is disabled.
+The resulting opportunistic AVX frequencies are displayed in~\figref{validated-p0n-frequencies}.
+The findings of~\figref{p0n-frequencies} can clearly be validated.
+This also highlights that frequency class dependent opportunistic core frequencies are independant of the ``Intel Speed Select Core-Power'' mechanism.
+
+\begin{table}[tp]
 	\centering
 	\caption{\label{tab:avx-classes}AVX frequency classes based on published slides from Intel.
     The $C_{dyn}$ classes 0 through 3 map to the frequency classes SSE, AVX2, AVX512 and AMX~\cite{ServeTheHome_Emerald_Rapids_2023}.
@@ -82,44 +107,23 @@ Using a modified version of ``intel-speed-select'', I extract the opportunistic 
 \addtocounter{footnote}{1}
 \footnotetext[\thefootnote]{\texttt{FIRESTARTER -\phantom{}-run-instruction-groups=L3\_L:100}}
 
-Downs~\cite{Downs_2020_AVX_Downclocking} measured the influence of AVX throttling on Ice Lake by infering the frequency class based on the resulting frequency of the ``avx-turbo'' microarchitectural benchmark~\cite{Downs_avx_turbo}.
-However he was only able to trigger two out of the three classes, leaving open the question on how instructions are mapped to ``Light'' and ``Heavy''.
-Laukemann et al.~\cite{laukemann_microarchitectural_2024} showed the same for Sapphire Rapids using ``likwid-bench''~\cite{RHZE_HPC_likwid} with the ``peakflops\_avx512\_fma'' and ``peakflops\_avx\_fma'' microarchitectural benchmark.
-They were also only able to show two out of the four frequency classes.
-
-\begin{figure}[]
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands/avx-frequency-license-bands.pdf}
+    \includegraphics[width=0.6\columnwidth]{fig/avx-frequency-license-bands/avx-frequency-license-bands.pdf}
     \caption{\label{fig:p0n-frequencies}Opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
     The number of active cores are split into eight buckets. The frequency class and the bucket decides the resulting turbo frequency.
     In the first bucket the SSE and AVX2 frequency classes share the same frequency.}
 \end{figure}
 
-%Register Address: 1ADH, 429 MSR\_TURBO\_RATIO\_LIMIT
-%Register Address: 1AEH, 430 MSR\_TURBO\_RATIO\_LIMIT\_CORES
-
-To associate which events triggers the processor cores to be part of a frequency class, I designed a microbenchmark that executes small compute kernels on a fixed number of cores and measure the resulting core frequencies.
-This methodology is fundamentally the same as demostrated by Downs and Laukemann et al.
-However, as frequency classes can only be validated using the maximal turbo frequency,
-I ensure that the RAPL power limiting mechanism is not triggered.
-Using ``Intel Speed Select Core-Power'' I set one core to priority group 0 and all other to priority group 1 with a fixed low maximum frequency of \SI{1600}{\MHz}.
-This will priorize the power draw of the core in group 0 over the others.
-The frequency measurement is done on the core in group 0, which should run at the maximum turbo frequency.
-``Intel Speed Select'' is described in more detail in~\secref{isst}.
-I prototype this measurement with four different FIRESTARTER kernels.
-Each kernel is executed for \SI{60}{\s} discarding the first \SI{30}{\s} and last \SI{5}{\s}.
-Hyperthreading is disabled.
-The resulting opportunistic AVX frequencies are displayed in~\figref{validated-p0n-frequencies}.
-The findings of~\figref{p0n-frequencies} can clearly be validated.
-This also highlights that frequency class dependent opportunistic core frequencies are independant of the ``Intel Speed Select Core-Power'' mechanism.
-
-\begin{figure}[]
+\begin{figure}[bp]
     \centering
-    \includegraphics[width=0.8\columnwidth]{fig/avx-frequency-license-bands-validation/validate-avx-frequency-license-bands.pdf}
+    \includegraphics[width=0.6\columnwidth]{fig/avx-frequency-license-bands-validation/validate-avx-frequency-license-bands.pdf}
     \caption{\label{fig:validated-p0n-frequencies}Validation of the opportunistic AVX turbo frequencies of the test system extracted using Intel Speed Select Technology.
     The number of active cores are split into eight buckets. The frequency class and the bucket decides the resulting turbo frequency.
     In the first bucket the SSE and AVX2 frequency class share the same frequency. I ensure that the package power does not exceed the maximum of \SI{350}{\watt} TDP of the test system.}
 \end{figure}
+
+\clearpage
 
 \section{Uncore Frequency Selection}
 \label{sec:avx-anomalies-uncore-freqency}

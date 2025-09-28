@@ -148,7 +148,7 @@ This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unacc
 The changes of key structures between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
 \figref{golden-cove} shows a diagram of the Golden Cove core.
 
-\begin{figure}[]
+\begin{figure}[b]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/robsize/reorder-buffer.pdf}
     \caption{\label{fig:robsize-reorder}Measurement of the reorder buffer size.}
@@ -235,6 +235,44 @@ Hyperthreading is disabled and the measurement is repeated on the cross product 
 A slight mismatch between the distribution of cache lines across different cache slices is visible.
 This effect is described by McCalpin~\cite{McCalpin_2018_IntelAddressHashing} as an artifact of using specific hash algorithms.
 
+The measurement enables building a model showing how the different core and uncore frequencies influence communication latencies.
+\figref{cbo-latencies-socket-min}, \figref{cbo-latencies-socket-max} and \figref{cbo-latencies-socket-diff} show the minimum, maximum and maximal difference in communication latencies over all pairs of cores on the first socket.
+% \figref{cbo-latencies-socket-min}, \figref{cbo-latencies-socket-mean}, \figref{cbo-latencies-socket-max} and \figref{cbo-latencies-socket-diff} show the minimum, average, maximum and difference in communication latencies over all pairs of cores on the first socket.
+The plots for the latencies of specific core combinations are included in~\appref{core_to_core_latencies_complete}.
+
+I create a model of core to core latency using linear regression with the core and uncore frequency as parameters:
+\begin{equation*}
+t_{latency}~[ns] = a + \frac{b}{f_{core}~[MHz]} + \frac{c}{f_{uncore}~[MHz]}
+\end{equation*}
+The computed parameters are displayed in~\tabref{latency_model_parameters}.
+Each of the models have a coefficient of determination $R^2 > 0.99$, leaving little variability unaccounted for.
+The latency plots for all core and uncore frequency combinations using this model are included in~\appref{core_to_core_latencies_model}.
+
+\begin{table}[b]
+	\centering
+	\caption{\label{tab:latency_model_parameters}Parameters of the core to core communication latency models}
+	\begin{tabular}{rrrr}
+		 & Parameter $a$ & Parameter $b$ & Parameter $c$ \\
+		\toprule
+		\rowcolor[HTML]{EFEFEF}Minimal latency & $-1.2283117081191506$ & $52020.30476702$ & $61732.83781473$ \\
+		Maximal latency & $0.9258637728757435$ & $53374.66379634$ & $125374.30302008$ \\
+		\rowcolor[HTML]{EFEFEF}Maximal difference in latency & $-0.1620055737606272$ & $7294.88075747$ & $25821.70896832$ \\
+		\bottomrule
+		%\vspace{6mm}
+	\end{tabular}
+\end{table}
+
+\clearpage
+
+The presented methodology shows that latencies of core to core communication can be easily modeled.
+It can be extended to show latencies inside a single NUMA node or across sockets utilizing the UPI link.
+Note that the models should be considered best case scenarios, as the 2d-mesh interconnect is not congested by traffic, which would increase the observed latencies.
+
+Performance engineers optimizing for the last percent require intricate knowledge about the core and uncore microarchitecture.
+This should ideally be facilitated by continuous tracking and automated benchmarking across generations.
+Latency critial applications can optimize communication by using specific core and memory pinnings.
+Selecting the cache lines used for communication can reduce latency in an order of \SI{17}{\percent}.
+
 \begin{figure}[]
     \centering
     \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/core0to1latency.pdf}
@@ -263,40 +301,3 @@ This effect is described by McCalpin~\cite{McCalpin_2018_IntelAddressHashing} as
     \includegraphics[width=0.8\columnwidth]{fig/core-to-core-latency/all-to-all-heatmap-diff.pdf}
     \caption{\label{fig:cbo-latencies-socket-diff}Difference in core to core communication latency over all cores of hati's socket 0.}
 \end{figure}
-
-The measurement enables building a model showing how the different core and uncore frequencies influence communication latencies.
-\figref{cbo-latencies-socket-min}, \figref{cbo-latencies-socket-max} and \figref{cbo-latencies-socket-diff} show the minimum, maximum and maximal difference in communication latencies over all pairs of cores on the first socket.
-% \figref{cbo-latencies-socket-min}, \figref{cbo-latencies-socket-mean}, \figref{cbo-latencies-socket-max} and \figref{cbo-latencies-socket-diff} show the minimum, average, maximum and difference in communication latencies over all pairs of cores on the first socket.
-The plots for the latencies of specific core combinations are included in~\appref{core_to_core_latencies_complete}.
-
-I create a model of core to core latency using linear regression with the core and uncore frequency as parameters:
-\begin{equation*}
-t_{latency}~[ns] = a + \frac{b}{f_{core}~[MHz]} + \frac{c}{f_{uncore}~[MHz]}
-\end{equation*}
-The computed parameters are displayed in~\tabref{latency_model_parameters}.
-Each of the models have a coefficient of determination $R^2 > 0.99$, leaving little variability unaccounted for.
-The latency plots for all core and uncore frequency combinations using this model are included in~\appref{core_to_core_latencies_model}.
-
-The presented methodology shows that latencies of core to core communication can be easily modeled.
-It can be extended to show latencies inside a single NUMA node or across sockets utilizing the UPI link.
-Note that the models should be considered best case scenarios, as the 2d-mesh interconnect is not congested by traffic, which would increase the observed latencies.
-
-\begin{table}[t]
-	\centering
-	\caption{\label{tab:latency_model_parameters}Parameters of the latency models}
-	\begin{tabular}{rrrr}
-		 & Parameter $a$ & Parameter $b$ & Parameter $c$ \\
-		\toprule
-		\rowcolor[HTML]{EFEFEF}Minimal latency & $-1.2283117081191506$ & $52020.30476702$ & $61732.83781473$ \\
-		Maximal latency & $0.9258637728757435$ & $53374.66379634$ & $125374.30302008$ \\
-		\rowcolor[HTML]{EFEFEF}Maximal difference in latency & $-0.1620055737606272$ & $7294.88075747$ & $25821.70896832$ \\
-		\bottomrule
-		%\vspace{6mm}
-	\end{tabular}
-\end{table}
-
-
-Performance engineers optimizing for the last percent require intricate knowledge about the core and uncore microarchitecture.
-This should ideally be facilitated by continuous tracking and automated benchmarking across generations.
-Latency critial applications can optimize communication by using specific core and memory pinnings.
-Selecting the cache lines used for communication can reduce latency in an order of \SI{17}{\percent}.
