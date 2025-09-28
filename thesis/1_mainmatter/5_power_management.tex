@@ -29,9 +29,9 @@ This is consistent with the previous Intel generation Skylake-SP~\cite[Sec. 2.6.
 
 Starting with the Haswell Microarchitecture, Intel introduced the concept of AVX frequencies.
 This allows power hungy instructions using vector registers to use a lower base and different per core turbo frequencies~\cite{Hackenberg_2015_Haswell}.
-The concept is extended with a new class for AVX512 instructions for the Skylake Server Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
+The concept is extended with a new class for AVX512 instructions for the Skylake-SP Microarchitecture~\cite[Sec. 2.6.3]{Intel_Optimization_Reference_Manual_050}.
 With the introduction of Ice Lake, these classes are not only determined by the instruction set or register size, but a more realistic model of actual power consumption by also classifing instruction into ``Light'' and ``Heavy'' $C_{dyn}$ classes\footnote{$C_{dyn}$ describes the dynamic capacitance of instruction which is proportional to the power consumption.} by their power consumption~\cite{papazian_new_2020}.
-With the addition of the AMX instruction set, Intel split up these classes further, ranging from ``Ultra-Light'' to ``Heavy''.
+With the addition of the \ac{AMX} instruction set, Intel split up these classes further, ranging from ``Ultra-Light'' to ``Heavy''.
 Instructions are mapped to four classes based on their instruction set and power draw.
 Opportunistic AVX turbo frequencies are determined based on the classes and number of active cores.
 The mapping from instruction set and power usage to frequency classes are displayed in~\tabref{avx-classes} based on a slide from Intel published by ServerTheHome~\cite{ServeTheHome_Emerald_Rapids_2023}.
@@ -274,7 +274,7 @@ The worst case latency until this frequency change is under \SI{1000}{\us} as sh
 The uncore is blocked up to \SI{5}{\us} as shown in~\figref{ufs_gap_95}.
 When using the lowest core frequency of \SI{800}{\MHz} the block time increases up to \SI{8}{\us}.
 Intel~\cite{Intel_2020_IceLake_SP} claims a block time of \SI{7}{\us} for Sapphire Rapids' predecessor Ice Lake-SP.
-It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\us}.
+It is an improvement compared to Skylake-SP where Schöne et al. measured \SI{15}{\us}.
 
 \begin{figure}[h]
     \begin{subfigure}[t]{0.3\linewidth}
@@ -323,7 +323,7 @@ To remove OS noise from the measurement, the used CPUs and the second package ar
 \figref{c6_latencies} shows a box plot of the exit latency from the C6 idle state.
 Outliers are marked in the plot.
 The exit latency shows little difference using different core frequencies.
-They are more than double of what Schöne et al.~\cite{Schoene_2019_SKL} measured for Skylake.
+They are more than double of what Schöne et al.~\cite{Schoene_2019_SKL} measured for Skylake-SP.
 All latencies on the local socket and the active remote socket are below the limit of \SI{190}{\us} as advertised by Intel for Sapphire Rapids.
 When the remote socket is idle, the wakeup latency is increased by a constant of around \SI{25}{\us}.
 This is far below the limit of \SI{290}{\us} for PC6, as PC2 is used to allow memory accesses to cross the UPI link~\cite{Intel_PowerManagementTechnologyReviewIceLake}~\cite[p.~48]{EnergyEfficientServers_2015}.

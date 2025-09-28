@@ -1,23 +1,23 @@
 \chapter{Architectural Details of ``Sapphire Rapids'' Processors}
 \label{sec:arch}
 The Sapphire Rapids family of server processors is the successor to the ``Ice Lake'' architecture.
-Building up on the design of the Skylake~\cite{Schoene_2019_SKL} and Cascade Lake~\cite{Velten_2022_Rome_CLX} architectures, it is the first in Intels lineup of server processor to introduce a modular design containing four silicon tiles in a 2x2 grid interconnected with EMIB structures.
-The two variants of this processor are the 4th Generation Intel Xeon Scalable Processor and Xeon CPU Max Series with four additional HBM blocks~\cite{Intel_2021_Hotchips}.
-Each tile contains up to 15 Golden Cove cores with a shared L3 cache connected by a mesh, an accelerator complex, two DDR5 memory channels, 20 PCIe Gen 5/CXL lanes and one UPI 2.0 link.
-This structure enables the package to be used in a single memory domain or split into two or four sub-NUMA clusters~\cite{Intel_4th_gen_scalable}.
+Building up on the design of the Skylake-SP~\cite{Schoene_2019_SKL} and Cascade Lake~\cite{Velten_2022_Rome_CLX} architectures, it is the first in Intels lineup of server processor to introduce a modular design containing four silicon tiles in a 2x2 grid interconnected with \ac{EMIB} structures.
+The two variants of this processor are the 4th Generation Intel Xeon Scalable Processor and Xeon CPU Max Series with four additional \ac{HBM} blocks~\cite{Intel_2021_Hotchips}.
+Each tile contains up to 15 Golden Cove cores with a shared L3 cache connected by a mesh, an accelerator complex, two \ac{DDR5} memory channels, 20 \ac{PCIe} Gen 5/\ac{CXL} lanes and one \ac{UPI} 2.0 link.
+This structure enables the package to be used in a single memory domain or split into two or four \ac{SNC} clusters~\cite{Intel_4th_gen_scalable}.
 The accelerator complex contains up to four different accelerators:
-Data Streaming Accelerator (DSA) allows for memory move, fill and compare offloading.
-QuickAssist Technology (QAT) allows for acceleration of cryptographic operations.
-Dynamic Load Balancer (DLB) brings hardware accelerated queues.
-In-Memory Analytics Accelerator (IAA) allows for memory compression, encryption and filtering.~\cite{Yifan_2024_intel_accelerator_ecosystem,Yuan_2023_ISCA_tutorial,Intel_4th_gen_scalable}
-Which accelerators are activated depend on the specific SKU, while Intel allows for the option to install licenses through an PCI express interface\footnote{\url{https://github.com/intel/intel-sdsi}}~\cite{Krenn_2025_Intel_on_demand}.
+\ac{DSA} allows for memory move, fill and compare offloading.
+\ac{QAT} allows for acceleration of cryptographic operations.
+\ac{DLB} brings hardware accelerated queues.
+\ac{IAA} allows for memory compression, encryption and filtering.~\cite{Yifan_2024_intel_accelerator_ecosystem,Yuan_2023_ISCA_tutorial,Intel_4th_gen_scalable}
+Which accelerators are activated depend on the specific \ac{SKU}, while Intel allows for the option to install licenses through a \ac{PCIe} interface\footnote{\url{https://github.com/intel/intel-sdsi}}~\cite{Krenn_2025_Intel_on_demand}.
 \figref{spr-overview} shows a high level view of the processor.
 
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig/spr-uma.png}
     \caption{\label{fig:spr-overview}Block diagram of the 4th Generation Intel Xeon Scalable Processor from~\cite{Intel_4th_gen_scalable}.
-Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMIB structures to continue the mesh across the die boundaries.~\cite{Intel_2022_ISSCC}}
+Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with \ac{EMIB} structures to continue the mesh across the die boundaries.~\cite{Intel_2022_ISSCC}}
 \end{figure}
 
 \begin{figure}[]
@@ -40,7 +40,7 @@ Two mirrored tiles are arranged in a 2x2 grid, which are interconnected with EMI
 \section{Test System Details}
 I performed all measurements on an Intel Xeon Platinum 8480+ dual socket server.
 \tabref{test-system} shows details of the specific test system, called hati.
-If not noted otherwise, all measurements on this processor are performed with hyperthreading and SNC-4 activated.
+If not noted otherwise, all measurements on this processor are performed with hyperthreading and \ac{SNC}-4 activated.
 The CPU frequency scaling governor is set to \texttt{performance}.
 
 \begin{table}[t]
@@ -68,24 +68,24 @@ The CPU frequency scaling governor is set to \texttt{performance}.
 	\end{tabular}
 \end{table}
 
-McCalpin~\cite{McCalpin_2021_CoreMapping} and Cho~\cite{Cho_2022_KnowYourNeighbor} described methods to find the physical location of cores and their associated Caching/Home Agents (CHA).
+McCalpin~\cite{McCalpin_2021_CoreMapping} and Cho~\cite{Cho_2022_KnowYourNeighbor} described methods to find the physical location of cores and their associated \ac{CHA}.
 Schöne created a proof of concept for this measurement on Sapphire Rapids.
 It works as follows:
-The stream benchmark is executed on each CPU, one after another.
-This causes traffic to flow over the mesh the to the DRAM.
+The stream benchmark is executed on each \ac{CPU}, one after another.
+This causes traffic to flow over the mesh the to the \ac{DRAM}.
 First using the vertical interconnect and then the horizontal interconnect~\cite{Intel_2018_SkylakeSP}.
-I collect the following performance counters of the mesh traffic from all CHAs:
+I collect the following performance counters of the mesh traffic from all \ac{CHA}s:
 \begin{itemize}
 	\item Vertical Egress Events\footnote{\textbf{TxR\_VERT\_OCCUPANCY0} with AD - Agent 0 and AK - Agent 0: event=144,umask=0x03} to measure the occupancy of the egress buffers in the mesh stop.
 	\item Horizontal Egress Events\footnote{\textbf{TxR\_HORZ\_OCCUPANCY} with AD - Uncredited and AK: event=160,umask=0x03} to measure the occupancy of the transgress buffers.
 \end{itemize}
 This measurement is performed using the default core frequency without the use of hyperthreading.
-I use the vertical occupancy event to associate the cores to CHAs.
-The horizontal occupancy is used to find which CHAs are in the same row.
-I assume that at least one row has not deactived cores and CHAs, and that the ids of the CHAs are numbered sequentially.
+I use the vertical occupancy event to associate the cores to \ac{CHA}s.
+The horizontal occupancy is used to find which \ac{CHA}s are in the same row.
+I assume that at least one row has not deactived cores and \ac{CHA}s, and that the ids of the \ac{CHA}s are numbered sequentially.
 This allows me to align the rows and columns to one another around a complete row.
-As previously mentioned, sub-NUMA clustering is activated bounding the size of the rows and columns to the size of a tile.
-\figref{physical-layout} shows the physical map of the processors core and CHA positions on the test system.
+As previously mentioned, \ac{SNC} is activated bounding the size of the rows and columns to the size of a tile.
+\figref{physical-layout} shows the physical map of the processors core and \ac{CHA} positions on the test system.
 
 \section{Golden Cove Core Microarchitecture}
 
@@ -95,18 +95,18 @@ Major tech journalists~\cite{ServerTheHome_2023_SPR_Press,TechGage_2023_SPR_Pres
 I was unable to find the original slide deck, thus this information is to be taken with extra caution.
 
 Golden Cove continued to deliver improved instructions throughput compared to previous generations~\cite{Intel_2021_Architecture_Day}.
-Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the IPC and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
+Kobalicek hosts the asmgrid project~\cite{Kobalicek_AsmGrid} which displays the \ac{IPC} and latency improvements over the last two generations (Cascade Lake and Ice Lake) and similar products from competitors (Zen 4 and Zen 5).
 The likwid bench toolkit~\cite{RHZE_HPC_likwid} would deliver similar results for specific compute kernels.
-I was not able to find a publication that describes the IPC improvements based on the data of asmgrid and likwid bench.
+I was not able to find a publication that describes the \ac{IPC} improvements based on the data of asmgrid and likwid bench.
 
 Intel increased the size of key structures to enable better out-of-order execution~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}.
 Major changes in the frontend include improved branch prediction, a wider instruction fetch bandwith of \SI{32}{\byte\per cycle}, a 6-way instruction decoder, a bigger μOP Cache and increased bandwith to this cache.
 Optimizations for energy efficiency include replacing some operations with microcode.
-This causes an increased latency for mixing VEX and SSE instructions if the upper ymm registers are not cleared.~\cite[Sec. 3.11.6]{Intel_Optimization_Reference_Manual_050}
+This causes an increased latency for mixing \ac{VEX} encoded and \ac{SSE} instructions if the upper ymm registers are not cleared.~\cite[Sec. 3.11.6]{Intel_Optimization_Reference_Manual_050}
 Major changes in the backend include an increased number of allocations, retirement and execution ports.
-Especially for execution ports, an additional integer ALU, a second fast floating point adder and one port for AMX instructions was added.
+Especially for execution ports, an additional integer \ac{ALU}, a second fast floating point adder and one port for \ac{AMX} instructions was added.
 The number of memory access was increased to two \SI{64}{\byte\per cycle} or three \SI{32}{\byte\per cycle} loads and one \SI{64}{\byte\per cycle} or two \SI{32}{\byte\per cycle} stores.~\cite[Sec. 2.4]{Intel_Optimization_Reference_Manual_050}
-AMX instructions operate on up to eight tiles each with a maximum size of \SI{1}{\kibi\byte}~\cite[Sec. 20.5.2]{Intel_Optimization_Reference_Manual_050}.
+\ac{AMX} instructions operate on up to eight tiles each with a maximum size of \SI{1}{\kibi\byte}~\cite[Sec. 20.5.2]{Intel_Optimization_Reference_Manual_050}.
 
 Increasing key structures in the core will inadvertently increase power consumption, this may be offset by the increase in instruction througput for higher energy efficiency.
 Since I was only able to find limited amout of public claims from Intel~\cite{Intel_2021_Architecture_Day} about their core microarchitecture, I opted to measure individual components of the core, i.e. reorder buffer, load buffer, store buffer and register file sizes.
@@ -127,9 +127,9 @@ To measure the size of the load and store buffers, I insert \textbf{mov} instruc
 \figref{robsize-load} shows a discrepancy between the claim~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} of 240 in-flight loads vs the 192 measured.
 This has also been measured by Chips and Cheese~\cite{Chipsandcheese_2023_GoldenCove_Vector_Register}, they postulate that Intel is using a different mechanism for in-flight loads.
 The difference of 48 entries is equivalent to a size of \SI{3}{\kibi\byte}.
-I assume that these are used to support non-temporal loads of AMX tiles which bypass the L1d cache~\cite[Sec. 20.8]{Intel_Optimization_Reference_Manual_050}.
-This would allow a minimum of three tiles to reside in a separate load buffer, reducing the negative impact of the large AMX tiles on the out-of-order execution and removing the potential latency of allocating up to 16 entries per tile in the load buffer.
-If this is the case, it may be beneficial to have this buffer available to the core if AMX not in use.
+I assume that these are used to support non-temporal loads of \ac{AMX} tiles which bypass the L1d cache~\cite[Sec. 20.8]{Intel_Optimization_Reference_Manual_050}.
+This would allow a minimum of three tiles to reside in a separate load buffer, reducing the negative impact of the large \ac{AMX} tiles on the out-of-order execution and removing the potential latency of allocating up to 16 entries per tile in the load buffer.
+If this is the case, it may be beneficial to have this buffer available to the core if \ac{AMX} not in use.
 In~\figref{robsize-store}, I measure 112 available entries in the store buffer equal to the claim of Intel~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press}.
 To measure the size of the available number of speculative registers, I insert \textbf{add}, \textbf{mov}, \textbf{cmp} and \textbf{xor} instructions each operating on either the same registers or on two different registers per instruction.
 This is repeated for all register types; general purpose (\SI{64}{\bit}), xmm, ymm and zmm registers.
@@ -137,15 +137,15 @@ This is repeated for all register types; general purpose (\SI{64}{\bit}), xmm, y
 I removed zmm registers with \textbf{mov} and \textbf{cmp} filler instructions from the plot as I could not measure latency differences.
 Mov elimination, zero ideoms and ones ideoms will cause the jump in measurement latency to appear only after a greater number of filler instructions than the actual size of speculative register files.
 Since I cannot measure the register files isolated from the rest of the backend, multiple jumps in latency can be observed for some measurements due to resource limits from different components, i.e. the scheduler.
-AVX frequency changes may also influence the measured latencies, as I am running the measurement without setting the core and uncore to a fixed frequency.
+\ac{AVX} frequency changes may also influence the measured latencies, as I am running the measurement without setting the core and uncore to a fixed frequency.
 Therefore, I use the minimum number of filler instructions that cause a jump as the number of measured speculative registers.
-Adding the 32 architectural registers available in the x86-64 ISA gives a lower bound on the number of physical registers.
-For Skylake I measure around 148 integer and 132 floating point speculative registers, with 32 registers from the ISA, this leaves no integer and 4 floating point registers unaccounted for~\cite{Intel_2017_Skylake_SP}.
+Adding the 32 architectural registers available in the x86-64 \ac{ISA} gives a lower bound on the number of physical registers.
+For Skylake-SP I measure around 148 integer and 132 floating point speculative registers, with 32 registers from the \ac{ISA}, this leaves no integer and 4 floating point registers unaccounted for~\cite{Intel_2017_Skylake_SP}.
 This validates that the measurement can get a close estimate of the number of physical registers.
 For Golden Lake I measure 240 integer, 282 xmm/ymm and 188 zmm speculative registers.
 This leaves 16 additional integer, 6 xmm/ymm and no zmm physical registers unaccounted for~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press}.
 
-The changes of key structures between the Skylake and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
+The changes of key structures between the Skylake-SP and Golden Cove core architecture are displayed in~\tabref{micro-arch-params}.
 \figref{golden-cove} shows a diagram of the Golden Cove core.
 
 \begin{figure}[b]
@@ -171,10 +171,10 @@ The changes of key structures between the Skylake and Golden Cove core architect
 
 \begin{sidewaystable}[t]
 	\centering
-	\caption{\label{tab:micro-arch-params}Comparision of key changes between the Skylake and Golden Cove core microarchitecture. Entries that are not from a primary source are either denoted with \checkmark if they have been verified, or ? if they need to be verfied.}
+	\caption{\label{tab:micro-arch-params}Comparision of key changes between the Skylake-SP and Golden Cove core microarchitecture. Entries that are not from a primary source are either denoted with \checkmark if they have been verified, or ? if they need to be verfied.}
 	\begin{tabular}{r|lll}
 		\toprule
-			&	Skylake & Golden Cove & Golden Cove Verified \\
+			&	Skylake-SP & Golden Cove & Golden Cove Verified \\
 		\rowcolor[HTML]{EFEFEF}Out-of-order Windows		& 224~\cite{Intel_2017_Skylake_SP} & 512~\cite{Intel_2021_Architecture_Day,ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-reorder} \\
 		In-flight Loads & 72~\cite{Intel_2017_Skylake_SP} & 240~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & 192 measured in~\figref{robsize-load} \\
 		\rowcolor[HTML]{EFEFEF}In-flight Stores & 56~\cite{Intel_2017_Skylake_SP} & 112~\cite{ServerTheHome_2023_SPR_Press,Wccftech_2023_SPR_Press} & \checkmark~\figref{robsize-store} \\
@@ -265,7 +265,7 @@ The latency plots for all core and uncore frequency combinations using this mode
 \clearpage
 
 The presented methodology shows that latencies of core to core communication can be easily modeled.
-It can be extended to show latencies inside a single NUMA node or across sockets utilizing the UPI link.
+It can be extended to show latencies inside a single NUMA node or across sockets utilizing the \ac{UPI} links.
 Note that the models should be considered best case scenarios, as the 2d-mesh interconnect is not congested by traffic, which would increase the observed latencies.
 
 Performance engineers optimizing for the last percent require intricate knowledge about the core and uncore microarchitecture.
