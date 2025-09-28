@@ -44,7 +44,7 @@ Before regenerating plots make shure to taint the exsisting figure files as unch
 This is the code-support package for the following paper.
 Please cite the paper if you use parts of this repository for scientific work.
 
-Markus Schmidl: An Analysis of the Intel Sapphire Rapids Architecture's Energy Efficiency Features (2025),
+Markus Schmidl: An Analysis of Energy Efficiency Features in Intel Sapphire Rapids Processors (2025),
 DOI:
 
 # License

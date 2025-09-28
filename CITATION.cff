@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "Please cite this paper if you use any of the contained software for scientific work"
+authors:
+- family-names: "Schmidl"
+  given-names: "Markus"
+title: 'Code support package for "An Analysis of Energy Efficiency Features in Intel Sapphire Rapids Processors"'
+version: 0.0.1
+date-released: 2025-09-29
+url: "https://github.com/tud-zih-energy/lo2s"
+preferred-citation:
+  type: article
+  title: "An Analysis of Energy Efficiency Features in Intel Sapphire Rapids Processors"
+  authors:
+  - family-names: "Schmidl"
+    given-names: "Markus"
+  doi: ""
+  month: 9
+  year: 2025
