@@ -1,20 +1,16 @@
 \chapter{Background and Related Work on Energy Efficiency Mechanisms}
 \label{sec:background}
 
-DVFS
-
-cstates
-
-power limit and thermal protection
-
-power and resource allocations
-
-
-
-
-\todoms{Avx frequencies}
-
-\todoms{intel speed select Technology}
-
-\todoms{Reference Laukemann et al. D. Write-Allocate Evasion}
-\todoms{cite user space idle state paper}
+\ac{DVFS} describe a mechanism of the processor to change it operating frequency and voltage.
+Modern processors usually have a frequency domain for each core or groups of cores and each \ac{NUMA} cluster~\cite{Intel_2017_Skylake_SP,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
+This is accompanied by interfaces accessible through the operating system and hardware control loops~\cite{intel_pstate_kernel_doc,Kernel_IntelSpeedSelect}.
+Using \ac{DVFS} to improve the energy efficiency of applications is shown by mutiple authors~\cite{Gocht_2019_QLearning,Vysocky_2018_HPCTuning}.
+Internals of the frequency transition mechanism is described by Hackenberg et al.~\cite{Hackenberg_2015_Haswell} and Schöne et al.~\cite{Intel_2017_Skylake_SP,Schoene_2021_Zen2,Schoene_2024_Alder_Lake}.
+Idle states, commonly refered to as C-states, allow the operating system and user-space applications to invoke a lower power state improving energy efficiency for idling processors.
+Different components of the core and uncore can be power and clock gated to reduce energy consumption as a tradeoff for wakeup latency.~\cite{Intel_PowerManagementTechnologyReviewIceLake,Kuns_2025_UserSpaceIdle}
+Wakeup latencies are measured by mutiple authors~\cite{Hackenberg_2015_Haswell,Intel_2017_Skylake_SP,Schoene_2021_Zen2,Schoene_2024_Alder_Lake,Smejkal_2024_SleepWell}.
+Operating near power or performance limit requires several sofisticated measurement and control mechanisms.
+\ac{RAPL} measures and and enforces limits on energy consumption.
+The accuracy of the metrics is evaluted for several prior processor generations~\cite{Haehnel_2012_RAPL,Hackenberg_2015_Haswell,Intel_2017_Skylake_SP,AMD_Zen2_Overview,Schoene_2024_Alder_Lake}.
+The \ac{ISST} interfaces configure allocations and priorities for frequency and power budgets of multiple cores~\cite{Kernel_IntelSpeedSelect,Intel_2021_HPM}.
+\ac{RDT} configures allocations and priorities for cache and memory bandwidth~\cite{Sohal_2022_RDT,Intel_2021_HPM}.

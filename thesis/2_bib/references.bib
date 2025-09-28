@@ -650,4 +650,70 @@ keywords = {RAPL, operating systems, power consumption}
   keywords={Distributed processing;Codes;Electric breakdown;Current measurement;Lakes;Benchmark testing;Ice;SPEChpc 2021;SpecI2M;CloverLeaf;write allocate;non-temporal stores;Ice Lake;Sapphire Rapids},
   doi={10.1109/IPDPS57955.2024.00038}}
 
+@misc{intel_pstate_kernel_doc,
+  url={https://www.kernel.org/doc/html/v4.12/admin-guide/pm/intel_pstate.html},
+  title={{The Linux kernel user’s and administrator’s guide, Power Management, intel_pstate, CPU Performance Scaling Driver}},
+  note = {Accessed: 2025-09-29}
+}
+
+@InProceedings{Vysocky_2018_HPCTuning,
+author="Vysocky, Ondrej
+and Beseda, Martin
+and {\v{R}}{\'i}ha, Lubom{\'i}r
+and Zapletal, Jan
+and Lysaght, Michael
+and Kannan, Venkatesh",
+editor="Kozubek, Tom{\'a}{\v{s}}
+and {\v{C}}erm{\'a}k, Martin
+and Tich{\'y}, Petr
+and Blaheta, Radim
+and {\v{S}}{\'i}stek, Jakub
+and Luk{\'a}{\v{s}}, Dalibor
+and Jaro{\v{s}}, Ji{\v{r}}{\'i}",
+title="MERIC and RADAR Generator: Tools for Energy Evaluation and Runtime Tuning of HPC Applications",
+booktitle="High Performance Computing in Science and Engineering",
+year="2018",
+publisher="Springer International Publishing",
+address="Cham",
+pages="144--159",
+abstract="This paper introduces two tools for manual energy evaluation and runtime tuning developed at IT4Innovations in the READEX project. The MERIC library can be used for manual instrumentation and analysis of any application from the energy and time consumption point of view. Besides tracing, MERIC can also change environment and hardware parameters during the application runtime, which leads to energy savings.",
+isbn="978-3-319-97136-0"
+}
+
+@inproceedings{Smejkal_2024_SleepWell,
+author = {Smejkal, Till and Bierbaum, Jan and Oberhauser, Thomas and Schirmeier, Horst and H\"{a}rtig, Hermann},
+title = {Sleep Well: Pragmatic Analysis of the Idle States of Intel Processors},
+year = {2024},
+isbn = {9798400704734},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3632366.3632385},
+doi = {10.1145/3632366.3632385},
+abstract = {Rising energy consumption is of growing concern for cloud data center providers. Modern processors try to counteract this problem through low-power idle states that save energy in phases with little demand for compute resources. Making proper use of this feature, however, requires knowledge about the properties of these states for the very processors used in a specific setup; most importantly, the energy consumed in each idle state and the latency for resuming normal operation. Unfortunately, hardware vendors usually do not provide this critical information.In this paper, we propose a scheme for automatically analyzing the idle states of modern Intel processors. Our open-source implementation uses an extensible Linux kernel module to measure the energy and latency implications of a system's processor without any manual intervention or external equipment. We demonstrate the practical applicability of our approach by analyzing two Intel processors from the Haswell and Skylake generation ---an Intel Core i7-4790 and an Intel Core i7-6700K, respectively. The results show that our implementation yields reliable, precise, and reproducible measurements for the energy and latency implications of each processor's various idle states.},
+booktitle = {Proceedings of the IEEE/ACM 10th International Conference on Big Data Computing, Applications and Technologies},
+articleno = {04},
+numpages = {10},
+keywords = {energy, measurement, idle states, wake-up latency, intel processor, Haswell, Skylake, RAPL, HPET},
+location = {Taormina (Messina), Italy},
+series = {BDCAT '23}
+}
+
+@inproceedings{Sohal_2022_RDT,
+author = {Sohal, Parul and Bechtel, Michael and Mancuso, Renato and Yun, Heechul and Krieger, Orran},
+title = {A Closer Look at Intel Resource Director Technology (RDT)},
+year = {2022},
+isbn = {9781450396509},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3534879.3534882},
+doi = {10.1145/3534879.3534882},
+abstract = {Unarbitrated contention over shared resources at different levels of the memory hierarchy represents a major source of temporal interference. Hardware manufacturers are increasingly more receptive to issues with temporal interference and are starting to propose concrete solutions to mitigate the problem. Intel Resource Director Technology (RDT) represents one such attempt. Given the wide adoption of Intel platforms, RDT features can be an invaluable asset for the consolidation of real-time systems on complex multi- and many-core machines. Unfortunately, to date, a systematic analysis of the capabilities introduced by the RDT framework has not yet been conducted. Moreover, no clear understanding has been matured about the implementation-specific behavior of RDT primitives across processor generations. And ultimately, the ability of RDT to provide real-time guarantees is yet to be established. In our work, we aim at conducting a systematic investigation of the RDT mechanisms from a real-time perspective. We experimentally evaluate the functionality and interpretability of RDT-aided allocation and monitoring controls across the two most recent processor generations. Our evaluations show that while some features like Cache Allocation Technology (CAT) yield promising results, the implementation of other primitives such as Memory Bandwidth Allocation (MBA) has much room for improvement. Moreover, in some cases, the presented interfaces range from blurry to incomplete, as is the case for MBA and Memory Bandwidth Monitoring (MBM).},
+booktitle = {Proceedings of the 30th International Conference on Real-Time Networks and Systems},
+pages = {127–139},
+numpages = {13},
+keywords = {shared cache partitioning, performance guarantees, memory management, bandwidth control, application profiling, Resource Director Technology, RDT, MBM, MBA, CMT, CAT},
+location = {Paris, France},
+series = {RTNS '22}
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
