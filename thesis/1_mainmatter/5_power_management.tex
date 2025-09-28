@@ -197,7 +197,7 @@ Second, the execution speed of a compute loop is measured repeatedly until it ma
 The frequency is switched back and a random time between \SI{0}{\us} and \SI{20000}{\us} is waited before being repeated for a total \SI{4000}{} times.
 
 In~\cite{Schoene_2024_Alder_Lake}, Schöne et al. demonstrated that the transition latencies of Alder Lake processors depend on the time since the last frequency transition, the transition from the target to the source frequency.
-I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median}.
+I split the measurement data at a interval of \SI{1}{\ms} since the last frequency transition and plot the median latencies in~\figref{pstate_latencies_median_lt_1ms}~and~\figref{pstate_latencies_median_gt_1ms}.
 Below this interval the behaviour is the same as in Skylake-SP~\cite{Schoene_2019_SKL} with a higher median latency of \SI{600}{\us} instead of \SI{500}{\us}.
 Above this interval a different behaviour is visible when switching to a frequency greater than \SI{1.8}{\GHz}.
 Median latencies are higher in this area and they are not equal across different frequency changes.
@@ -225,24 +225,23 @@ The ftalat benchmark does not measure the time on how long the core throttles or
 Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction of Sapphire Rapids' predecessor Ice Lake-SP.
 
 \begin{figure}[]
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/ftalat/ftalat_median_<1ms_hati.pdf}
-        \caption{\label{fig:pstate_latencies_median_lt_1ms}Median p-state latencies. ($< \SI{1}{\ms}$)}
+        \caption{\label{fig:pstate_latencies_median_lt_1ms}Median P-state latencies. ($< \SI{1}{\ms}$)}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.45\linewidth}
+    \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/ftalat/ftalat_median_>1ms_hati.pdf}
-        \caption{\label{fig:pstate_latencies_median_gt_1ms}Median p-state latencies. ($> \SI{1}{\ms}$)}
+        \caption{\label{fig:pstate_latencies_median_gt_1ms}Median P-state latencies. ($> \SI{1}{\ms}$)}
     \end{subfigure}
-    \caption{\label{fig:pstate_latencies_median}Median P-State switching latencies of the Sapphire Rappids processor, differentiated by wait times between frequency transitions below and above \SI{1}{\ms}.}
-\end{figure}
-
-\begin{figure}[]
-    \centering
-    \includegraphics[width=0.45\columnwidth]{fig/ftalat/ftalat_95percentQuantile_hati.pdf}
-    \caption{\label{fig:pstate_latencies_95percentQuantile}95th percentile of P-state switching latencies.}
+    \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/ftalat/ftalat_95percentQuantile_hati.pdf}
+        \caption{\label{fig:pstate_latencies_95percentQuantile}95th percentile of P-state switching latencies.}
+    \end{figure}
+    \caption{Core frequency switching latencies of the Sapphire Rappids processor. Median latencies are differentiated by wait times between frequency transitions below and above \SI{1}{\ms}.}
 \end{figure}
 
 \begin{figure}[]
@@ -250,6 +249,8 @@ Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction
     \includegraphics[width=\columnwidth]{fig/ftalat/ftalat_scatter_wait_transition_latency_hati.pdf}
     \caption{\label{fig:pstate_latencies_time_dependance}Dependance of the time between the detection events of transitions from \SI{1.2}{\GHz} to \SI{1.8}{}, \SI{1.9}{}, ..., \SI{2.9}{\GHz}. For better lines for bins of size \SI{1625}{\us} and \SI{200}{\us} have been included for the x and y-axis respectively. These plots are included for frequency transitions in~\appref{pstate_latencies_scatter_complete}}
 \end{figure}
+
+\clearpage
 
 \section{Uncore Frequency Scaling}
 \label{sec:uncore_frequency_scaling}
@@ -295,6 +296,8 @@ It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\
     \caption{Time until the uncore IO is blocked, after which the frequency is adjusted on the Sapphire Rapids processor.}
 \end{figure}
 
+\clearpage
+
 \section{Idle State Latencies}
 \label{sec:idle_state_latencies}
 
@@ -325,7 +328,7 @@ When the remote socket is idle, the wakeup latency is increased by a constant of
 This is far below the limit of \SI{290}{\us} for PC6, as PC2 is used to allow memory accesses to cross the UPI link~\cite{Intel_PowerManagementTechnologyReviewIceLake}~\cite[p.~48]{EnergyEfficientServers_2015}.
 Measuring the PC6 wakeup latency would require an external interrupt source, e.g. a network card with its own accurate timestamps, as proposed by Govtva~\cite{Govtva_2019}.
 
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{fig/cstate-latencies/C_state_latencies.pdf}
     \caption{\label{fig:c6_latencies}C-state wakeup latency of C6 measured using methodology developed by Schöne et al.
