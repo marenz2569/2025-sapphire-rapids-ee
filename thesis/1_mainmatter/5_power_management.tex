@@ -236,11 +236,12 @@ Intel~\cite{Intel_2020_IceLake_SP} removed this block time with the introduction
         \includegraphics[width=\linewidth]{fig/ftalat/ftalat_median_>1ms_hati.pdf}
         \caption{\label{fig:pstate_latencies_median_gt_1ms}Median P-state latencies. ($> \SI{1}{\ms}$)}
     \end{subfigure}
+    \hfill
     \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/ftalat/ftalat_95percentQuantile_hati.pdf}
         \caption{\label{fig:pstate_latencies_95percentQuantile}95th percentile of P-state switching latencies.}
-    \end{figure}
+    \end{subfigure}
     \caption{Core frequency switching latencies of the Sapphire Rappids processor. Median latencies are differentiated by wait times between frequency transitions below and above \SI{1}{\ms}.}
 \end{figure}
 
@@ -275,7 +276,7 @@ When using the lowest core frequency of \SI{800}{\MHz} the block time increases 
 Intel~\cite{Intel_2020_IceLake_SP} claims a block time of \SI{7}{\us} for Sapphire Rapids' predecessor Ice Lake-SP.
 It is an improvement compared to Skylake where Schöne et al. measured \SI{15}{\us}.
 
-\begin{figure}[]
+\begin{figure}[h]
     \begin{subfigure}[t]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{fig/uncore-frequency-switching-latency/median-t-init.pdf}
