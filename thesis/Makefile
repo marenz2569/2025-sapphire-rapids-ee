@@ -17,6 +17,7 @@ all: fig
 	bibtex main
 	pdflatex -halt-on-error main
 	gs -dUsePDFX3Profile=1 -dBATCH -dNOPAUSE -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sOutputFile=main_pdfx.pdf main.pdf
+	gs -dPDFA -dBATCH -dNOPAUSE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -dPDFACompatibilityPolicy=1 -sOutputFile=main_pdfa.pdf main.pdf
 
 clean:
 	rm *.aux *.bbl *.blg *.log *.lot *.out *.run.xml *.toc *.lof main-blx.bib || true
