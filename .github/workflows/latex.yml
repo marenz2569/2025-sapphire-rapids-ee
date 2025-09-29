@@ -29,3 +29,4 @@ jobs:
       run: |
         curl --config curl.config -T thesis/main.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main.pdf
         curl --config curl.config -T thesis/main_pdfx.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main_pdfx.pdf
+        curl --config curl.config -T thesis/main_pdfa.pdf https://datashare.tu-dresden.de/remote.php/dav/files/$DATASHARE_USERID/2025-sapphire-rapids-ee/main_pdfa.pdf
