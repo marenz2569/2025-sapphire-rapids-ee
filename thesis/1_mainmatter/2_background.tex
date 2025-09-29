@@ -1,8 +1,8 @@
 \chapter{Background and Related Work on Energy Efficiency Mechanisms}
 \label{sec:background}
 
-\ac{DVFS} describe a mechanism of the processor to change it operating frequency and voltage.
-Modern processors usually have a frequency domain for each core or groups of cores and each \ac{NUMA} cluster~\cite{Intel_2017_Skylake_SP,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
+\ac{DVFS} describes a mechanism of the processor to change it operating frequency and voltage.
+Modern processors usually have a frequency domain for each core or groups of cores and  \ac{NUMA} cluster~\cite{Intel_2017_Skylake_SP,Schoene_2024_Alder_Lake,Schoene_2021_Zen2}.
 This is accompanied by interfaces accessible through the operating system and hardware control loops~\cite{intel_pstate_kernel_doc,Kernel_IntelSpeedSelect}.
 Using \ac{DVFS} to improve the energy efficiency of applications is shown by mutiple authors~\cite{Gocht_2019_QLearning,Vysocky_2018_HPCTuning}.
 Internals of the frequency transition mechanism is described by Hackenberg et al.~\cite{Hackenberg_2015_Haswell} and Schöne et al.~\cite{Intel_2017_Skylake_SP,Schoene_2021_Zen2,Schoene_2024_Alder_Lake}.
