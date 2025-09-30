@@ -33,6 +33,9 @@ sudo $HWLOC_GATHER_TOPOLOGY --io --dmi --dt $RESULTS_FOLDER/hwloc-topology/hwloc
 # shellcheck disable=SC2024
 sudo lshw -xml > $RESULTS_FOLDER/lshw.xml
 
+# Make sure that python logs directly
+export PYTHONUNBUFFERED=1
+
 # Execute the command of the measurement passed via the arguments
 "$@"
 
