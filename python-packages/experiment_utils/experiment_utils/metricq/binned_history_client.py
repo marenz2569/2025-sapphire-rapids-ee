@@ -17,7 +17,7 @@
 
 import asyncio
 import os
-from typing import List
+from typing import List, Dict
 import metricq
 from metricq.history_client import HistoryRequestType
 from uuid import uuid4
@@ -56,21 +56,21 @@ class BinnedHistoryClient():
         # The counter for the meticq value bins
         metric_bin_counter = Counter()
 
-        client = metricq.HistoryClient(token=f"{self.token}-{uuid4()}", management_url=self.server, event_loop=asyncio.get_running_loop())
+        client = metricq.HistoryClient(token=f"{self.token}-{uuid4()}", url=self.server)
 
         await client.connect()
 
         chunk_begin = self.start_timestamp
         while chunk_begin < self.stop_timestamp:
             chunk_end = chunk_begin + chunk_size
-            chunk_end = min(self.start_timestamp, self.stop_timestamp)
+            chunk_end = min(chunk_end, self.stop_timestamp)
             print(f"Requesting chunk from {chunk_begin} to {chunk_end} of {metric}")
 
             result = await client.history_data_request(
                 metric,
                 start_time=chunk_begin,
                 end_time=chunk_end,
-                interval_max=interval_max,
+                interval_max=maximal_aggregation_interval,
                 request_type=HistoryRequestType.AGGREGATE_TIMELINE,
                 timeout=240
             )
@@ -95,5 +95,6 @@ class BinnedHistoryClient():
 
         return counters
 
-    def get_counters(self, metrics: List[str], chunk_size: metricq.Timedelta, maximal_aggregation_interval: metricq.Timedelta) -> List[Counter]:
-        return asyncio.run(self.aget_counters(metrics=metrics, chunk_size=chunk_size, maximal_aggregation_interval=maximal_aggregation_interval))
+    def get_counters(self, metrics: List[str], chunk_size: metricq.Timedelta, maximal_aggregation_interval: metricq.Timedelta) -> Dict[str, Counter]:
+        counters = asyncio.run(self.aget_counters(metrics=metrics, chunk_size=chunk_size, maximal_aggregation_interval=maximal_aggregation_interval))
+        return dict(zip(metrics, counters))
