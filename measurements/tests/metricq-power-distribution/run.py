@@ -6,6 +6,7 @@
 import pickle
 from pathlib import Path
 import sys
+import os
 from metricq import Timestamp, Timedelta
 from datetime import timedelta
 from experiment_utils.metricq import BinnedHistoryClient
