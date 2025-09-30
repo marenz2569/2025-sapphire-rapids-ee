@@ -16,7 +16,7 @@ def main():
         print('RESULTS_FOLDER env variable is not set')
         sys.exit(1)
 
-    results_foler = Path(os.environ['RESULTS_FOLDER'])
+    results_folder = Path(os.environ['RESULTS_FOLDER'])
 
     start_timestamp = Timestamp.from_iso8601("2024-01-01T00:00:00.0Z")
     stop_timestamp = Timestamp.from_iso8601("2025-01-01T00:00:00.0Z")
