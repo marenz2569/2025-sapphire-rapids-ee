@@ -5,7 +5,8 @@
   click,
   matplotlib,
   numpy,
-  pandas
+  pandas,
+  metricq
 }:
 
 buildPythonPackage {
@@ -20,6 +21,7 @@ buildPythonPackage {
   pythonImportsCheck = [
     "experiment_utils"
     "experiment_utils.elab"
+    "experiment_utils.metricq"
     "experiment_utils.roco2_python"
   ];
 
@@ -39,5 +41,6 @@ buildPythonPackage {
     matplotlib
     numpy
     pandas
+    metricq
   ];
 }

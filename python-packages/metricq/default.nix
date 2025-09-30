@@ -44,7 +44,7 @@ buildPythonPackage rec {
   ];
   pythonPath = [
   ];
-  buildInputs = [
+  propagatedBuildInputs = [
     mypy-protobuf
     click
     click-log
@@ -54,5 +54,7 @@ buildPythonPackage rec {
     python-dateutil
     aio-pika
     yarl
+  ];
+  buildInputs = [
   ];
 }

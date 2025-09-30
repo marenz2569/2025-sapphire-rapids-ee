@@ -9,7 +9,8 @@ dependencies = [
   "click",
   "matplotlib",
   "numpy",
-  "pandas"
+  "pandas",
+  "metricq"
 ]
 description = "Utilities that are used by multiple experiments"
 authors = [
