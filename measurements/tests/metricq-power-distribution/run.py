@@ -16,7 +16,7 @@ def main():
     metrics = [ "barnard.n1001.power" ]
 
     client = BinnedHistoryClient(token="2025-sapphire-rapids-ee", start_timestamp=start_timestamp, stop_timestamp=stop_timestamp, metric_binsize=0.1)
-    counters = client.get_counters(metrics=metrics, chunk_size=chunk_size,  maximal_aggregation_interval=maximal_aggregation_interval)
+    counters = client.get_counters(metrics=metrics, chunk_size=chunk_size, maximal_aggregation_interval=maximal_aggregation_interval)
 
     print(counters)
 
