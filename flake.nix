@@ -22,8 +22,10 @@
 
         python = pkgs.python3.override {
           self = pkgs.python3;
-          packageOverrides = pyfinal: pyprev: {
-            experiment_utils = pyfinal.callPackage ./experiment_utils { };
+          packageOverrides = pyfinal: pyprev: rec {
+            mypy-protobuf = pyfinal.callPackage ./python-packages/mypy-protobuf { };
+            metricq = pyfinal.callPackage ./python-packages/metricq { inherit mypy-protobuf; };
+            experiment_utils = pyfinal.callPackage ./python-packages/experiment_utils { };
           };
         };
 
@@ -34,6 +36,7 @@
           ipython
           jupyter
           matplotlib
+          metricq
           mypy
           numpy
           pandas

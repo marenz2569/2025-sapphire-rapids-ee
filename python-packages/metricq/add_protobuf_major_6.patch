@@ -1,0 +1,12 @@
+diff --git a/setup.py b/setup.py
+index 7e5664d..c1fa75f 100755
+--- a/setup.py
++++ b/setup.py
+@@ -129,6 +129,7 @@ def make_protobuf_requirement(major: int, minor: int, patch: int) -> str:
+         (3, 0),
+         (4, 21),
+         (5, 26),
++        (6, 30),
+     )
+ 
+     # We must subtract one because bisect gives the insertion point after...
