@@ -24,7 +24,7 @@ def main():
     maximal_aggregation_interval = Timedelta.from_timedelta(timedelta(seconds=60))
 
     # n[1001-1720].barnard.hpc.tu-dresden.de
-    metrics = [ f"barnard.n{}.power" for i in range(1001, 1720+1) ]
+    metrics = [ f"barnard.n{i}.power" for i in range(1001, 1720+1) ]
 
     client = BinnedHistoryClient(token="2025-sapphire-rapids-ee", start_timestamp=start_timestamp, stop_timestamp=stop_timestamp, metric_binsize=0.1)
     counters = client.get_counters(metrics=metrics, chunk_size=chunk_size, maximal_aggregation_interval=maximal_aggregation_interval)
