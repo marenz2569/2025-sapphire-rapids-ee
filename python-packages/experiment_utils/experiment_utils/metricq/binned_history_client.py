@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# pylint: disable=line-too-long,missing-module-docstring,too-many-arguments,too-many-positional-arguments
+
 import asyncio
 import os
 from typing import List, Dict
@@ -37,7 +39,7 @@ class BinnedHistoryClient():
         \arg metric_binsize The size of the bins, default 0.1W
         \arg server The server that is used to access metricq
         """
-        if server == None:
+        if server is None:
             raise RuntimeError("Metricq server cannot be None. Check that it is either set with the envrionment variable METRICQ_SERVER passed as an argument.")
 
         self.server = server
