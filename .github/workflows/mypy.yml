@@ -44,4 +44,4 @@ jobs:
         fi
     - name: Run mypy
       run: |
-        nix run .# -- -m mypy experiment_utils measurements
+        nix run .# -- -m mypy python-packages measurements
