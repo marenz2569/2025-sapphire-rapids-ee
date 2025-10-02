@@ -11,7 +11,7 @@ The folder `.github` contains the github actions CI files.
 
 All measurement data is distributed through OPARA, DOI: [https://doi.org/10.25532/OPARA-935](https://doi.org/10.25532/OPARA-935)
 
-# Notes on developing with Python
+# Developing with Python
 
 Create a python installation and link it into `.venv` via `nix build .# -o .venv`.
 This will make sure that VSCode and mypy will use the correct installation.
