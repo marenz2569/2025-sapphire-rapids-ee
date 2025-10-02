@@ -18,9 +18,9 @@
 import asyncio
 import os
 from typing import List, Dict
+from uuid import uuid4
 import metricq
 from metricq.history_client import HistoryRequestType
-from uuid import uuid4
 
 from .counter import Counter
 
@@ -88,6 +88,13 @@ class BinnedHistoryClient():
         return metric_bin_counter
 
     async def aget_counters(self, metrics: List[str], chunk_size: metricq.Timedelta, maximal_aggregation_interval: metricq.Timedelta):
+        """
+        Spawn a asyncio tasks to retrieve aggregated and binned counts for a specifed list of metrics.
+        \arg metrics The list of metrics to fetch and bin
+        \arg chunk_size The size (timedelta) of a the chunked transfer
+        \arg maximal_aggregation_interval The maximum aggregation bin width
+        \returns List of asyncio tasks for each metric
+        """
         counters = []
 
         for metric in metrics:
@@ -96,5 +103,12 @@ class BinnedHistoryClient():
         return counters
 
     def get_counters(self, metrics: List[str], chunk_size: metricq.Timedelta, maximal_aggregation_interval: metricq.Timedelta) -> Dict[str, Counter]:
+        """
+        Retrieve aggregated and binned counts for a specifed list of metrics.
+        \arg metrics The list of metrics to fetch and bin
+        \arg chunk_size The size (timedelta) of a the chunked transfer
+        \arg maximal_aggregation_interval The maximum aggregation bin width
+        \returns A dict from metric to retrieved binned metric counts
+        """
         counters = asyncio.run(self.aget_counters(metrics=metrics, chunk_size=chunk_size, maximal_aggregation_interval=maximal_aggregation_interval))
         return dict(zip(metrics, counters))
