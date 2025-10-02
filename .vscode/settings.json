@@ -1,16 +1,4 @@
 {
     "python.analysis.typeCheckingMode": "standard",
-    "mypy-type-checker.path": [
-        "nix",
-        "run",
-        ".#",
-        "--",
-        "-m",
-        "mypy"
-    ],
-    "mypy-type-checker.interpreter": [
-        "nix",
-        "run",
-        ".#"
-    ]
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
 }
