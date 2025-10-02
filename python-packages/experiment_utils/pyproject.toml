@@ -20,3 +20,6 @@ license = "MIT"
 
 [project.scripts]
 elab = "experiment_utils.elab:main"
+
+[tool.setuptools.package-data]
+"experiment_utils" = ["py.typed"]
